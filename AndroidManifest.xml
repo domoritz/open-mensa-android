@@ -31,7 +31,7 @@
        			<action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
        			<category android:name="android.intent.category.DEFAULT" />
     		</intent-filter>
-            <meta-data android:value=".MensaActivity" android:name="android.support.PARENT_ACTIVITY"/>
+            <meta-data android:value=".MainActivity" android:name="android.support.PARENT_ACTIVITY"/>
         </activity>
     </application>
 
