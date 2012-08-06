@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:paddingBottom="10dip"
+    android:paddingLeft="10dip"
+    android:paddingTop="10dip"
+    android:paddingRight="10dip">
+
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Lorem Ipsum"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/txtDescription"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:text="Lorem Ipsum" />
+
+</LinearLayout>

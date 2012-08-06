@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory android:title="@string/source">
+        <de.uni_potsdam.hpi.openmensa.DynamicPreference
+ android:title="@string/canteen" android:summary="@string/canteen_desc" android:key="pref_canteen" android:dialogMessage="@string/canteent_choose_desc" android:dialogTitle="@string/canteen_choose_title"/>
+        <EditTextPreference android:title="@string/source_url" android:summary="@string/source_url_desc" android:defaultValue="@string/source_url_default" android:key="pref_source_url"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/about">
+    	<Preference android:summary="@string/app_version_name" android:title="Version"></Preference>
+    	<Preference android:title="@string/powered_py" android:summary="OpenMensa">
+    		<intent android:action="android.intent.action.VIEW"
+            android:data="http://www.openmensa.org/" />
+    		</Preference>
+    	<Preference android:title="@string/author" android:selectable="true" android:summary="Dominik Moritz">
+        	<intent android:action="android.intent.action.VIEW"
+            android:data="http://www.domoritz.de/" />
+    	</Preference>
+    	<Preference android:title="Feedback" android:summary="@string/feedback_desc">
+    	    <intent
+  				android:action="android.intent.action.VIEW"
+  				android:data="mailto:dominik.moritz@student.hpi.uni-potsdam.de">
+  			<extra android:name="android.intent.extra.SUBJECT" android:value="OpenMensa" />
+			</intent>
+    	</Preference>
+    	
+    
+	</PreferenceCategory>
+    
+
+</PreferenceScreen>
