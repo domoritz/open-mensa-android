@@ -11,6 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActionBar;
+import android.app.ActionBar.OnNavigationListener;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
@@ -36,10 +38,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.SpinnerAdapter;
 
-public class MainActivity extends FragmentActivity implements OnSharedPreferenceChangeListener {
+public class MainActivity extends FragmentActivity implements OnSharedPreferenceChangeListener, OnNavigationListener {
 
     public static final String TAG = "Canteendroid";
     public static final Boolean LOGV = true;
@@ -47,6 +50,9 @@ public class MainActivity extends FragmentActivity implements OnSharedPreference
     private int mYear;
 	private int mMonth;
 	private int mDay;
+	
+	private ArrayList<Canteen> canteens = new ArrayList<Canteen>();
+	private SpinnerAdapter mSpinnerAdapter;
 
 	/**
      * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the
@@ -59,7 +65,7 @@ public class MainActivity extends FragmentActivity implements OnSharedPreference
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    ViewPager mViewPager;
+    ViewPager mViewPager;	
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,8 +90,30 @@ public class MainActivity extends FragmentActivity implements OnSharedPreference
      	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
      	prefs.registerOnSharedPreferenceChangeListener(this);
      	
+     	ActionBar actionBar = getActionBar();
+        
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        
+        canteens.add(new Canteen("Griebnitzsee", 74));
+        canteens.add(new Canteen("Golm", 34));
+
+        mSpinnerAdapter = new ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, canteens);
+        
+        actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
+     	
      	reload();
     }
+    
+    /**
+     * Change the current canteen
+     */
+	@Override
+	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+		// TODO Auto-generated method stub
+		Canteen c = canteens.get(itemPosition);
+		Log.d(TAG, String.format("Chose canteen %s", c));
+		return false;
+	}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
