@@ -39,9 +39,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MensaActivity extends FragmentActivity implements OnSharedPreferenceChangeListener {
+public class MainActivity extends FragmentActivity implements OnSharedPreferenceChangeListener {
 
-    public static final String TAG = "OpenMensaActivity";
+    public static final String TAG = "Canteendroid";
     public static final Boolean LOGV = true;
     
     private int mYear;
@@ -64,7 +64,7 @@ public class MensaActivity extends FragmentActivity implements OnSharedPreferenc
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mensa);
+        setContentView(R.layout.activity_main);
         // Create the adapter that will return a fragment for each of the three primary sections
         // of the app.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -89,7 +89,7 @@ public class MensaActivity extends FragmentActivity implements OnSharedPreferenc
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_mensa, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
     
@@ -142,8 +142,8 @@ public class MensaActivity extends FragmentActivity implements OnSharedPreferenc
 
     
     private void reload() {
-    	if ( !isOnline(MensaActivity.this)) {
-    		new AlertDialog.Builder(MensaActivity.this)
+    	if ( !isOnline(MainActivity.this)) {
+    		new AlertDialog.Builder(MainActivity.this)
          	.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.cancel();
@@ -173,8 +173,8 @@ public class MensaActivity extends FragmentActivity implements OnSharedPreferenc
             Fragment fragment = new DaySectionFragment();
             Bundle args = new Bundle();
             
-            String urlPattern = SettingsActivity.getSourceUrl(MensaActivity.this);
-            String activeMensa = SettingsActivity.getActiveCanteen(MensaActivity.this);
+            String urlPattern = SettingsActivity.getSourceUrl(MainActivity.this);
+            String activeMensa = SettingsActivity.getActiveCanteen(MainActivity.this);
             String url = String.format(urlPattern, activeMensa);
             
             args.putString(DaySectionFragment.ARG_URL, url);
