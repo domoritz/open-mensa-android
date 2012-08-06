@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -20,8 +19,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -77,6 +79,12 @@ public class MensaActivity extends FragmentActivity implements OnSharedPreferenc
      	mYear = c.get(Calendar.YEAR);
      	mMonth = c.get(Calendar.MONTH);
      	mDay = c.get(Calendar.DAY_OF_MONTH);
+     	
+     	
+     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+     	prefs.registerOnSharedPreferenceChangeListener(this);
+     	
+     	reload();
     }
 
     @Override
@@ -109,7 +117,39 @@ public class MensaActivity extends FragmentActivity implements OnSharedPreferenc
         }
 	}
     
+    /**
+     * Checks if we have a valid Internet Connection on the device.
+     * @param context
+     * @return True if device has internet
+     *
+     * Code from: http://www.androidsnippets.org/snippets/131/
+     */
+    public static boolean isOnline(Context context) {
+
+        NetworkInfo info = (NetworkInfo) ((ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+
+        if (info == null || !info.isConnected()) {
+            return false;
+        }
+        if (info.isRoaming()) {
+            // here is the roaming option you can change it if you want to
+            // disable internet while roaming, just return false
+            return false;
+        }
+        return true;
+    }
+
+    
     private void reload() {
+    	if ( !isOnline(MensaActivity.this)) {
+    		new AlertDialog.Builder(MensaActivity.this)
+         	.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+               }}).setTitle("Not Connected").setMessage("You are not connected to the Internet.");
+    	}
+
     	int index = mViewPager.getCurrentItem();
     	mSectionsPagerAdapter.getItem(index);
     	mSectionsPagerAdapter.notifyDataSetChanged();
@@ -198,8 +238,8 @@ public class MensaActivity extends FragmentActivity implements OnSharedPreferenc
                 Bundle savedInstanceState) {
         	
         	View listView = inflater.inflate(R.layout.fragment_pager_list, container, false);
-        	TextView titleView = (TextView) listView.findViewById(R.id.title);
-        	titleView.setText(mensaName);
+        	//TextView titleView = (TextView) listView.findViewById(R.id.title);
+        	//titleView.setText(mensaName);
             return listView;
         }
         
@@ -227,7 +267,7 @@ public class MensaActivity extends FragmentActivity implements OnSharedPreferenc
         public void fetchMealFeed()
         {
         	RetreiveFeedTask task = new RetreiveFeedTask(this.getActivity());
-    		task.execute(new String[] { url });
+        	task.execute(new String[] { url }); 		
         }
         
         

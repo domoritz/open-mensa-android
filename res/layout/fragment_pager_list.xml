@@ -4,12 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView android:id="@+id/title"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/hello_world"/>
-
     <!-- The frame layout is here since we will be showing either
     the empty view or the list view.  -->
     <FrameLayout
