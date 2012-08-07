@@ -6,6 +6,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -86,7 +87,6 @@ public class MainActivity extends FragmentActivity implements OnSharedPreference
      	mMonth = c.get(Calendar.MONTH);
      	mDay = c.get(Calendar.DAY_OF_MONTH);
      	
-     	
      	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
      	prefs.registerOnSharedPreferenceChangeListener(this);
      	
@@ -94,8 +94,15 @@ public class MainActivity extends FragmentActivity implements OnSharedPreference
         
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         
-        canteens.add(new Canteen("Griebnitzsee", 74));
-        canteens.add(new Canteen("Golm", 34));
+        Set<String> set = SettingsActivity.getActiveCanteen(this);
+        
+        if (set.size() > 0) {
+        	for (String name : set) {
+    			canteens.add(new Canteen(name, 1));
+    		}
+		} else {
+			canteens.add(new Canteen());
+		}
 
         mSpinnerAdapter = new ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, canteens);
         
@@ -202,7 +209,7 @@ public class MainActivity extends FragmentActivity implements OnSharedPreference
             Bundle args = new Bundle();
             
             String urlPattern = SettingsActivity.getSourceUrl(MainActivity.this);
-            String activeMensa = SettingsActivity.getActiveCanteen(MainActivity.this);
+            String activeMensa = Integer.toString(canteens.get(0).id);
             String url = String.format(urlPattern, activeMensa);
             
             args.putString(DaySectionFragment.ARG_URL, url);
@@ -399,7 +406,6 @@ public class MainActivity extends FragmentActivity implements OnSharedPreference
             	if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
-
             }
             
             public void showErrorMessage(Exception ex) {

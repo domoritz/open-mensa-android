@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-public class DynamicPreference extends ListPreference {
+public class DynamicPreference extends MultiSelectListPreference {
 
 
     public DynamicPreference(Context context, AttributeSet attrs) {
@@ -31,7 +31,7 @@ public class DynamicPreference extends ListPreference {
     }
 
     private ListAdapter adapter() {
-        return new ArrayAdapter(getContext(), android.R.layout.select_dialog_singlechoice);
+        return new ArrayAdapter<String>(getContext(), android.R.layout.select_dialog_multichoice);
     }
 
     private CharSequence[] entries() {

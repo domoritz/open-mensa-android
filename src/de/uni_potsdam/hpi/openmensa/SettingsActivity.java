@@ -1,5 +1,8 @@
 package de.uni_potsdam.hpi.openmensa;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -43,9 +46,9 @@ public class SettingsActivity extends PreferenceActivity {
     	return url;
     }
     
-    public static String getActiveCanteen(Context context) {
-    	String canteen = getSharedPrefs(context).getString(KEY_CANTEEN, "1");
-    	return canteen;
+    public static Set<String> getActiveCanteen(Context context) {
+    	Set<String> set = getSharedPrefs(context).getStringSet(KEY_CANTEEN, new HashSet<String>());
+    	return set;
     }
 
 }
