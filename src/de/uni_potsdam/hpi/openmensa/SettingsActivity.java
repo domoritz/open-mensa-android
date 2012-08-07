@@ -13,7 +13,8 @@ import android.view.MenuItem;
 
 public class SettingsActivity extends PreferenceActivity {
 	public static final String KEY_SOURCE_URL = "pref_source_url";
-	public static final String KEY_CANTEEN = "pref_canteen";
+	public static final String KEY_ACTIVE_CANTEENS = "pref_canteen";
+	public static final String KEY_AVAILABLE_CANTEENS = "pref_available_canteens";
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +47,8 @@ public class SettingsActivity extends PreferenceActivity {
     	return url;
     }
     
-    public static Set<String> getActiveCanteen(Context context) {
-    	Set<String> set = getSharedPrefs(context).getStringSet(KEY_CANTEEN, new HashSet<String>());
+    public static Set<String> getActiveCanteens(Context context) {
+    	Set<String> set = getSharedPrefs(context).getStringSet(KEY_ACTIVE_CANTEENS, new HashSet<String>());
     	return set;
     }
 

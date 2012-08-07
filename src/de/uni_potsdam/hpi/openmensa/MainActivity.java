@@ -6,6 +6,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -47,12 +49,15 @@ public class MainActivity extends FragmentActivity implements OnSharedPreference
 
     public static final String TAG = "Canteendroid";
     public static final Boolean LOGV = true;
+    public static final String PREFS_NAME = "CanteendroidPrefs";
     
     private int mYear;
 	private int mMonth;
 	private int mDay;
 	
-	private ArrayList<Canteen> canteens = new ArrayList<Canteen>();
+	private ArrayList<Canteen> activeCanteens = new ArrayList<Canteen>();
+	private HashMap<String, Canteen> availableCanteens = new HashMap<String, Canteen>();
+	private String activeCanteen = "1";
 	private SpinnerAdapter mSpinnerAdapter;
 
 	/**
@@ -87,37 +92,80 @@ public class MainActivity extends FragmentActivity implements OnSharedPreference
      	mMonth = c.get(Calendar.MONTH);
      	mDay = c.get(Calendar.DAY_OF_MONTH);
      	
-     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
      	prefs.registerOnSharedPreferenceChangeListener(this);
      	
      	ActionBar actionBar = getActionBar();
         
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        
-        Set<String> set = SettingsActivity.getActiveCanteen(this);
-        
-        if (set.size() > 0) {
-        	for (String name : set) {
-    			canteens.add(new Canteen(name, 1));
-    		}
-		} else {
-			canteens.add(new Canteen());
+     	
+     	try {
+			refreshAvailableCanteens();
+		} catch (Exception ex) {
+			Log.w(TAG, "Exception: "+ ex.getMessage());
+            if (LOGV) {
+                Log.d(TAG, Log.getStackTraceString(ex));
+            }
 		}
-
-        mSpinnerAdapter = new ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, canteens);
+     	
+     	refreshActiveCanteens();
+     	mSpinnerAdapter = new ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, activeCanteens);
         
         actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
      	
      	reload();
     }
+
+	private void refreshActiveCanteens() {
+      
+        Set<String> set = SettingsActivity.getActiveCanteens(this);
+        
+        if (set.size() > 0) {
+        	for (String key : set) {
+    			activeCanteens.add(new Canteen(key, key));
+    		}
+		} else {
+			activeCanteens.add(new Canteen());
+		}
+        
+        for (Canteen c : availableCanteens.values()) {
+			activeCanteens.add(c);
+		}
+	}
     
-    /**
+    private void refreshAvailableCanteens() throws JSONException {
+    	
+    	String jsonString = "[{'name':'Griebnitzsee', 'id':'1'}, " +
+        		"{'name':'Golm', 'id':'2'}, " +
+        		"{'name':'Neues Palais', 'id':'3'}]";
+        
+        JSONArray arr;
+		arr = new JSONArray(jsonString);
+		JSONSharedPreferences.saveJSONArray(this, PREFS_NAME, SettingsActivity.KEY_AVAILABLE_CANTEENS, arr);
+		Log.d(TAG, String.format("Saved %s canteens", arr.length()));
+		
+
+    	JSONArray canteenArray = new JSONArray();
+		canteenArray = JSONSharedPreferences.loadJSONArray(this, PREFS_NAME, SettingsActivity.KEY_ACTIVE_CANTEENS);
+		for (int i = 0; i < canteenArray.length(); i++) {
+	    	JSONObject canteen = canteenArray.getJSONObject(i);
+	    	availableCanteens.put(canteen.getString("id"), new Canteen(canteen.getString("id"), canteen.getString("name")));
+		}
+		Log.d(TAG, String.format("Loaded %s canteens", canteenArray.length()));
+	}
+    
+    @Override
+    protected void onStop(){
+       super.onStop();
+    }
+
+	/**
      * Change the current canteen
      */
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 		// TODO Auto-generated method stub
-		Canteen c = canteens.get(itemPosition);
+		Canteen c = activeCanteens.get(itemPosition);
 		Log.d(TAG, String.format("Chose canteen %s", c));
 		return false;
 	}
@@ -147,7 +195,7 @@ public class MainActivity extends FragmentActivity implements OnSharedPreference
     
     @Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    	if (key.equals(SettingsActivity.KEY_CANTEEN) || key.equals(SettingsActivity.KEY_SOURCE_URL)) {
+    	if (key.equals(SettingsActivity.KEY_ACTIVE_CANTEENS) || key.equals(SettingsActivity.KEY_SOURCE_URL)) {
             reload();
         }
 	}
@@ -209,11 +257,9 @@ public class MainActivity extends FragmentActivity implements OnSharedPreference
             Bundle args = new Bundle();
             
             String urlPattern = SettingsActivity.getSourceUrl(MainActivity.this);
-            String activeMensa = Integer.toString(canteens.get(0).id);
-            String url = String.format(urlPattern, activeMensa);
+            String url = String.format(urlPattern, activeCanteen);
             
             args.putString(DaySectionFragment.ARG_URL, url);
-            args.putString(DaySectionFragment.ARG_MENSA_NAME, activeMensa);
             args.putInt(DaySectionFragment.ARG_SECTION_NUMBER, i + 1);
             fragment.setArguments(args);
             return fragment;

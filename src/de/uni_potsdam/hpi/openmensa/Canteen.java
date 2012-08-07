@@ -2,11 +2,11 @@ package de.uni_potsdam.hpi.openmensa;
 
 public class Canteen {
 	public String name = "Dummy";
-	public int id = -1;
+	public String key = null;
 	
-	public Canteen(String name, int id) {
+	public Canteen(String key, String name) {
 		this.name = name;
-		this.id = id;
+		this.key = key;
 	}
 	
 	public Canteen() {}
