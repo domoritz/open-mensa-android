@@ -1,31 +1,22 @@
 package de.uni_potsdam.hpi.openmensa;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.annotations.SerializedName;
 
 public class Canteen {
+	@SerializedName("name")
 	public String name = "Dummy";
+	
+	@SerializedName("id")
 	public String key = null;
 	
 	public Canteen(String key, String name) {
 		this.name = name;
 		this.key = key;
 	}
-	
-	public Canteen(JSONObject json) throws JSONException {
-		key = json.getString("id");
-		name =json.getString("name");
-	}
-	
-	public JSONObject toJSON() throws JSONException {
-        JSONObject json = new JSONObject();
-        json.put("id", key );
-        json.put("name", name );
-        return json;
-    }
 
-	
-	public Canteen() {}
+	public Canteen() {
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public String toString() {

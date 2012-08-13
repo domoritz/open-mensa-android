@@ -48,6 +48,7 @@ public class SettingsActivity extends PreferenceActivity {
     }
     
     public static Set<String> getActiveCanteens(Context context) {
+    	// Throws ClassCastException if there is a preference with this name that is not a Set.
     	Set<String> set = getSharedPrefs(context).getStringSet(KEY_ACTIVE_CANTEENS, new HashSet<String>());
     	return set;
     }

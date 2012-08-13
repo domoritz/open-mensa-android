@@ -14,6 +14,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.AlertDialog;
@@ -60,6 +62,8 @@ public class MainActivity extends FragmentActivity implements
 	private HashMap<String, Canteen> availableCanteens = new HashMap<String, Canteen>();
 	private String activeCanteen = "1";
 	private SpinnerAdapter mSpinnerAdapter;
+	
+	Gson gson = new Gson();
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -115,8 +119,7 @@ public class MainActivity extends FragmentActivity implements
 		}
 
 		refreshActiveCanteens();
-		mSpinnerAdapter = new ArrayAdapter<Canteen>(this,
-				android.R.layout.simple_spinner_dropdown_item, activeCanteens);
+		mSpinnerAdapter = new ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, activeCanteens);
 
 		actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
 
@@ -129,38 +132,42 @@ public class MainActivity extends FragmentActivity implements
 
 		if (set.size() > 0) {
 			for (String key : set) {
-				activeCanteens.add(new Canteen(key, key));
+				if (set.contains(key)) {
+					activeCanteens.add(availableCanteens.get(key));
+				} else {
+					Log.w(TAG, String.format("Key not found: %s", key));
+				}				
 			}
-		} else {
-			activeCanteens.add(new Canteen());
-		}
-
-		for (Canteen c : availableCanteens.values()) {
-			activeCanteens.add(c);
 		}
 	}
 
-	private void refreshAvailableCanteens() throws JSONException {
+	private void refreshAvailableCanteens() {
+		
+		//RetrieveCanteenFeedTask task = new RetrieveCanteenFeedTask(this.getActivity());
+		//task.execute(new String[] { url });
+		
+		Log.d(TAG, "Refresh available canteens");
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		String jsonString = "[{'name':'Griebnitzsee', 'id':'1'}, " +
 				"{'name':'Golm', 'id':'2'}, " +
 				"{'name':'Neues Palais', 'id':'3'}]";
 
-		JSONArray arr;
-		arr = new JSONArray(jsonString);
-		JSONSharedPreferences.saveJSONArray(this, PREFS_NAME,
-				SettingsActivity.KEY_AVAILABLE_CANTEENS, arr);
-		Log.d(TAG, String.format("Saved %s canteens", arr.length()));
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(SettingsActivity.KEY_AVAILABLE_CANTEENS, jsonString);
+        editor.commit();
+        
+        Log.d(TAG, String.format("Saved %s canteens", 3));
 
-		JSONArray canteenArray = new JSONArray();
-		canteenArray = JSONSharedPreferences.loadJSONArray(this, PREFS_NAME,
-				SettingsActivity.KEY_ACTIVE_CANTEENS);
-		for (int i = 0; i < canteenArray.length(); i++) {
-			JSONObject canteen = canteenArray.getJSONObject(i);
-			availableCanteens.put(canteen.getString("id"), new Canteen(canteen
-					.getString("id"), canteen.getString("name")));
+		
+		String json = prefs.getString(SettingsActivity.KEY_AVAILABLE_CANTEENS, "[]");
+		Canteen[] canteens = gson.fromJson(json, Canteen[].class);
+		for (Canteen canteen : canteens) {
+			availableCanteens.put(canteen.key, canteen);
 		}
-		Log.d(TAG, String.format("Loaded %s canteens", canteenArray.length()));
+
+		Log.d(TAG, String.format("Loaded %s canteens", canteens.length));
 	}
 
 	@Override
@@ -388,7 +395,6 @@ public class MainActivity extends FragmentActivity implements
 
 			protected void onPostExecuteFinished() {
 				Log.d(TAG, String.format("%s Items", listItems.size()));
-				Log.d(TAG, "Update View");
 				adapter.notifyDataSetChanged();
 			}
 		}
