@@ -14,6 +14,7 @@ import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.WrappedCanteen;
 
 /**
+ * Provides simple methods to access shared settings.
  * 
  * @author dominik
  *

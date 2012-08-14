@@ -3,7 +3,6 @@ package de.uni_potsdam.hpi.openmensa;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 import android.app.ActionBar;
@@ -53,7 +52,7 @@ public class MainActivity extends FragmentActivity implements
 	private ArrayList<Canteen> activeCanteens = new ArrayList<Canteen>();
 	private HashMap<String, Canteen> availableCanteens = new HashMap<String, Canteen>();
 	private String displayedCanteenId = "1";
-	private SpinnerAdapter mSpinnerAdapter;
+	private SpinnerAdapter spinnerAdapter;
 	
 	static MainActivity app;
 	
@@ -77,7 +76,6 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		app = this;
 		setContentView(R.layout.activity_main);
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections
@@ -88,6 +86,10 @@ public class MainActivity extends FragmentActivity implements
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
+		
+		// set a static reference so that others can access the application context
+		// TODO: remove this when there is a separate activity for the canteen chooser
+		app = this;
 
 		// get the current date
 		final Calendar c = Calendar.getInstance();
@@ -100,18 +102,15 @@ public class MainActivity extends FragmentActivity implements
 		prefs.registerOnSharedPreferenceChangeListener(this);
 
 		ActionBar actionBar = getActionBar();
-
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
-		refreshAvailableCanteens();
-		refreshActiveCanteens();
-		
-		mSpinnerAdapter = new ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, activeCanteens);
-		actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
 
 		reload();
 	}
 	
+	/**
+	 * @return A static reference to this Application instance. 
+	 * 			This could be used as a context for example for the settings.
+	 */
 	static MainActivity getApp() {
 		return app;
 	}
@@ -135,6 +134,10 @@ public class MainActivity extends FragmentActivity implements
 				}				
 			}
 		}
+		
+		ActionBar actionBar = getActionBar();
+		spinnerAdapter = new ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, activeCanteens);
+		actionBar.setListNavigationCallbacks(spinnerAdapter, this);
 	}
 
 	/**
@@ -144,8 +147,8 @@ public class MainActivity extends FragmentActivity implements
 		Log.d(TAG, "Refresh available canteen list");
 		
 		// load available canteens from settings and afterwards refetch the list from server
-		// TODO: should be avoided by caching...
-		availableCanteens = SettingsProvider.getAvailableCanteens(this);
+		// TODO: should be avoided by caching..., 
+		// TODO: but still needs to refresh the view and set the available canteens
 		
 		String baseUrl = SettingsProvider.getSourceUrl(this);
 		String url = baseUrl + "cafeterias";
@@ -156,10 +159,14 @@ public class MainActivity extends FragmentActivity implements
 	
 	@Override
 	public void onCanteenFetchFinished(RetrieveCanteenFeedTask task) {
+		// TODO don't pass json
 		SettingsProvider.setAvailableCanteens(this, task.getFetchedJSON());
 		
-		availableCanteens = SettingsProvider.getAvailableCanteens(this);
+		availableCanteens.clear();
+		availableCanteens.putAll(SettingsProvider.getAvailableCanteens(this));
 		Log.d(TAG, String.format("Saved %s canteens", availableCanteens.size()));
+		
+		refreshActiveCanteens();
 	}
 
 	@Override
@@ -217,7 +224,7 @@ public class MainActivity extends FragmentActivity implements
 	 * @param context
 	 * @return True if device has internet
 	 * 
-	 *         Code from: http://www.androidsnippets.org/snippets/131/
+	 *  Code from: http://www.androidsnippets.org/snippets/131/
 	 */
 	public static boolean isOnline(Context context) {
 
@@ -230,7 +237,7 @@ public class MainActivity extends FragmentActivity implements
 		}
 		if (info.isRoaming()) {
 			// here is the roaming option you can change it if you want to
-			// disable internet while roaming, just return false
+			// disable Internet while roaming, just return false
 			return false;
 		}
 		return true;
@@ -246,13 +253,17 @@ public class MainActivity extends FragmentActivity implements
 			new AlertDialog.Builder(MainActivity.this)
 					.setNegativeButton("Okay",
 							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
+								public void onClick(DialogInterface dialog, int id) {
 									dialog.cancel();
 								}
 							}).setTitle("Not Connected").setMessage(
 							"You are not connected to the Internet.");
+		} else {
+			// async
+			refreshAvailableCanteens();
 		}
+		
+		refreshActiveCanteens();
 
 //		int index = mViewPager.getCurrentItem();
 //		mSectionsPagerAdapter.getItem(index);

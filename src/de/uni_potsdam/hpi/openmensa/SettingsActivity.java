@@ -1,16 +1,7 @@
 package de.uni_potsdam.hpi.openmensa;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-
-import com.google.gson.Gson;
-
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 

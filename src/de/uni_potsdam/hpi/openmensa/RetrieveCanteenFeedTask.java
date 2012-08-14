@@ -3,14 +3,12 @@ package de.uni_potsdam.hpi.openmensa;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.util.Log;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
-import de.uni_potsdam.hpi.openmensa.api.WrappedCanteen;
 
 /**
  * 
  * @author dominik
- *
+ * TODO: Parse the feed and write into the Hash instead of only saving the json
  */
 class RetrieveCanteenFeedTask extends RetrieveFeedTask {
 	
