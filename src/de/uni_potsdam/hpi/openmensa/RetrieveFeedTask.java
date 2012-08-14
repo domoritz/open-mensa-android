@@ -5,8 +5,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.json.JSONException;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
@@ -14,6 +12,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.google.gson.Gson;
 
 /**
  * An abstract feed fetcher. Override the parseFromJSON and
@@ -23,9 +23,11 @@ import android.util.Log;
  */
 abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Integer> {
 	private Exception exception;
-	ProgressDialog dialog;
-	Builder builder;
-	Context context;
+	private ProgressDialog dialog;
+	private Builder builder;
+	protected Context context;
+	protected Gson gson = new Gson();
+	
 	public static final String TAG = MainActivity.TAG;
 	public static final Boolean LOGV = MainActivity.LOGV;
 
@@ -55,7 +57,7 @@ abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Integer> {
 		dialog.show();
 	}
 
-	protected abstract void parseFromJSON(String string) throws JSONException;
+	protected abstract void parseFromJSON(String string);
 
 	protected Integer doInBackground(String... urls) {
 		for (String url : urls) {
