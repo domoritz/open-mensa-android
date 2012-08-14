@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.openmensa;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import android.app.ActionBar;
@@ -34,7 +35,6 @@ import android.widget.ListView;
 import android.widget.SpinnerAdapter;
 
 import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
 
 public class MainActivity extends FragmentActivity implements
 		OnSharedPreferenceChangeListener, OnNavigationListener {
@@ -299,7 +299,7 @@ public class MainActivity extends FragmentActivity implements
 	 * A fragment representing a section of the app, that displays the Meals for
 	 * one Day.
 	 */
-	public static class DaySectionFragment extends ListFragment {
+	public static class DaySectionFragment extends ListFragment implements OnFinishedFetchingMealsListener {
 		public DaySectionFragment() {
 		}
 
@@ -360,40 +360,15 @@ public class MainActivity extends FragmentActivity implements
 			Log.i("FragmentList", "Item clicked: " + id);
 		}
 
-		public void fetchMealFeed()
-		{
-			RetrieveFeedTask task = new RetrieveMenuFeedTask(this.getActivity());
+		public void fetchMealFeed() {
+			RetrieveFeedTask task = new RetrieveMealFeedTask(this.getActivity(), this);
 			task.execute(new String[] { url });
 		}
-
-		/**
-		 * TODO: extract this to a separate file
-		 * @author dominik
-		 *
-		 */
-		class RetrieveMenuFeedTask extends RetrieveFeedTask {
-
-			public RetrieveMenuFeedTask(Context context) {
-				super(context);
-			}
-			
-			// wrap the meal because the api needs this
-			private class WrappedMeal {
-				@SerializedName("meal")
-				public Meal meal;
-			}
-
-			protected void parseFromJSON(String string) {
-				WrappedMeal[] meals = gson.fromJson(string, WrappedMeal[].class);
-				for (WrappedMeal wrappedMeal : meals) {
-					listItems.add(wrappedMeal.meal);
-				}
-			}
-
-			protected void onPostExecuteFinished() {
-				Log.d(TAG, String.format("%s Items", listItems.size()));
-				adapter.notifyDataSetChanged();
-			}
+		
+		@Override
+		public void onMealFetchFinished(List<Meal> meals) {
+			listItems.addAll(meals);
+			adapter.notifyDataSetChanged();
 		}
 	}
 }
