@@ -55,6 +55,8 @@ public class MainActivity extends FragmentActivity implements
 	private String displayedCanteenId = "1";
 	private SpinnerAdapter mSpinnerAdapter;
 	
+	static MainActivity app;
+	
 	Gson gson = new Gson();
 
 	/**
@@ -75,6 +77,7 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		app = this;
 		setContentView(R.layout.activity_main);
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections
@@ -107,6 +110,10 @@ public class MainActivity extends FragmentActivity implements
 		actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
 
 		reload();
+	}
+	
+	static MainActivity getApp() {
+		return app;
 	}
 
 	/**
