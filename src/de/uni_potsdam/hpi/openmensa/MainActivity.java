@@ -56,8 +56,6 @@ public class MainActivity extends FragmentActivity implements
 	private int displayedCanteenPosition = 0;
 	private SpinnerAdapter spinnerAdapter;
 	
-	static MainActivity app;
-	
 	Gson gson = new Gson();
 
 	/**
@@ -88,10 +86,6 @@ public class MainActivity extends FragmentActivity implements
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		
-		// set a static reference so that others can access the application context
-		// TODO: remove this when there is a separate activity for the canteen chooser
-		app = this;
 
 		// get the current date
 		final Calendar c = Calendar.getInstance();
@@ -107,14 +101,6 @@ public class MainActivity extends FragmentActivity implements
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
 		reload();
-	}
-	
-	/**
-	 * @return A static reference to this Application instance. 
-	 * 			This could be used as a context for example for the settings.
-	 */
-	static MainActivity getApp() {
-		return app;
 	}
 
 	/**
