@@ -83,7 +83,6 @@ public class MainActivity extends FragmentActivity implements
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
-		// set date to today
 		// get the current date
 		final Calendar c = Calendar.getInstance();
 		mYear = c.get(Calendar.YEAR);
@@ -156,13 +155,9 @@ public class MainActivity extends FragmentActivity implements
         Log.d(TAG, String.format("Saved %s canteens", 3));
 
 		
-		String json = prefs.getString(SettingsActivity.KEY_AVAILABLE_CANTEENS, "[]");
-		Canteen[] canteens = gson.fromJson(json, Canteen[].class);
-		for (Canteen canteen : canteens) {
-			availableCanteens.put(canteen.key, canteen);
-		}
+		availableCanteens = SettingsActivity.getAvailableCanteens(this);
 
-		Log.d(TAG, String.format("Loaded %s canteens", canteens.length));
+		Log.d(TAG, String.format("Loaded %s canteens", availableCanteens.size()));
 	}
 
 	@Override

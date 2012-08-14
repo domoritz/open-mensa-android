@@ -1,7 +1,10 @@
 package de.uni_potsdam.hpi.openmensa;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.google.gson.Gson;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -15,6 +18,8 @@ public class SettingsActivity extends PreferenceActivity {
 	public static final String KEY_SOURCE_URL = "pref_source_url";
 	public static final String KEY_ACTIVE_CANTEENS = "pref_canteen";
 	public static final String KEY_AVAILABLE_CANTEENS = "pref_available_canteens";
+	
+	private static Gson gson = new Gson();
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +56,16 @@ public class SettingsActivity extends PreferenceActivity {
     	// Throws ClassCastException if there is a preference with this name that is not a Set.
     	Set<String> set = getSharedPrefs(context).getStringSet(KEY_ACTIVE_CANTEENS, new HashSet<String>());
     	return set;
+    }
+    
+    public static HashMap<String, Canteen> getAvailableCanteens(Context context) {
+    	HashMap<String, Canteen> availableCanteens = new HashMap<String, Canteen>();
+    	String json = getSharedPrefs(context).getString(SettingsActivity.KEY_AVAILABLE_CANTEENS, "[]");
+		Canteen[] canteens = gson.fromJson(json, Canteen[].class);
+		for (Canteen canteen : canteens) {
+			availableCanteens.put(canteen.key, canteen);
+		}
+		return availableCanteens;
     }
 
 }

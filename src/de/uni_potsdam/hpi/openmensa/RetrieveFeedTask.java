@@ -97,7 +97,6 @@ abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Integer> {
 
 	protected void onProgressUpdate(Integer... progress) {
 		super.onProgressUpdate(progress);
-		// Log.d(TAG, ""+progress[0]);
 		dialog.setProgress(progress[0]);
 	}
 

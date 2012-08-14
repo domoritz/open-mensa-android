@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.openmensa;
 
 import android.content.Context;
-import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.util.AttributeSet;
 import android.view.View;
