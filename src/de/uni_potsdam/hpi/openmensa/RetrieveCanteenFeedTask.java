@@ -16,7 +16,7 @@ class RetrieveCanteenFeedTask extends RetrieveFeedTask {
 
 	protected void parseFromJSON(String string)  {
 		Canteen[] canteens = gson.fromJson(string, Canteen[].class);
-		listItems = new ArrayList<Canteen>(Arrays.asList(canteens));
+		listItems.addAll(new ArrayList<Canteen>(Arrays.asList(canteens)));
 	}
 
 	protected void onPostExecuteFinished() {

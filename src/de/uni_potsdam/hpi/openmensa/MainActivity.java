@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.openmensa;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Set;
@@ -116,6 +115,9 @@ public class MainActivity extends FragmentActivity implements
 		reload();
 	}
 
+	/**
+	 * Refreshes the canteens in the action bar
+	 */
 	private void refreshActiveCanteens() {
 
 		Set<String> set = SettingsActivity.getActiveCanteens(this);
@@ -131,6 +133,9 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
+	/**
+	 * Refreshes the available canteens list
+	 */
 	private void refreshAvailableCanteens() {
 		
 		//RetrieveCanteenFeedTask task = new RetrieveCanteenFeedTask(this.getActivity());
