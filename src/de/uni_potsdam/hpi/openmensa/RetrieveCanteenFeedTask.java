@@ -34,14 +34,14 @@ class RetrieveCanteenFeedTask extends RetrieveFeedTask {
 	
 	protected void parseFromJSON(String string)  {
 		this.fetchedJSON = string;
-		WrappedCanteen[] canteens = gson.fromJson(string, WrappedCanteen[].class);
-		for(WrappedCanteen wrappedCanteen : canteens) {
-			canteenList.add(wrappedCanteen.canteen);
-		}
+		//WrappedCanteen[] canteens = gson.fromJson(string, WrappedCanteen[].class);
+		//for(WrappedCanteen wrappedCanteen : canteens) {
+		//	canteenList.add(wrappedCanteen.canteen);
+		//}
 	}
 
 	protected void onPostExecuteFinished() {
-		Log.d(TAG, String.format("Fetched %s canteen items", canteenList.size()));
+		//Log.d(TAG, String.format("Fetched %s canteen items", canteenList.size()));
 		
 		// notify that we are done
 		fetchListener.onCanteenFetchFinished(this);

@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import com.google.gson.Gson;
 
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
+import de.uni_potsdam.hpi.openmensa.api.WrappedCanteen;
 
 /**
  * 
@@ -44,10 +45,17 @@ public class SettingsProvider {
     public static HashMap<String, Canteen> getAvailableCanteens(Context context) {
     	HashMap<String, Canteen> availableCanteens = new HashMap<String, Canteen>();
     	String json = getSharedPrefs(context).getString(KEY_AVAILABLE_CANTEENS, "[]");
-		Canteen[] canteens = gson.fromJson(json, Canteen[].class);
-		for (Canteen canteen : canteens) {
-			availableCanteens.put(canteen.key, canteen);
+    	WrappedCanteen[] canteens = gson.fromJson(json, WrappedCanteen[].class);
+		for(WrappedCanteen wrappedCanteen : canteens) {
+			availableCanteens.put(wrappedCanteen.canteen.key, wrappedCanteen.canteen);
 		}
 		return availableCanteens;
+    }
+    
+    // TODO: 
+    public static void setAvailableCanteens(Context context, String json) {
+    	SharedPreferences.Editor editor = getSharedPrefs(context).edit();
+    	editor.putString(SettingsProvider.KEY_AVAILABLE_CANTEENS, json);
+    	editor.commit();
     }
 }

@@ -40,7 +40,7 @@ import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.Meal;
 
 public class MainActivity extends FragmentActivity implements
-		OnSharedPreferenceChangeListener, OnNavigationListener {
+		OnSharedPreferenceChangeListener, OnNavigationListener, OnFinishedFetchingCanteensListener {
 
 	public static final String TAG = "Canteendroid";
 	public static final Boolean LOGV = true;
@@ -111,17 +111,20 @@ public class MainActivity extends FragmentActivity implements
 
 	/**
 	 * Refreshes the canteens in the action bar
+	 * 
+	 * TODO: should wait for completion of refreshAvailableCanteens()
 	 */
 	private void refreshActiveCanteens() {
+		Log.d(TAG, "Refresh active canteen list");
 
 		Set<String> set = SettingsProvider.getActiveCanteens(this);
 
 		if (set.size() > 0) {
 			for (String key : set) {
-				if (set.contains(key)) {
+				if (availableCanteens.containsKey(key)) {
 					activeCanteens.add(availableCanteens.get(key));
 				} else {
-					Log.w(TAG, String.format("Key not found: %s", key));
+					Log.w(TAG, String.format("Active canteen's index %s not found in available canteens!", key));
 				}				
 			}
 		}
@@ -129,31 +132,27 @@ public class MainActivity extends FragmentActivity implements
 
 	/**
 	 * Refreshes the available canteens list
-	 * 
-	 * TODO: fetch avilable canteens from api
 	 */
 	private void refreshAvailableCanteens() {
+		Log.d(TAG, "Refresh available canteen list");
 		
-		//RetrieveCanteenFeedTask task = new RetrieveCanteenFeedTask(this.getActivity());
-		//task.execute(new String[] { url });
-		
-		Log.d(TAG, "Refresh available canteens");
-		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-		String jsonString = "[{'name':'Griebnitzsee', 'id':'1'}, " +
-				"{'name':'Golm', 'id':'2'}, " +
-				"{'name':'Neues Palais', 'id':'3'}]";
-
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(SettingsProvider.KEY_AVAILABLE_CANTEENS, jsonString);
-        editor.commit();
-        
-        Log.d(TAG, String.format("Saved %s canteens", 3));
-		
+		// load available canteens from settings and afterwards refetch the list from server
+		// TODO: should be avoided by caching...
 		availableCanteens = SettingsProvider.getAvailableCanteens(this);
 		
-		Log.d(TAG, String.format("Loaded %s canteens", availableCanteens.size()));
+		String baseUrl = SettingsProvider.getSourceUrl(this);
+		String url = baseUrl + "cafeterias";
+		
+		RetrieveCanteenFeedTask task = new RetrieveCanteenFeedTask(this, this);
+		task.execute(new String[] { url });
+	}
+	
+	@Override
+	public void onCanteenFetchFinished(RetrieveCanteenFeedTask task) {
+		SettingsProvider.setAvailableCanteens(this, task.getFetchedJSON());
+		
+		availableCanteens = SettingsProvider.getAvailableCanteens(this);
+		Log.d(TAG, String.format("Saved %s canteens", availableCanteens.size()));
 	}
 
 	@Override
@@ -246,9 +245,9 @@ public class MainActivity extends FragmentActivity implements
 							"You are not connected to the Internet.");
 		}
 
-		int index = mViewPager.getCurrentItem();
-		mSectionsPagerAdapter.getItem(index);
-		mSectionsPagerAdapter.notifyDataSetChanged();
+//		int index = mViewPager.getCurrentItem();
+//		mSectionsPagerAdapter.getItem(index);
+//		mSectionsPagerAdapter.notifyDataSetChanged();
 	}
 
 	/**

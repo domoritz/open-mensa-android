@@ -42,6 +42,7 @@ public class DynamicPreference extends MultiSelectListPreference {
         return new ArrayAdapter<String>(getContext(), android.R.layout.select_dialog_multichoice);
     }
 
+    // TODO: adjust available entries by SettingsProvider.getAvailableCanteens()!
     private CharSequence[] entries() {
     	CharSequence[] entries = { "Griebnitzsee", "Golm", "Neues Palais" };
         return entries;
