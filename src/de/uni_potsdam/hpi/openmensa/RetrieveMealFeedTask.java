@@ -13,7 +13,7 @@ import com.google.gson.annotations.SerializedName;
  */
 class RetrieveMealFeedTask extends RetrieveFeedTask {
 
-	// wrap the meal because the API v1 needs this (meal is nested in a cafeteria)
+	// wrap the meal because the API v1 needs this
 	private class WrappedMeal {
 		@SerializedName("meal")
 		public Meal meal;
