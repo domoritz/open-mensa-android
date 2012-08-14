@@ -111,7 +111,7 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	private void refreshActiveCanteens() {
 
-		Set<String> set = SettingsActivity.getActiveCanteens(this);
+		Set<String> set = SettingsProvider.getActiveCanteens(this);
 
 		if (set.size() > 0) {
 			for (String key : set) {
@@ -143,13 +143,13 @@ public class MainActivity extends FragmentActivity implements
 				"{'name':'Neues Palais', 'id':'3'}]";
 
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(SettingsActivity.KEY_AVAILABLE_CANTEENS, jsonString);
+        editor.putString(SettingsProvider.KEY_AVAILABLE_CANTEENS, jsonString);
         editor.commit();
         
         Log.d(TAG, String.format("Saved %s canteens", 3));
 
 		
-		availableCanteens = SettingsActivity.getAvailableCanteens(this);
+		availableCanteens = SettingsProvider.getAvailableCanteens(this);
 
 		Log.d(TAG, String.format("Loaded %s canteens", availableCanteens.size()));
 	}
@@ -195,8 +195,8 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		if (key.equals(SettingsActivity.KEY_ACTIVE_CANTEENS)
-				|| key.equals(SettingsActivity.KEY_SOURCE_URL)) {
+		if (key.equals(SettingsProvider.KEY_ACTIVE_CANTEENS)
+				|| key.equals(SettingsProvider.KEY_SOURCE_URL)) {
 			reload();
 		}
 	}
@@ -266,7 +266,7 @@ public class MainActivity extends FragmentActivity implements
 			Fragment fragment = new DaySectionFragment();
 			Bundle args = new Bundle();
 
-			String urlPattern = SettingsActivity.getSourceUrl(MainActivity.this);
+			String urlPattern = SettingsProvider.getSourceUrl(MainActivity.this);
 			String url = String.format(urlPattern, activeCanteen);
 
 			args.putString(DaySectionFragment.ARG_URL, url);
