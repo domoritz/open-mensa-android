@@ -52,7 +52,7 @@ public class MainActivity extends FragmentActivity implements
 
 	private ArrayList<Canteen> activeCanteens = new ArrayList<Canteen>();
 	private HashMap<String, Canteen> availableCanteens = new HashMap<String, Canteen>();
-	private String activeCanteen = "1";
+	private String displayedCanteenId = "1";
 	private SpinnerAdapter mSpinnerAdapter;
 	
 	Gson gson = new Gson();
@@ -167,6 +167,8 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 		Canteen c = activeCanteens.get(itemPosition);
 		Log.d(TAG, String.format("Chose canteen %s", c));
+		displayedCanteenId = c.key;
+		// TODO: need to refresh the view
 		return false;
 	}
 
@@ -268,7 +270,7 @@ public class MainActivity extends FragmentActivity implements
 			Bundle args = new Bundle();
 
 			String urlPattern = SettingsProvider.getSourceUrl(MainActivity.this);
-			String url = String.format(urlPattern + "cafeterias/%s/meals", activeCanteen);
+			String url = String.format(urlPattern + "cafeterias/%s/meals", displayedCanteenId);
 
 			args.putString(DaySectionFragment.ARG_URL, url);
 			args.putInt(DaySectionFragment.ARG_SECTION_NUMBER, i + 1);
