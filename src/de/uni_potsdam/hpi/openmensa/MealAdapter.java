@@ -9,6 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author dominik
+ *
+ */
 public class MealAdapter extends ArrayAdapter<Meal>{
 	Context context;
     int layoutResourceId;   

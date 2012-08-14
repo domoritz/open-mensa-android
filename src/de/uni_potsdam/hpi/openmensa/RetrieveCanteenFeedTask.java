@@ -6,6 +6,11 @@ import java.util.Arrays;
 import android.content.Context;
 import android.util.Log;
 
+/**
+ * 
+ * @author dominik
+ *
+ */
 class RetrieveCanteenFeedTask extends RetrieveFeedTask {
 	
 	private ArrayList<Canteen> listItems;

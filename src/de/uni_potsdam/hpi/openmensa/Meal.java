@@ -2,6 +2,11 @@ package de.uni_potsdam.hpi.openmensa;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * 
+ * @author dominik
+ *
+ */
 public class Meal {
 	@SerializedName("name")
 	public String name;

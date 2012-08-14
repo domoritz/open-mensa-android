@@ -14,6 +14,11 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
+/**
+ * 
+ * @author dominik
+ *
+ */
 public class SettingsActivity extends PreferenceActivity {
 	public static final String KEY_SOURCE_URL = "pref_source_url";
 	public static final String KEY_ACTIVE_CANTEENS = "pref_canteen";

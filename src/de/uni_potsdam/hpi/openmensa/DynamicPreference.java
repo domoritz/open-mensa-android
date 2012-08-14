@@ -8,6 +8,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+/**
+ * A multi select list preference for the preferences file (res->xml->preferences). 
+ * This enables the preference item to get the list from another place than the resources xml.
+ * 
+ * @author dominik
+ *
+ * TODO: give this a better name or better make it abstract and build a 
+ * 		separate preference where entries and entyValues has a concrete implementation
+ */
 public class DynamicPreference extends MultiSelectListPreference {
 
 

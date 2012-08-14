@@ -9,6 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
+/**
+ * The fragment that displays the preferences.
+ * 
+ * @author dominik
+ */
 public class SettingsFragment extends PreferenceFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {

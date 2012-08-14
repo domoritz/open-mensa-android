@@ -97,18 +97,10 @@ public class MainActivity extends FragmentActivity implements
 
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-		try {
-			refreshAvailableCanteens();
-		} catch (Exception ex) {
-			Log.w(TAG, "Exception: " + ex.getMessage());
-			if (LOGV) {
-				Log.d(TAG, Log.getStackTraceString(ex));
-			}
-		}
-
+		refreshAvailableCanteens();
 		refreshActiveCanteens();
+		
 		mSpinnerAdapter = new ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, activeCanteens);
-
 		actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
 
 		reload();
@@ -134,6 +126,8 @@ public class MainActivity extends FragmentActivity implements
 
 	/**
 	 * Refreshes the available canteens list
+	 * 
+	 * TODO: fetch avilable canteens from api
 	 */
 	private void refreshAvailableCanteens() {
 		
@@ -233,6 +227,11 @@ public class MainActivity extends FragmentActivity implements
 		return true;
 	}
 
+	/**
+	 * Refreshes the meals hash by fetching the data from the api and then displays the latest data.
+	 * 
+	 * TODO: make it work
+	 */
 	private void reload() {
 		if (!isOnline(MainActivity.this)) {
 			new AlertDialog.Builder(MainActivity.this)
@@ -352,6 +351,7 @@ public class MainActivity extends FragmentActivity implements
 			// Assign adapter to ListView
 			setListAdapter(adapter);
 
+			// TODO: don't fetch the meals here, use a prefetched hash
 			fetchMealFeed();
 		}
 
@@ -366,6 +366,11 @@ public class MainActivity extends FragmentActivity implements
 			task.execute(new String[] { url });
 		}
 
+		/**
+		 * TODO: extract this to a separate file
+		 * @author dominik
+		 *
+		 */
 		class RetrieveMenuFeedTask extends RetrieveFeedTask {
 
 			public RetrieveMenuFeedTask(Context context) {
