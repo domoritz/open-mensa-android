@@ -49,9 +49,11 @@ public class MainActivity extends FragmentActivity implements
 	private int mMonth;
 	private int mDay;
 
-	private ArrayList<Canteen> activeCanteens = new ArrayList<Canteen>();
+	// TODO: use Canteens object, (see comments in SettingsProvider)
 	private HashMap<String, Canteen> availableCanteens = new HashMap<String, Canteen>();
+	private ArrayList<Canteen> activeCanteens = new ArrayList<Canteen>();
 	private String displayedCanteenId = "1";
+	private int displayedCanteenPosition = 0;
 	private SpinnerAdapter spinnerAdapter;
 	
 	static MainActivity app;
@@ -138,6 +140,7 @@ public class MainActivity extends FragmentActivity implements
 		ActionBar actionBar = getActionBar();
 		spinnerAdapter = new ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, activeCanteens);
 		actionBar.setListNavigationCallbacks(spinnerAdapter, this);
+		actionBar.setSelectedNavigationItem(displayedCanteenPosition);
 	}
 
 	/**
@@ -182,6 +185,7 @@ public class MainActivity extends FragmentActivity implements
 		Canteen c = activeCanteens.get(itemPosition);
 		Log.d(TAG, String.format("Chose canteen %s", c));
 		displayedCanteenId = c.key;
+		displayedCanteenPosition = itemPosition;
 		// TODO: need to refresh the view
 		return false;
 	}
@@ -222,7 +226,7 @@ public class MainActivity extends FragmentActivity implements
 	 * Checks if we have a valid Internet Connection on the device.
 	 * 
 	 * @param context
-	 * @return True if device has internet
+	 * @return True if device has Internet
 	 * 
 	 *  Code from: http://www.androidsnippets.org/snippets/131/
 	 */
@@ -244,7 +248,7 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	/**
-	 * Refreshes the meals hash by fetching the data from the api and then displays the latest data.
+	 * Refreshes the meals hash by fetching the data from the API and then displays the latest data.
 	 * 
 	 * TODO: make it work
 	 */
@@ -371,7 +375,7 @@ public class MainActivity extends FragmentActivity implements
 			// Assign adapter to ListView
 			setListAdapter(adapter);
 
-			// TODO: don't fetch the meals here, use a prefetched hash
+			// TODO: don't fetch the meals here, use a prefetched dictionary
 			fetchMealFeed();
 		}
 

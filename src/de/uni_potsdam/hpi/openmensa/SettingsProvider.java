@@ -15,6 +15,8 @@ import de.uni_potsdam.hpi.openmensa.api.WrappedCanteen;
 
 /**
  * Provides simple methods to access shared settings.
+ * TODO: Save Canteens object. This will improve the overall design and refactor the code. 
+ * TODO: Use the canteens object to save the active canteens and the currently displayed canteen
  * 
  * @author dominik
  *
@@ -37,12 +39,14 @@ public class SettingsProvider {
     	return url;
     }
     
+    // TODO: see above for refactoring
     public static Set<String> getActiveCanteens(Context context) {
     	// Throws ClassCastException if there is a preference with this name that is not a Set.
     	Set<String> set = getSharedPrefs(context).getStringSet(KEY_ACTIVE_CANTEENS, new HashSet<String>());
     	return set;
     }
     
+ // TODO: see above for refactoring
     public static HashMap<String, Canteen> getAvailableCanteens(Context context) {
     	HashMap<String, Canteen> availableCanteens = new HashMap<String, Canteen>();
     	String json = getSharedPrefs(context).getString(KEY_AVAILABLE_CANTEENS, "[]");
@@ -54,6 +58,7 @@ public class SettingsProvider {
     }
     
     // TODO: 
+    // TODO: see above for refactoring
     public static void setAvailableCanteens(Context context, String json) {
     	SharedPreferences.Editor editor = getSharedPrefs(context).edit();
     	editor.putString(SettingsProvider.KEY_AVAILABLE_CANTEENS, json);
