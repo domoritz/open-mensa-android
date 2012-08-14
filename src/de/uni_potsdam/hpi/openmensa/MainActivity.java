@@ -164,7 +164,6 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		// TODO Auto-generated method stub
 		Canteen c = activeCanteens.get(itemPosition);
 		Log.d(TAG, String.format("Chose canteen %s", c));
 		return false;

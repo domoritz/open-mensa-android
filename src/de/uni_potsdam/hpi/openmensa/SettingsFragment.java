@@ -1,13 +1,7 @@
 package de.uni_potsdam.hpi.openmensa;
 
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.app.Activity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
 
 /**
  * The fragment that displays the preferences.

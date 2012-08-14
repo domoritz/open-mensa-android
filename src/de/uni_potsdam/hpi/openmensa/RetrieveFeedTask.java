@@ -17,7 +17,7 @@ import com.google.gson.Gson;
 
 /**
  * An abstract feed fetcher. Override the parseFromJSON and
- * onPostExecuteFinished methods.
+ * onPostExecuteFinished methods in your concrete implementation.
  * 
  * @author dominik
  */
@@ -41,6 +41,7 @@ abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Integer> {
 		dialog.setMax(100);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 
+		// error dialog that may be needed
 		builder = new AlertDialog.Builder(context)
 				.setNegativeButton("Okay",
 						new DialogInterface.OnClickListener() {
@@ -119,7 +120,7 @@ abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Integer> {
 
 	protected abstract void onPostExecuteFinished();
 
-	public void showErrorMessage(Exception ex) {
+	private void showErrorMessage(Exception ex) {
 		builder.setTitle(ex.getClass().getName());
 		builder.setMessage(ex.toString());
 		builder.show();
