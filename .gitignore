@@ -12,5 +12,8 @@
 bin/
 gen/
 
+# automatically loaded dependencies
+libs/
+
 # Local configuration file (sdk path, etc)
 local.properties
