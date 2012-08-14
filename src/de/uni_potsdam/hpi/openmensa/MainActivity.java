@@ -147,10 +147,9 @@ public class MainActivity extends FragmentActivity implements
         editor.commit();
         
         Log.d(TAG, String.format("Saved %s canteens", 3));
-
 		
 		availableCanteens = SettingsProvider.getAvailableCanteens(this);
-
+		
 		Log.d(TAG, String.format("Loaded %s canteens", availableCanteens.size()));
 	}
 
@@ -267,7 +266,7 @@ public class MainActivity extends FragmentActivity implements
 			Bundle args = new Bundle();
 
 			String urlPattern = SettingsProvider.getSourceUrl(MainActivity.this);
-			String url = String.format(urlPattern, activeCanteen);
+			String url = String.format(urlPattern + "cafeterias/%s/meals", activeCanteen);
 
 			args.putString(DaySectionFragment.ARG_URL, url);
 			args.putInt(DaySectionFragment.ARG_SECTION_NUMBER, i + 1);
