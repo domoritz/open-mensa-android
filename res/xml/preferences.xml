@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <PreferenceCategory android:title="@string/source">
+    <PreferenceCategory android:title="@string/source_title">
         <de.uni_potsdam.hpi.openmensa.DynamicPreference
- android:title="@string/canteen" android:summary="@string/canteen_desc" android:key="pref_canteen" android:dialogMessage="@string/canteent_choose_desc" android:dialogTitle="@string/canteen_choose_title"/>
-        <EditTextPreference android:title="@string/source_url" android:summary="@string/source_url_desc" android:defaultValue="@string/source_url_default" android:key="pref_source_url"/>
+ android:title="@string/canteen_title" android:summary="@string/canteen_desc" android:key="pref_canteen" android:dialogMessage="@string/canteen_choose_desc" android:dialogTitle="@string/canteen_choose_title"/>
+        <EditTextPreference android:title="@string/source_url_title" android:summary="@string/source_url_desc" android:defaultValue="@string/source_url_default" android:key="pref_source_url"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/about">
-    	<Preference android:summary="@string/app_version_name" android:title="Version"></Preference>
-    	<Preference android:title="@string/powered_py" android:summary="OpenMensa">
+    <PreferenceCategory android:title="@string/about_title">
+    	<Preference android:summary="@string/version_desc" android:title="@string/version_title"></Preference>
+    	<Preference android:title="@string/powered_by_title" android:summary="@string/powered_by_desc">
     		<intent android:action="android.intent.action.VIEW"
             android:data="http://www.openmensa.org/" />
     		</Preference>
-    	<Preference android:title="@string/author" android:selectable="true" android:summary="Dominik Moritz">
+    	<Preference android:title="@string/author_title" android:selectable="true" android:summary="@string/author_desc">
         	<intent android:action="android.intent.action.VIEW"
             android:data="http://www.domoritz.de/" />
     	</Preference>
-    	<Preference android:title="Feedback" android:summary="@string/feedback_desc">
+    	<Preference android:title="@string/feedback_title" android:summary="@string/feedback_desc">
     	    <intent
   				android:action="android.intent.action.VIEW"
   				android:data="mailto:dominik.moritz@student.hpi.uni-potsdam.de">
