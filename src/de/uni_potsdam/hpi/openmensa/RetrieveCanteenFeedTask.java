@@ -3,6 +3,8 @@ package de.uni_potsdam.hpi.openmensa;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.google.gson.annotations.SerializedName;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -12,6 +14,12 @@ import android.util.Log;
  *
  */
 class RetrieveCanteenFeedTask extends RetrieveFeedTask {
+	
+	// wrap the canteen because the API v1 needs this
+	private class WrappedCanteen {
+		@SerializedName("cafeteria")
+		public Canteen canteen;
+	}
 	
 	private ArrayList<Canteen> canteenList;
 	private OnFinishedFetchingCanteensListener fetchListener;
@@ -27,8 +35,10 @@ class RetrieveCanteenFeedTask extends RetrieveFeedTask {
 	}
 	
 	protected void parseFromJSON(String string)  {
-		Canteen[] canteens = gson.fromJson(string, Canteen[].class);
-		canteenList.addAll(new ArrayList<Canteen>(Arrays.asList(canteens)));
+		WrappedCanteen[] canteens = gson.fromJson(string, WrappedCanteen[].class);
+		for(WrappedCanteen wrappedCanteen : canteens) {
+			canteenList.add(wrappedCanteen.canteen);
+		}
 	}
 
 	protected void onPostExecuteFinished() {
