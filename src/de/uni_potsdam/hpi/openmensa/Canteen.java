@@ -3,19 +3,18 @@ package de.uni_potsdam.hpi.openmensa;
 import com.google.gson.annotations.SerializedName;
 
 public class Canteen {
+	@SerializedName("id")
+	public String key = null;
+	
 	@SerializedName("name")
 	public String name = "Dummy";
 	
-	@SerializedName("id")
-	public String key = null;
+	//@SerializedName("address")
+	//public String address;
 	
 	public Canteen(String key, String name) {
 		this.name = name;
 		this.key = key;
-	}
-
-	public Canteen() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

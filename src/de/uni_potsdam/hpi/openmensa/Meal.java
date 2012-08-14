@@ -9,8 +9,13 @@ public class Meal {
 	@SerializedName("description")
 	public String description;
 	
-	public Meal(String name, String description) {
+	// TODO: maybe auto-parse into Date from ISO8601
+	@SerializedName("date")
+	public String date;
+	
+	public Meal(String name, String description, String date) {
 		this.name = name;
 		this.description = description;
+		this.date = date;
 	}
 }
