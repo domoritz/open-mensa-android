@@ -36,6 +36,9 @@ import android.widget.SpinnerAdapter;
 
 import com.google.gson.Gson;
 
+import de.uni_potsdam.hpi.openmensa.api.Canteen;
+import de.uni_potsdam.hpi.openmensa.api.Meal;
+
 public class MainActivity extends FragmentActivity implements
 		OnSharedPreferenceChangeListener, OnNavigationListener {
 

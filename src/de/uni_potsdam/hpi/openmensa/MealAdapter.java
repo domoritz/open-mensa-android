@@ -2,6 +2,8 @@ package de.uni_potsdam.hpi.openmensa;
 
 import java.util.ArrayList;
 
+import de.uni_potsdam.hpi.openmensa.api.Meal;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

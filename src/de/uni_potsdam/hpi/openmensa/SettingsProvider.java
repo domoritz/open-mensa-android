@@ -10,6 +10,8 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
+import de.uni_potsdam.hpi.openmensa.api.Canteen;
+
 /**
  * 
  * @author dominik

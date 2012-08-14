@@ -4,20 +4,14 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.util.Log;
-
-import com.google.gson.annotations.SerializedName;
+import de.uni_potsdam.hpi.openmensa.api.Meal;
+import de.uni_potsdam.hpi.openmensa.api.WrappedMeal;
 
 /**
  * 
  * @author dominik
  */
 class RetrieveMealFeedTask extends RetrieveFeedTask {
-
-	// wrap the meal because the API v1 needs this
-	private class WrappedMeal {
-		@SerializedName("meal")
-		public Meal meal;
-	}
 
 	private ArrayList<Meal> mealList;
 	private OnFinishedFetchingMealsListener fetchListener;
