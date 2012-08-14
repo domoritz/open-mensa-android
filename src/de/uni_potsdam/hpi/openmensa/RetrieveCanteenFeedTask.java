@@ -13,18 +13,24 @@ import android.util.Log;
  */
 class RetrieveCanteenFeedTask extends RetrieveFeedTask {
 	
-	private ArrayList<Canteen> listItems;
+	private ArrayList<Canteen> canteenList;
+	private OnFinishedFetchingCanteensListener fetchListener;
 	
-	public RetrieveCanteenFeedTask(Context context) {
+	public RetrieveCanteenFeedTask(Context context, OnFinishedFetchingCanteensListener fetchListener) {
 		super(context);
+		this.canteenList = new ArrayList<Canteen>();
+		this.fetchListener = fetchListener;
 	}
-
+	
 	protected void parseFromJSON(String string)  {
 		Canteen[] canteens = gson.fromJson(string, Canteen[].class);
-		listItems.addAll(new ArrayList<Canteen>(Arrays.asList(canteens)));
+		canteenList.addAll(new ArrayList<Canteen>(Arrays.asList(canteens)));
 	}
 
 	protected void onPostExecuteFinished() {
-		Log.d(TAG, String.format("%s Items", listItems.size()));
+		Log.d(TAG, String.format("Fetched %s canteen items", canteenList.size()));
+		
+		// notify that we are done
+		fetchListener.onCanteenFetchFinished(canteenList);
 	}
 }
