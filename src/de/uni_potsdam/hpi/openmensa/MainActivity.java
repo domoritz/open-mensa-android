@@ -365,8 +365,8 @@ public class MainActivity extends FragmentActivity implements
 		}
 		
 		@Override
-		public void onMealFetchFinished(List<Meal> meals) {
-			listItems.addAll(meals);
+		public void onMealFetchFinished(RetrieveMealFeedTask task) {
+			listItems.addAll(task.getMealList());
 			adapter.notifyDataSetChanged();
 		}
 	}

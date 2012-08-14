@@ -28,7 +28,7 @@ class RetrieveMealFeedTask extends RetrieveFeedTask {
 		this.fetchListener = fetchListener;
 	}
 	
-	public ArrayList<Meal> getListItems() {
+	public ArrayList<Meal> getMealList() {
 		return mealList;
 	}
 	
@@ -43,6 +43,6 @@ class RetrieveMealFeedTask extends RetrieveFeedTask {
 		Log.d(TAG, String.format("Fetched %s meal items", mealList.size()));
 		
 		// notify that we are done
-		fetchListener.onMealFetchFinished(mealList);
+		fetchListener.onMealFetchFinished(this);
 	}
 }

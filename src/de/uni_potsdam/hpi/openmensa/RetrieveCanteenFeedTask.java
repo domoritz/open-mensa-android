@@ -22,6 +22,10 @@ class RetrieveCanteenFeedTask extends RetrieveFeedTask {
 		this.fetchListener = fetchListener;
 	}
 	
+	public ArrayList<Canteen> getCanteenList() {
+		return canteenList;
+	}
+	
 	protected void parseFromJSON(String string)  {
 		Canteen[] canteens = gson.fromJson(string, Canteen[].class);
 		canteenList.addAll(new ArrayList<Canteen>(Arrays.asList(canteens)));
@@ -31,6 +35,6 @@ class RetrieveCanteenFeedTask extends RetrieveFeedTask {
 		Log.d(TAG, String.format("Fetched %s canteen items", canteenList.size()));
 		
 		// notify that we are done
-		fetchListener.onCanteenFetchFinished(canteenList);
+		fetchListener.onCanteenFetchFinished(this);
 	}
 }
