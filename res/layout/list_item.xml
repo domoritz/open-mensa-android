@@ -9,14 +9,14 @@
     android:paddingRight="10dip">
 
     <TextView
-        android:id="@+id/txtTitle"
+        android:id="@+id/txtName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Lorem Ipsum"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/txtDescription"
+        android:id="@+id/txtNotes"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:text="Lorem Ipsum" />

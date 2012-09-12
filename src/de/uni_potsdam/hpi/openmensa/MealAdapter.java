@@ -41,8 +41,8 @@ public class MealAdapter extends ArrayAdapter<Meal>{
             row = inflater.inflate(R.layout.list_item, parent, false);
            
             holder = new MealHolder();
-            holder.title = (TextView)row.findViewById(R.id.txtTitle);
-            holder.description = (TextView)row.findViewById(R.id.txtDescription);
+            holder.name = (TextView)row.findViewById(R.id.txtName);
+            holder.notes = (TextView)row.findViewById(R.id.txtNotes);
            
             row.setTag(holder);
         }
@@ -52,15 +52,15 @@ public class MealAdapter extends ArrayAdapter<Meal>{
         }
        
         Meal meal = data.get(position);
-        holder.title.setText(meal.name);
-        holder.description.setText(meal.description);
+        holder.name.setText(meal.name);
+        holder.notes.setText(meal.notes.toString());
        
         return row;
     }
    
     static class MealHolder
     {
-    	TextView title;
-        TextView description;
+    	TextView name;
+        TextView notes;
     }
 }

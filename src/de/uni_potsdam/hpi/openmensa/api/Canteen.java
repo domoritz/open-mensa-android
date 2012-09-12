@@ -14,8 +14,14 @@ public class Canteen {
 	@SerializedName("name")
 	public String name = "Dummy";
 	
-	//@SerializedName("address")
-	//public String address;
+	@SerializedName("address")
+	public String address;
+	
+	@SerializedName("longitude")
+	public Float longitude;
+	
+	@SerializedName("latitude")
+	public Float latitude;
 	
 	public Canteen(String key, String name) {
 		this.name = name;

@@ -100,7 +100,7 @@ public class MainActivity extends FragmentActivity implements
 		ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-		reload();
+		//reload();
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class MainActivity extends FragmentActivity implements
 		// TODO: but still needs to refresh the view and set the available canteens
 		
 		String baseUrl = SettingsProvider.getSourceUrl(this);
-		String url = baseUrl + "cafeterias";
+		String url = baseUrl + "canteens";
 		
 		RetrieveCanteenFeedTask task = new RetrieveCanteenFeedTask(this, this);
 		task.execute(new String[] { url });
@@ -278,7 +278,7 @@ public class MainActivity extends FragmentActivity implements
 			Bundle args = new Bundle();
 
 			String urlPattern = SettingsProvider.getSourceUrl(MainActivity.this);
-			String url = String.format(urlPattern + "cafeterias/%s/meals", displayedCanteenId);
+			String url = String.format(urlPattern + "canteens/%s/meals", displayedCanteenId);
 
 			args.putString(DaySectionFragment.ARG_URL, url);
 			args.putInt(DaySectionFragment.ARG_SECTION_NUMBER, i + 1);

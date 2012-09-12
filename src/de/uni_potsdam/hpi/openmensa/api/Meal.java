@@ -11,16 +11,18 @@ public class Meal {
 	@SerializedName("name")
 	public String name;
 	
-	@SerializedName("description")
-	public String description;
+	@SerializedName("notes")
+	public String[] notes;
+	
+	@SerializedName("category")
+	public String category;
 	
 	// TODO: maybe auto-parse into Date from ISO8601
 	@SerializedName("date")
 	public String date;
 	
-	public Meal(String name, String description, String date) {
+	public Meal(String name, String date) {
 		this.name = name;
-		this.description = description;
 		this.date = date;
 	}
 }
