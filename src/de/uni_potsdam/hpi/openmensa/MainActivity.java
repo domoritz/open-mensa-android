@@ -98,8 +98,10 @@ public class MainActivity extends FragmentActivity implements
 		ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		
-		// async
-		refreshAvailableCanteens();
+		getCanteensFromStorage();
+		reload();
+		
+		refreshActiveCanteens();
 	}
 
 	/**
@@ -148,9 +150,8 @@ public class MainActivity extends FragmentActivity implements
 	
 	@Override
 	public void onCanteenFetchFinished(RetrieveCanteenFeedTask task) {
-		canteens = task.getCanteens();
-		SettingsProvider.setCanteens(this, canteens);
-		SettingsProvider.refreshActiveCanteens(this);
+		// don't overwrite canteens metadata
+		canteens.setData(this, task.getCanteens());
 		
 		refreshActiveCanteens();
 	}
@@ -263,8 +264,11 @@ public class MainActivity extends FragmentActivity implements
 		} else {
 			// fetch menu feed and maybe canteens
 			
-			// async
-			refreshAvailableCanteens();
+			if (canteens.isOutOfDate()) {
+				Log.d(TAG, "Fetch canteens because storage is out of date");
+				// async
+				refreshAvailableCanteens();
+			}
 		}
 
 //		int index = mViewPager.getCurrentItem();

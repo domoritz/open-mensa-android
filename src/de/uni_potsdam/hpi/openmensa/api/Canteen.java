@@ -23,7 +23,7 @@ public class Canteen {
 	@SerializedName("latitude")
 	public Float latitude;
 	
-	// only for internal usage
+	// app only, not api
 	@SerializedName("active")
 	public Boolean active;
 	
