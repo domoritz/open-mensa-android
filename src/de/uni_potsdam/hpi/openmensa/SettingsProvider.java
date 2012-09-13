@@ -1,22 +1,20 @@
 package de.uni_potsdam.hpi.openmensa;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
-import de.uni_potsdam.hpi.openmensa.api.WrappedCanteen;
+import de.uni_potsdam.hpi.openmensa.api.Canteens;
 
 /**
  * Provides simple methods to access shared settings.
- * TODO: Save Canteens object. This will improve the overall design and refactor the code. 
- * TODO: Use the canteens object to save the active canteens and the currently displayed canteen
  * 
  * @author dominik
  *
@@ -24,8 +22,8 @@ import de.uni_potsdam.hpi.openmensa.api.WrappedCanteen;
 public class SettingsProvider {
 
 	public static final String KEY_SOURCE_URL = "pref_source_url";
-	public static final String KEY_ACTIVE_CANTEENS = "pref_canteen";
-	public static final String KEY_AVAILABLE_CANTEENS = "pref_available_canteens";
+	public static final String KEY_CANTEENS = "pref_canteens";
+	public static final String KEY_ACTIVE_CANTEENS = "pref_active_canteens";
 	
 	private static Gson gson = new Gson();
 	
@@ -39,29 +37,31 @@ public class SettingsProvider {
     	return url;
     }
     
-    // TODO: see above for refactoring
-    public static Set<String> getActiveCanteens(Context context) {
+    public static Canteens getCanteens(Context context) {
     	// Throws ClassCastException if there is a preference with this name that is not a Set.
-    	Set<String> set = getSharedPrefs(context).getStringSet(KEY_ACTIVE_CANTEENS, new HashSet<String>());
-    	return set;
+    	Canteens canteens = new Canteens();
+    	String json = getSharedPrefs(context).getString(KEY_CANTEENS, "{}");
+    	canteens = gson.fromJson(json, Canteens.class);
+		return canteens;
     }
     
- // TODO: see above for refactoring
-    public static HashMap<String, Canteen> getAvailableCanteens(Context context) {
-    	HashMap<String, Canteen> availableCanteens = new HashMap<String, Canteen>();
-    	String json = getSharedPrefs(context).getString(KEY_AVAILABLE_CANTEENS, "[]");
-    	WrappedCanteen[] canteens = gson.fromJson(json, WrappedCanteen[].class);
-		for(WrappedCanteen wrappedCanteen : canteens) {
-			availableCanteens.put(wrappedCanteen.canteen.key, wrappedCanteen.canteen);
-		}
-		return availableCanteens;
-    }
-    
-    // TODO: 
-    // TODO: see above for refactoring
-    public static void setAvailableCanteens(Context context, String json) {
+    public static void setCanteens(Context context, Canteens canteens) {
+    	String json = gson.toJson(canteens);
     	SharedPreferences.Editor editor = getSharedPrefs(context).edit();
-    	editor.putString(SettingsProvider.KEY_AVAILABLE_CANTEENS, json);
+    	editor.putString(SettingsProvider.KEY_CANTEENS, json);
     	editor.commit();
     }
+
+    /**
+     * sets the active canteens in the canteens object
+     * @param context
+     */
+	public static void refreshActiveCanteens(Context context) {
+		Set<String> activeCanteensKeys = getSharedPrefs(context).getStringSet(KEY_ACTIVE_CANTEENS, new HashSet<String>());
+		Canteens canteens = getCanteens(context);
+		for (Canteen canteen : canteens.values()) {
+			canteen.active = activeCanteensKeys.contains(canteen.key);
+		}
+		setCanteens(context, canteens);
+	}
 }

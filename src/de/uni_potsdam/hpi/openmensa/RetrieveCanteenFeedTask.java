@@ -3,7 +3,10 @@ package de.uni_potsdam.hpi.openmensa;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.util.Log;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
+import de.uni_potsdam.hpi.openmensa.api.Canteens;
+import de.uni_potsdam.hpi.openmensa.api.Meal;
 
 /**
  * 
@@ -12,34 +15,29 @@ import de.uni_potsdam.hpi.openmensa.api.Canteen;
  */
 class RetrieveCanteenFeedTask extends RetrieveFeedTask {
 	
-	private String fetchedJSON;
-	private ArrayList<Canteen> canteenList;
+	private Canteens canteens;
 	private OnFinishedFetchingCanteensListener fetchListener;
+	protected String name = "Canteens";
 	
 	public RetrieveCanteenFeedTask(Context context, OnFinishedFetchingCanteensListener fetchListener) {
 		super(context);
-		this.canteenList = new ArrayList<Canteen>();
+		this.canteens = new Canteens();
 		this.fetchListener = fetchListener;
 	}
 	
-	public String getFetchedJSON() {
-		return fetchedJSON;
+	public Canteens getCanteens() {
+		return canteens;
 	}
 	
-	public ArrayList<Canteen> getCanteenList() {
-		return canteenList;
-	}
-	
-	protected void parseFromJSON(String string)  {
-		this.fetchedJSON = string;
-		//WrappedCanteen[] canteens = gson.fromJson(string, WrappedCanteen[].class);
-		//for(WrappedCanteen wrappedCanteen : canteens) {
-		//	canteenList.add(wrappedCanteen.canteen);
-		//}
+	protected void parseFromJSON()  {
+		Canteen[] canteens_arr = gson.fromJson(getFetchedJSON(), Canteen[].class);
+		for(Canteen canteen : canteens_arr) {
+			canteens.put(canteen.key, canteen);
+		}
 	}
 
-	protected void onPostExecuteFinished() {
-		//Log.d(TAG, String.format("Fetched %s canteen items", canteenList.size()));
+	protected void onPostExecuteFinished() {	
+		Log.d(TAG, String.format("Fetched %s canteen items", canteens.size()));
 		
 		// notify that we are done
 		fetchListener.onCanteenFetchFinished(this);

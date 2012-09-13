@@ -54,7 +54,7 @@ public class DynamicPreference extends MultiSelectListPreference {
     }
 
 	private void initializeValues() {
-		HashMap<String, Canteen> canteens = SettingsProvider.getAvailableCanteens(context);
+		HashMap<String, Canteen> canteens = SettingsProvider.getCanteens(context);
     	ArrayList<CharSequence> entriesList = new ArrayList<CharSequence>();
     	ArrayList<CharSequence> entryValuesList = new ArrayList<CharSequence>();
     	

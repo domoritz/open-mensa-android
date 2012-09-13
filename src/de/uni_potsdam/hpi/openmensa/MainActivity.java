@@ -2,8 +2,6 @@ package de.uni_potsdam.hpi.openmensa;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Set;
 
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
@@ -36,10 +34,12 @@ import android.widget.SpinnerAdapter;
 import com.google.gson.Gson;
 
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
+import de.uni_potsdam.hpi.openmensa.api.Canteens;
 import de.uni_potsdam.hpi.openmensa.api.Meal;
 
 public class MainActivity extends FragmentActivity implements
-		OnSharedPreferenceChangeListener, OnNavigationListener, OnFinishedFetchingCanteensListener {
+		OnSharedPreferenceChangeListener, OnNavigationListener,
+		OnFinishedFetchingCanteensListener, OnFinishedFetchingMealsListener {
 
 	public static final String TAG = "Canteendroid";
 	public static final Boolean LOGV = true;
@@ -49,8 +49,7 @@ public class MainActivity extends FragmentActivity implements
 	private int mMonth;
 	private int mDay;
 
-	// TODO: use Canteens object, (see comments in SettingsProvider)
-	private HashMap<String, Canteen> availableCanteens = new HashMap<String, Canteen>();
+	private Canteens canteens = new Canteens();
 	private ArrayList<Canteen> activeCanteens = new ArrayList<Canteen>();
 	private String displayedCanteenId = "1";
 	private int displayedCanteenPosition = 0;
@@ -93,14 +92,14 @@ public class MainActivity extends FragmentActivity implements
 		mMonth = c.get(Calendar.MONTH);
 		mDay = c.get(Calendar.DAY_OF_MONTH);
 
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
-		//reload();
+		
+		// async
+		refreshAvailableCanteens();
 	}
 
 	/**
@@ -111,17 +110,13 @@ public class MainActivity extends FragmentActivity implements
 	private void refreshActiveCanteens() {
 		Log.d(TAG, "Refresh active canteen list");
 
-		Set<String> set = SettingsProvider.getActiveCanteens(this);
-
-		if (set.size() > 0) {
-			for (String key : set) {
-				if (availableCanteens.containsKey(key)) {
-					activeCanteens.add(availableCanteens.get(key));
-				} else {
-					Log.w(TAG, String.format("Active canteen's index %s not found in available canteens!", key));
-				}				
+		for (Canteen canteen : canteens.values()) {
+			if (canteen.isActive()) {
+				activeCanteens.add(canteen);
 			}
 		}
+		
+		Log.d(TAG, String.format("%s active canteens", activeCanteens.size()));
 		
 		ActionBar actionBar = getActionBar();
 		spinnerAdapter = new ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, activeCanteens);
@@ -133,8 +128,6 @@ public class MainActivity extends FragmentActivity implements
 	 * Refreshes the available canteens list
 	 */
 	private void refreshAvailableCanteens() {
-		Log.d(TAG, "Refresh available canteen list");
-		
 		// load available canteens from settings and afterwards refetch the list from server
 		// TODO: should be avoided by caching..., 
 		// TODO: but still needs to refresh the view and set the available canteens
@@ -142,20 +135,35 @@ public class MainActivity extends FragmentActivity implements
 		String baseUrl = SettingsProvider.getSourceUrl(this);
 		String url = baseUrl + "canteens";
 		
-		RetrieveCanteenFeedTask task = new RetrieveCanteenFeedTask(this, this);
+		RetrieveFeedTask task = new RetrieveCanteenFeedTask(this, this);
 		task.execute(new String[] { url });
+	}
+	
+	/**
+	 * Gets the canteens from the shared preferences without fetching
+	 */
+	public void getCanteensFromStorage() {
+		canteens = SettingsProvider.getCanteens(this);
 	}
 	
 	@Override
 	public void onCanteenFetchFinished(RetrieveCanteenFeedTask task) {
-		// TODO don't pass json
-		SettingsProvider.setAvailableCanteens(this, task.getFetchedJSON());
-		
-		availableCanteens.clear();
-		availableCanteens.putAll(SettingsProvider.getAvailableCanteens(this));
-		Log.d(TAG, String.format("Saved %s canteens", availableCanteens.size()));
+		canteens = task.getCanteens();
+		SettingsProvider.setCanteens(this, canteens);
+		SettingsProvider.refreshActiveCanteens(this);
 		
 		refreshActiveCanteens();
+	}
+	
+	public void fetchMealFeed() {
+		//RetrieveFeedTask task = new RetrieveMealFeedTask(this.getActivity(), this);
+		//task.execute(new String[] { "source_url" });
+	}
+	
+	@Override
+	public void onMealFetchFinished(RetrieveMealFeedTask task) {
+		//listItems.addAll(task.getMealList());
+		//adapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -202,8 +210,12 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		if (key.equals(SettingsProvider.KEY_ACTIVE_CANTEENS)
-				|| key.equals(SettingsProvider.KEY_SOURCE_URL)) {
+		if (key.equals(SettingsProvider.KEY_ACTIVE_CANTEENS)) {
+			// when changed in settings -> also change in canteens object
+			SettingsProvider.refreshActiveCanteens(this);
+			refreshActiveCanteens();
+		}
+		if (key.equals(SettingsProvider.KEY_SOURCE_URL)) {
 			reload();
 		}
 	}
@@ -249,11 +261,11 @@ public class MainActivity extends FragmentActivity implements
 							}).setTitle("Not Connected").setMessage(
 							"You are not connected to the Internet.");
 		} else {
+			// fetch menu feed and maybe canteens
+			
 			// async
 			refreshAvailableCanteens();
 		}
-		
-		refreshActiveCanteens();
 
 //		int index = mViewPager.getCurrentItem();
 //		mSectionsPagerAdapter.getItem(index);
@@ -309,7 +321,7 @@ public class MainActivity extends FragmentActivity implements
 	 * A fragment representing a section of the app, that displays the Meals for
 	 * one Day.
 	 */
-	public static class DaySectionFragment extends ListFragment implements OnFinishedFetchingMealsListener {
+	public static class DaySectionFragment extends ListFragment{
 		public DaySectionFragment() {
 		}
 
@@ -360,25 +372,11 @@ public class MainActivity extends FragmentActivity implements
 
 			// Assign adapter to ListView
 			setListAdapter(adapter);
-
-			// TODO: don't fetch the meals here, use a prefetched dictionary
-			fetchMealFeed();
 		}
 
 		@Override
 		public void onListItemClick(ListView l, View v, int position, long id) {
 			Log.i("FragmentList", "Item clicked: " + id);
-		}
-
-		public void fetchMealFeed() {
-			RetrieveFeedTask task = new RetrieveMealFeedTask(this.getActivity(), this);
-			task.execute(new String[] { url });
-		}
-		
-		@Override
-		public void onMealFetchFinished(RetrieveMealFeedTask task) {
-			listItems.addAll(task.getMealList());
-			adapter.notifyDataSetChanged();
 		}
 	}
 }

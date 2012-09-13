@@ -23,9 +23,20 @@ public class Canteen {
 	@SerializedName("latitude")
 	public Float latitude;
 	
+	// only for internal usage
+	@SerializedName("active")
+	public Boolean active;
+	
 	public Canteen(String key, String name) {
 		this.name = name;
 		this.key = key;
+	}
+	
+	public Boolean isActive() {
+		if (active != null) {
+			return active;
+		}
+		return false;
 	}
 
 	@Override

@@ -5,16 +5,16 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.util.Log;
 import de.uni_potsdam.hpi.openmensa.api.Meal;
-import de.uni_potsdam.hpi.openmensa.api.WrappedMeal;
 
 /**
  * 
  * @author dominik
  */
-class RetrieveMealFeedTask extends RetrieveFeedTask {
+public class RetrieveMealFeedTask extends RetrieveFeedTask {
 
 	private ArrayList<Meal> mealList;
 	private OnFinishedFetchingMealsListener fetchListener;
+	protected String name = "Meals";
 
 	public RetrieveMealFeedTask(Context context, OnFinishedFetchingMealsListener fetchListener) {
 		super(context);
@@ -26,10 +26,10 @@ class RetrieveMealFeedTask extends RetrieveFeedTask {
 		return mealList;
 	}
 	
-	protected void parseFromJSON(String string) {
-		WrappedMeal[] meals = gson.fromJson(string, WrappedMeal[].class);
-		for(WrappedMeal wrappedMeal : meals) {
-			mealList.add(wrappedMeal.meal);
+	protected void parseFromJSON() {
+		Meal[] meals = gson.fromJson(getFetchedJSON(), Meal[].class);
+		for(Meal meal : meals) {
+			mealList.add(meal);
 		}
 	}
 

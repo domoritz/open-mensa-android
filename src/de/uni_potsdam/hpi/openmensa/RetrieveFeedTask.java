@@ -21,22 +21,28 @@ import com.google.gson.Gson;
  * 
  * @author dominik
  */
-abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Integer> {
+public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Integer> {
 	private Exception exception;
 	private ProgressDialog dialog;
 	private Builder builder;
 	protected Context context;
 	protected Gson gson = new Gson();
 	
+	protected String name = "";
+	
 	public static final String TAG = MainActivity.TAG;
 	public static final Boolean LOGV = MainActivity.LOGV;
 
 	private final int DEFAULT_BUFFER_SIZE = 1024;
+	protected String fetchedJSON;
 
 	public RetrieveFeedTask(Context context) {
 		// progress dialog
 		dialog = new ProgressDialog(context);
-		dialog.setMessage("Fetching");
+		dialog.setTitle("Fetching ...");
+		if (name.length() > 0) {
+			dialog.setMessage(String.format("Fetching the %s", name));
+		}
 		dialog.setIndeterminate(false);
 		dialog.setMax(100);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -58,7 +64,7 @@ abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Integer> {
 		dialog.show();
 	}
 
-	protected abstract void parseFromJSON(String string);
+	protected abstract void parseFromJSON();
 
 	protected Integer doInBackground(String... urls) {
 		for (String url : urls) {
@@ -88,12 +94,17 @@ abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Integer> {
 					builder.append(buf, 0, count);
 				}
 
-				parseFromJSON(builder.toString());
+				handleJson(builder.toString());
 			} catch (Exception ex) {
 				this.exception = ex;
 			}
 		}
 		return urls.length;
+	}
+
+	private void handleJson(String string) {
+		fetchedJSON = string;
+		parseFromJSON();
 	}
 
 	protected void onProgressUpdate(Integer... progress) {
@@ -124,5 +135,9 @@ abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Integer> {
 		builder.setTitle(ex.getClass().getName());
 		builder.setMessage(ex.toString());
 		builder.show();
+	}
+
+	public String getFetchedJSON() {
+		return fetchedJSON;
 	}
 }
