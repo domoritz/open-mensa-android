@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:threefiftyprefs="http://schemas.android.com/apk/res/de.uni_potsdam.hpi.openmensa">
     <PreferenceCategory android:title="@string/source_title">
         <de.uni_potsdam.hpi.openmensa.DynamicPreference
  			android:title="@string/canteen_title" 

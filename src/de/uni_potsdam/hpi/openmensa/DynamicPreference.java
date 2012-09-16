@@ -22,6 +22,7 @@ import android.widget.ListView;
  *
  * TODO: give this a better name or better make it abstract and build a 
  * 		separate preference where entries and entyValues has a concrete implementation
+ * TODO: use ListPreferenceMultiSelect as it is compatible with older versions
  */
 public class DynamicPreference extends MultiSelectListPreference {
 
@@ -57,6 +58,9 @@ public class DynamicPreference extends MultiSelectListPreference {
 		HashMap<String, Canteen> canteens = SettingsProvider.getStorage(context).getCanteens();
     	ArrayList<CharSequence> entriesList = new ArrayList<CharSequence>();
     	ArrayList<CharSequence> entryValuesList = new ArrayList<CharSequence>();
+    	
+    	//entriesList.add("Select all");
+    	//entryValuesList.add("#ALL#");
     	
         for (Canteen canteen : canteens.values()) {
         	entriesList.add(canteen.name);
