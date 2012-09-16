@@ -38,7 +38,17 @@ public class Storage {
 		return false;
 	}
 	
+	public Canteens getCanteens(Context context) {
+		if (canteens == null) {
+			refreshStorage(context);
+		}
+		return canteens;
+	}
+	
 	public Canteens getCanteens() {
+		if (canteens == null) {
+			return new Canteens();
+		}
 		return canteens;
 	}
 	
@@ -47,7 +57,7 @@ public class Storage {
 	}
 
 	public void saveCanteens(Context context, Canteens canteens) {
-		this.canteens = canteens;
+		setCanteens(canteens);
 		lastUpdate = Calendar.getInstance();
 		
 		SettingsProvider.setStorage(context, this);

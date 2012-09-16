@@ -1,7 +1,9 @@
 package de.uni_potsdam.hpi.openmensa;
 
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 
 /**
  * The fragment that displays the preferences.

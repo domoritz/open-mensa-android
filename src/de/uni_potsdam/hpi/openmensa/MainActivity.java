@@ -15,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -55,6 +56,8 @@ public class MainActivity extends FragmentActivity implements
 	private int displayedCanteenPosition = 0;
 	private SpinnerAdapter spinnerAdapter;
 	
+	static Context context;
+	
 	Gson gson = new Gson();
 
 	/**
@@ -76,6 +79,9 @@ public class MainActivity extends FragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		context = this;
+		
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections
 		// of the app.
@@ -109,12 +115,25 @@ public class MainActivity extends FragmentActivity implements
 	 * TODO: should wait for completion of refreshAvailableCanteens()
 	 */
 	private void refreshActiveCanteens() {
-		Log.d(TAG, "Refresh active canteen list");
-
-		for (Canteen canteen : storage.getCanteens().values()) {
+		Log.d(TAG, "Refreshing active canteen list");
+		
+		for (Canteen canteen : storage.getCanteens(this).values()) {
 			if (canteen.isFavourite()) {
 				activeCanteens.add(canteen);
 			}
+		}
+		
+		if (activeCanteens.size() == 0) {
+			new AlertDialog.Builder(this)
+			.setTitle("No active canteens.")
+			.setMessage("You have not yet set any active canteens. Please select at least one.")
+			.setNeutralButton("Ok",
+			new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				Intent settings = new Intent(MainActivity.context, SettingsActivity.class);
+				startActivity(settings);
+			}
+			}).show();
 		}
 		
 		Log.d(TAG, String.format("%s active canteens", activeCanteens.size()));
