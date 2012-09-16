@@ -15,7 +15,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -35,7 +34,6 @@ import android.widget.SpinnerAdapter;
 import com.google.gson.Gson;
 
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
-import de.uni_potsdam.hpi.openmensa.api.Canteens;
 import de.uni_potsdam.hpi.openmensa.api.Meal;
 
 public class MainActivity extends FragmentActivity implements

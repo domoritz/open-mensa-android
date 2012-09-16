@@ -84,13 +84,15 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 				// content length is sometimes not sent
 				if (fileLength < 0) {
 					dialog.setIndeterminate(true);
+				} else {
+					dialog.setMax((int) fileLength);
 				}
 
 				char buf[] = new char[DEFAULT_BUFFER_SIZE];
 				while ((count = in.read(buf, 0, DEFAULT_BUFFER_SIZE)) > 0) {
 					total += count;
 					// publishing the progress....
-					publishProgress((int) (total * 100 / fileLength));
+					publishProgress((int) (fileLength));
 					builder.append(buf, 0, count);
 				}
 

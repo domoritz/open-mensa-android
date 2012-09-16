@@ -11,7 +11,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
-import de.uni_potsdam.hpi.openmensa.api.Canteens;
 
 /**
  * Provides simple methods to access shared settings.
