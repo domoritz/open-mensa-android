@@ -37,16 +37,16 @@ public class SettingsProvider {
     	return url;
     }
     
-    public static Canteens getCanteens(Context context) {
+    public static Storage getStorage(Context context) {
     	// Throws ClassCastException if there is a preference with this name that is not a Set.
-    	Canteens canteens = new Canteens();
     	String json = getSharedPrefs(context).getString(KEY_CANTEENS, "{}");
-    	canteens = gson.fromJson(json, Canteens.class);
-		return canteens;
+    	Storage storage = gson.fromJson(json, Storage.class);
+		return storage;
     }
     
-    public static void setCanteens(Context context, Canteens canteens) {
-    	String json = gson.toJson(canteens);
+    public static void setStorage(Context context, Storage storage) {
+    	String json = gson.toJson(storage);
+    	Log.d("json", json);
     	SharedPreferences.Editor editor = getSharedPrefs(context).edit();
     	editor.putString(SettingsProvider.KEY_CANTEENS, json);
     	editor.commit();
@@ -58,10 +58,10 @@ public class SettingsProvider {
      */
 	public static void refreshActiveCanteens(Context context) {
 		Set<String> activeCanteensKeys = getSharedPrefs(context).getStringSet(KEY_ACTIVE_CANTEENS, new HashSet<String>());
-		Canteens canteens = getCanteens(context);
-		for (Canteen canteen : canteens.values()) {
-			canteen.active = activeCanteensKeys.contains(canteen.key);
+		Storage storage = getStorage(context);
+		for (Canteen canteen : storage.canteens.values()) {
+			canteen.favourite = activeCanteensKeys.contains(canteen.key);
 		}
-		setCanteens(context, canteens);
+		setStorage(context, storage);
 	}
 }

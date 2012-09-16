@@ -49,7 +49,7 @@ public class MainActivity extends FragmentActivity implements
 	private int mMonth;
 	private int mDay;
 
-	private Canteens canteens = new Canteens();
+	private Storage storage = new Storage();
 	private ArrayList<Canteen> activeCanteens = new ArrayList<Canteen>();
 	private String displayedCanteenId = "1";
 	private int displayedCanteenPosition = 0;
@@ -98,7 +98,6 @@ public class MainActivity extends FragmentActivity implements
 		ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		
-		getCanteensFromStorage();
 		reload();
 		
 		refreshActiveCanteens();
@@ -112,8 +111,8 @@ public class MainActivity extends FragmentActivity implements
 	private void refreshActiveCanteens() {
 		Log.d(TAG, "Refresh active canteen list");
 
-		for (Canteen canteen : canteens.values()) {
-			if (canteen.isActive()) {
+		for (Canteen canteen : storage.getCanteens().values()) {
+			if (canteen.isFavourite()) {
 				activeCanteens.add(canteen);
 			}
 		}
@@ -141,17 +140,9 @@ public class MainActivity extends FragmentActivity implements
 		task.execute(new String[] { url });
 	}
 	
-	/**
-	 * Gets the canteens from the shared preferences without fetching
-	 */
-	public void getCanteensFromStorage() {
-		canteens = SettingsProvider.getCanteens(this);
-	}
-	
 	@Override
 	public void onCanteenFetchFinished(RetrieveCanteenFeedTask task) {
-		// don't overwrite canteens metadata
-		canteens.setData(this, task.getCanteens());
+		storage.saveCanteens(this, task.getCanteens());
 		
 		refreshActiveCanteens();
 	}
@@ -252,6 +243,8 @@ public class MainActivity extends FragmentActivity implements
 	 * TODO: make it work
 	 */
 	private void reload() {
+		storage.refreshStorage(this);
+		
 		if (!isOnline(MainActivity.this)) {
 			new AlertDialog.Builder(MainActivity.this)
 					.setNegativeButton("Okay",
@@ -264,7 +257,7 @@ public class MainActivity extends FragmentActivity implements
 		} else {
 			// fetch menu feed and maybe canteens
 			
-			if (canteens.isOutOfDate()) {
+			if (storage.isOutOfDate()) {
 				Log.d(TAG, "Fetch canteens because storage is out of date");
 				// async
 				refreshAvailableCanteens();

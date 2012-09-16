@@ -24,17 +24,17 @@ public class Canteen {
 	public Float latitude;
 	
 	// app only, not api
-	@SerializedName("active")
-	public Boolean active;
+	@SerializedName("favourite")
+	public Boolean favourite;
 	
 	public Canteen(String key, String name) {
 		this.name = name;
 		this.key = key;
 	}
 	
-	public Boolean isActive() {
-		if (active != null) {
-			return active;
+	public Boolean isFavourite() {
+		if (favourite != null) {
+			return favourite;
 		}
 		return false;
 	}
