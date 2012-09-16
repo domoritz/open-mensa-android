@@ -49,9 +49,6 @@ public class MainActivity extends FragmentActivity implements
 	private int mDay;
 
 	private Storage storage = new Storage();
-	private ArrayList<Canteen> activeCanteens = new ArrayList<Canteen>();
-	private String displayedCanteenId = "1";
-	private int displayedCanteenPosition = 0;
 	private SpinnerAdapter spinnerAdapter;
 	
 	static Context context;
@@ -106,6 +103,12 @@ public class MainActivity extends FragmentActivity implements
 		
 		refreshActiveCanteens();
 	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		storage.flush(this);
+	}
 
 	/**
 	 * Refreshes the canteens in the action bar
@@ -115,11 +118,7 @@ public class MainActivity extends FragmentActivity implements
 	private void refreshActiveCanteens() {
 		Log.d(TAG, "Refreshing active canteen list");
 		
-		for (Canteen canteen : storage.getCanteens(this).values()) {
-			if (canteen.isFavourite()) {
-				activeCanteens.add(canteen);
-			}
-		}
+		ArrayList<Canteen> activeCanteens = storage.getActiveCanteens();
 		
 		if (activeCanteens.size() == 0) {
 			new AlertDialog.Builder(this)
@@ -139,7 +138,13 @@ public class MainActivity extends FragmentActivity implements
 		ActionBar actionBar = getActionBar();
 		spinnerAdapter = new ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, activeCanteens);
 		actionBar.setListNavigationCallbacks(spinnerAdapter, this);
-		actionBar.setSelectedNavigationItem(displayedCanteenPosition);
+		
+		Canteen curr = storage.getCurrentCanteen();
+		if(curr != null) {
+			Log.d(TAG, curr.toString());
+			int displayedCanteenPosition = activeCanteens.indexOf(curr);
+			actionBar.setSelectedNavigationItem(displayedCanteenPosition);
+		}
 	}
 
 	/**
@@ -185,10 +190,9 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		Canteen c = activeCanteens.get(itemPosition);
-		Log.d(TAG, String.format("Chose canteen %s", c));
-		displayedCanteenId = c.key;
-		displayedCanteenPosition = itemPosition;
+		Canteen c = storage.getActiveCanteens().get(itemPosition);
+		Log.d(TAG, String.format("Chose canteen %s", c.key));
+		storage.setCurrentCanteen(c);
 		// TODO: need to refresh the view
 		return false;
 	}
@@ -304,7 +308,7 @@ public class MainActivity extends FragmentActivity implements
 			Bundle args = new Bundle();
 
 			String urlPattern = SettingsProvider.getSourceUrl(MainActivity.this);
-			String url = String.format(urlPattern + "canteens/%s/meals", displayedCanteenId);
+			String url = String.format(urlPattern + "canteens/%s/meals", 0);
 
 			args.putString(DaySectionFragment.ARG_URL, url);
 			args.putInt(DaySectionFragment.ARG_SECTION_NUMBER, i + 1);

@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.openmensa;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
+import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.Canteens;
 
 /**
@@ -19,6 +21,9 @@ import de.uni_potsdam.hpi.openmensa.api.Canteens;
 public class Storage {
 	@SerializedName("canteens")
 	Canteens canteens;
+	
+	@SerializedName("currentCanteen")
+	public String currentCanteen;
 	
 	@SerializedName("lastUpdate")
 	public Calendar lastUpdate;
@@ -60,16 +65,55 @@ public class Storage {
 		setCanteens(canteens);
 		lastUpdate = Calendar.getInstance();
 		
-		SettingsProvider.setStorage(context, this);
+		flush(context);
 		SettingsProvider.refreshActiveCanteens(context);
+	}
+	
+	public ArrayList<Canteen> getActiveCanteens() {
+		ArrayList<Canteen> activeCanteens = new ArrayList<Canteen>();
+		for (Canteen canteen : getCanteens().values()) {
+			if (canteen.isFavourite()) {
+				activeCanteens.add(canteen);
+			}
+		}
+		return activeCanteens;
 	}
 
 	/**
 	 * Gets the canteens from the shared preferences without fetching
+	 * opposite: flush
 	 */
 	public void refreshStorage(Context context) {
 		Storage storage = SettingsProvider.getStorage(context);
-		canteens = storage.getCanteens();
+		canteens = storage.canteens;
 		lastUpdate = storage.lastUpdate;
+		currentCanteen = storage.currentCanteen;
 	}
+	
+	/**
+	 * saves the storage object in the shared preferences
+	 * opposite: refreshStorage
+	 * 
+	 * @param context
+	 */
+	public void flush(Context context) {
+		SettingsProvider.setStorage(context, this);
+	}
+
+	public void setCurrentCanteen(Canteen c) {
+		currentCanteen = c.key;
+	}
+
+	public Canteen getCurrentCanteen() {
+		if (currentCanteen == null) {
+			if (currentCanteen != null && currentCanteen.length() > 0) {
+				currentCanteen = getActiveCanteens().get(0).key;
+			} else {
+				return null;
+			}	
+		}
+		return getCanteens().get(currentCanteen);
+	}
+	
+	
 }
