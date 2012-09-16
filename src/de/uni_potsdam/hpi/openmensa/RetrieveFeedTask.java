@@ -92,7 +92,7 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 				while ((count = in.read(buf, 0, DEFAULT_BUFFER_SIZE)) > 0) {
 					total += count;
 					// publishing the progress....
-					publishProgress((int) (fileLength));
+					publishProgress((int) (total));
 					builder.append(buf, 0, count);
 				}
 
