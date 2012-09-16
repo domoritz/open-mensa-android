@@ -1,9 +1,7 @@
 package de.uni_potsdam.hpi.openmensa;
 
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceScreen;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 

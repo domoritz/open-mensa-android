@@ -1,12 +1,9 @@
 package de.uni_potsdam.hpi.openmensa;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.util.Log;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.Canteens;
-import de.uni_potsdam.hpi.openmensa.api.Meal;
 
 /**
  * 

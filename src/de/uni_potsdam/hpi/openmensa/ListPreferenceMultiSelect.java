@@ -12,7 +12,6 @@ import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.preference.ListPreference;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ListView;
 
 /**
@@ -34,7 +33,6 @@ import android.widget.ListView;
 public class ListPreferenceMultiSelect extends ListPreference {
 	private String separator;
 	private static final String DEFAULT_SEPARATOR = "OV=I=XseparatorX=I=VO"; 
-	private static final String LOG_TAG = "ListPreferenceMultiSelect";
 	private String checkAllKey = null;
 	private boolean[] mClickedDialogEntryIndices;
 	
