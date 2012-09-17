@@ -4,13 +4,15 @@ import android.content.Context;
 import android.util.Log;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.Canteens;
+import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener;
+import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
 
 /**
  * 
  * @author dominik
  * TODO: Parse the feed and write into the Hash instead of only saving the json
  */
-class RetrieveCanteenFeedTask extends RetrieveFeedTask {
+public class RetrieveCanteenFeedTask extends RetrieveFeedTask {
 	
 	private Canteens canteens;
 	private OnFinishedFetchingCanteensListener fetchListener;

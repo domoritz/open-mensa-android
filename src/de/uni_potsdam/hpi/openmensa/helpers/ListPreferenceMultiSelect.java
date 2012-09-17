@@ -1,9 +1,12 @@
-package de.uni_potsdam.hpi.openmensa;
+package de.uni_potsdam.hpi.openmensa.helpers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
+import de.uni_potsdam.hpi.openmensa.R;
+import de.uni_potsdam.hpi.openmensa.R.styleable;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;

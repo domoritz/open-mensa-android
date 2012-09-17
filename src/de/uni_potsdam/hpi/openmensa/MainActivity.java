@@ -27,6 +27,12 @@ import android.widget.SpinnerAdapter;
 import com.google.gson.Gson;
 
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
+import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsActivity;
+import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsProvider;
+import de.uni_potsdam.hpi.openmensa.api.preferences.Storage;
+import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener;
+import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingMealsListener;
+import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
 
 public class MainActivity extends FragmentActivity implements
 		OnSharedPreferenceChangeListener, OnNavigationListener,

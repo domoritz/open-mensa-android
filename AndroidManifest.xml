@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".api.preferences.SettingsActivity"
             android:label="@string/title_activity_preferences" >
             
             <intent-filter>

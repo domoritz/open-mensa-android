@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.openmensa;
+package de.uni_potsdam.hpi.openmensa.api.preferences;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;

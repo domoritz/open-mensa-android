@@ -1,5 +1,7 @@
-package de.uni_potsdam.hpi.openmensa;
+package de.uni_potsdam.hpi.openmensa.api.preferences;
 
+import de.uni_potsdam.hpi.openmensa.R;
+import de.uni_potsdam.hpi.openmensa.R.xml;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 

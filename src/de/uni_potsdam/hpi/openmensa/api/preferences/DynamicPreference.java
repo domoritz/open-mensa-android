@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.openmensa;
+package de.uni_potsdam.hpi.openmensa.api.preferences;
 
 import java.util.ArrayList;
 import java.util.HashMap;

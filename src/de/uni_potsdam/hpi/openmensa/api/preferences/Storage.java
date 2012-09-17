@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.openmensa;
+package de.uni_potsdam.hpi.openmensa.api.preferences;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
+import de.uni_potsdam.hpi.openmensa.MainActivity;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.Canteens;
 

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.util.Log;
 import de.uni_potsdam.hpi.openmensa.api.Meal;
+import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingMealsListener;
+import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
 
 /**
  * 

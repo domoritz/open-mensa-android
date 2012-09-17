@@ -1,4 +1,6 @@
-package de.uni_potsdam.hpi.openmensa;
+package de.uni_potsdam.hpi.openmensa.helpers;
+
+import de.uni_potsdam.hpi.openmensa.RetrieveCanteenFeedTask;
 
 public interface OnFinishedFetchingCanteensListener {
 	

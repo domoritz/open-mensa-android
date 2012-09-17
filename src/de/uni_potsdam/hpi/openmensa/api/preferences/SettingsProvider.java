@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.openmensa;
+package de.uni_potsdam.hpi.openmensa.api.preferences;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +10,8 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import de.uni_potsdam.hpi.openmensa.R;
+import de.uni_potsdam.hpi.openmensa.R.string;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 
 /**

@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.openmensa;
+package de.uni_potsdam.hpi.openmensa.helpers;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -14,6 +14,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
+
+import de.uni_potsdam.hpi.openmensa.MainActivity;
 
 /**
  * An abstract feed fetcher. Override the parseFromJSON and
