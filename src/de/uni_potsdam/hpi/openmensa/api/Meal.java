@@ -21,8 +21,8 @@ public class Meal {
 	@SerializedName("date")
 	public String date;
 	
-	public Meal(String name, String date) {
+	public Meal(String category, String name) {
+		this.category = category;
 		this.name = name;
-		this.date = date;
 	}
 }

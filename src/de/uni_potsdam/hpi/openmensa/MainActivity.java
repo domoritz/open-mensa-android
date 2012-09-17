@@ -48,7 +48,7 @@ public class MainActivity extends FragmentActivity implements
 	private int mMonth;
 	private int mDay;
 
-	private Storage storage = new Storage();
+	private static Storage storage = new Storage();
 	private SpinnerAdapter spinnerAdapter;
 	
 	static Context context;
@@ -267,14 +267,12 @@ public class MainActivity extends FragmentActivity implements
 		storage.refreshStorage(this);
 		
 		if (!isOnline(MainActivity.this)) {
-			new AlertDialog.Builder(MainActivity.this)
-					.setNegativeButton("Okay",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int id) {
-									dialog.cancel();
-								}
-							}).setTitle("Not Connected").setMessage(
-							"You are not connected to the Internet.");
+			new AlertDialog.Builder(MainActivity.this).setNegativeButton("Okay",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				}).setTitle("Not Connected").setMessage("You are not connected to the Internet.");
 		} else {
 			// fetch menu feed and maybe canteens
 			
@@ -307,11 +305,7 @@ public class MainActivity extends FragmentActivity implements
 			Fragment fragment = new DaySectionFragment();
 			Bundle args = new Bundle();
 
-			String urlPattern = SettingsProvider.getSourceUrl(MainActivity.this);
-			String url = String.format(urlPattern + "canteens/%s/meals", 0);
-
-			args.putString(DaySectionFragment.ARG_URL, url);
-			args.putInt(DaySectionFragment.ARG_SECTION_NUMBER, i + 1);
+			args.putString(DaySectionFragment.ARG_DATE, "2012-09-17");
 			fragment.setArguments(args);
 			return fragment;
 		}
@@ -343,14 +337,11 @@ public class MainActivity extends FragmentActivity implements
 		public DaySectionFragment() {
 		}
 
-		public static final String ARG_URL = "source_url";
-		public static final String ARG_SECTION_NUMBER = "number";
-		public static final String ARG_MENSA_NAME = "Griebnitzsee";
-		ArrayList<Meal> listItems;
+		public static final String ARG_DATE = "date";
+		private ArrayList<Meal> listItems;
+		private String date;
 		MealAdapter adapter;
-
-		String url, mensaName;
-		int section_number;
+		private Canteen canteen;
 
 		/**
 		 * When creating, retrieve this instance's number from its arguments.
@@ -360,9 +351,8 @@ public class MainActivity extends FragmentActivity implements
 			super.onCreate(savedInstanceState);
 			Bundle args = getArguments();
 
-			url = args.getString(ARG_URL);
-			section_number = args.getInt(ARG_SECTION_NUMBER);
-			mensaName = args.getString(ARG_MENSA_NAME);
+			canteen = MainActivity.storage.getCurrentCanteen();
+			date = args.getString(ARG_DATE);
 		}
 
 		/**
@@ -390,6 +380,10 @@ public class MainActivity extends FragmentActivity implements
 
 			// Assign adapter to ListView
 			setListAdapter(adapter);
+			
+			ArrayList<Meal> meals = canteen.getMeals(date);
+			listItems.addAll(meals);
+			adapter.notifyDataSetChanged();
 		}
 
 		@Override
