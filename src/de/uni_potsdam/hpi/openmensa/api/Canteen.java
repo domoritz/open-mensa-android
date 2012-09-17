@@ -48,7 +48,7 @@ public class Canteen {
 	
 	public ArrayList<Meal> getMeals(String date) {
 		ArrayList<Meal> meals = new ArrayList<Meal>();
-		meals.add(new Meal("great", "today"));
+		meals.add(new Meal(name, "Backfisch mit Remouladensauce(1)(9), dazu Pommes frites und Gurkensalat mit frischem Dill"));
 		return meals;
 	}
 }

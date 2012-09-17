@@ -15,26 +15,18 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.SpinnerAdapter;
 
 import com.google.gson.Gson;
 
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
-import de.uni_potsdam.hpi.openmensa.api.Meal;
 
 public class MainActivity extends FragmentActivity implements
 		OnSharedPreferenceChangeListener, OnNavigationListener,
@@ -48,7 +40,7 @@ public class MainActivity extends FragmentActivity implements
 	private int mMonth;
 	private int mDay;
 
-	private static Storage storage = new Storage();
+	static Storage storage = new Storage();
 	private SpinnerAdapter spinnerAdapter;
 	
 	static Context context;
@@ -63,12 +55,12 @@ public class MainActivity extends FragmentActivity implements
 	 * intensive, it may be best to switch to a
 	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
 	 */
-	SectionsPagerAdapter mSectionsPagerAdapter;
+	SectionsPagerAdapter sectionsPagerAdapter;
 
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
-	ViewPager mViewPager;
+	ViewPager viewPager;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,15 +69,7 @@ public class MainActivity extends FragmentActivity implements
 		
 		context = this;
 		
-		// Create the adapter that will return a fragment for each of the three
-		// primary sections
-		// of the app.
-		mSectionsPagerAdapter = new SectionsPagerAdapter(
-				getSupportFragmentManager());
-
-		// Set up the ViewPager with the sections adapter.
-		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(mSectionsPagerAdapter);
+		createSectionsPageAdapter();
 
 		// get the current date
 		final Calendar c = Calendar.getInstance();
@@ -103,11 +87,32 @@ public class MainActivity extends FragmentActivity implements
 		
 		refreshActiveCanteens();
 	}
+
+	private void createSectionsPageAdapter() {
+		// Create the adapter that will return a fragment for each day fragment views
+		sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+		// Set up the ViewPager with the sections adapter.
+		viewPager = (ViewPager) findViewById(R.id.pager);
+		viewPager.setAdapter(sectionsPagerAdapter);
+	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
 		storage.flush(this);
+	}
+	
+	/**
+	 * Change the current canteen
+	 * 
+	 * @param canteen
+	 */
+	public void changeCanteenTo(Canteen canteen) {
+		storage.setCurrentCanteen(canteen);
+		storage.flush(this);
+		
+		sectionsPagerAdapter.notifyDataSetChanged();
 	}
 
 	/**
@@ -186,13 +191,13 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	/**
-	 * Change the current canteen
+	 * Is called when another canteen is selected
 	 */
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 		Canteen c = storage.getActiveCanteens().get(itemPosition);
 		Log.d(TAG, String.format("Chose canteen %s", c.key));
-		storage.setCurrentCanteen(c);
+		this.changeCanteenTo(c);
 		// TODO: need to refresh the view
 		return false;
 	}
@@ -286,109 +291,5 @@ public class MainActivity extends FragmentActivity implements
 //		int index = mViewPager.getCurrentItem();
 //		mSectionsPagerAdapter.getItem(index);
 //		mSectionsPagerAdapter.notifyDataSetChanged();
-	}
-
-	/**
-	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-	 * one of the primary sections of the app.
-	 */
-	public class SectionsPagerAdapter extends FragmentPagerAdapter {
-		public SectionsPagerAdapter(FragmentManager fm) {
-			super(fm);
-		}
-
-		/**
-		 * Creates an Item
-		 */
-		@Override
-		public Fragment getItem(int i) {
-			Fragment fragment = new DaySectionFragment();
-			Bundle args = new Bundle();
-
-			args.putString(DaySectionFragment.ARG_DATE, "2012-09-17");
-			fragment.setArguments(args);
-			return fragment;
-		}
-
-		@Override
-		public int getCount() {
-			return 3;
-		}
-
-		@Override
-		public CharSequence getPageTitle(int position) {
-			switch (position) {
-				case 0:
-					return getString(R.string.title_section1).toUpperCase();
-				case 1:
-					return getString(R.string.title_section2).toUpperCase();
-				case 2:
-					return getString(R.string.title_section3).toUpperCase();
-			}
-			return null;
-		}
-	}
-
-	/**
-	 * A fragment representing a section of the app, that displays the Meals for
-	 * one Day.
-	 */
-	public static class DaySectionFragment extends ListFragment{
-		public DaySectionFragment() {
-		}
-
-		public static final String ARG_DATE = "date";
-		private ArrayList<Meal> listItems;
-		private String date;
-		MealAdapter adapter;
-		private Canteen canteen;
-
-		/**
-		 * When creating, retrieve this instance's number from its arguments.
-		 */
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			Bundle args = getArguments();
-
-			canteen = MainActivity.storage.getCurrentCanteen();
-			date = args.getString(ARG_DATE);
-		}
-
-		/**
-		 * The Fragment's UI is just a simple text view showing its instance
-		 * number.
-		 */
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-			View listView = inflater.inflate(R.layout.fragment_pager_list,
-					container, false);
-			// TextView titleView = (TextView)
-			// listView.findViewById(R.id.title);
-			// titleView.setText(mensaName);
-			return listView;
-		}
-
-		@Override
-		public void onActivityCreated(Bundle savedInstanceState) {
-			super.onActivityCreated(savedInstanceState);
-
-			listItems = new ArrayList<Meal>();
-
-			adapter = new MealAdapter(getActivity(), R.layout.list_item, listItems);
-
-			// Assign adapter to ListView
-			setListAdapter(adapter);
-			
-			ArrayList<Meal> meals = canteen.getMeals(date);
-			listItems.addAll(meals);
-			adapter.notifyDataSetChanged();
-		}
-
-		@Override
-		public void onListItemClick(ListView l, View v, int position, long id) {
-			Log.i("FragmentList", "Item clicked: " + id);
-		}
 	}
 }

@@ -100,8 +100,8 @@ public class Storage {
 		SettingsProvider.setStorage(context, this);
 	}
 
-	public void setCurrentCanteen(Canteen c) {
-		currentCanteen = c.key;
+	public void setCurrentCanteen(Canteen canteen) {
+		currentCanteen = canteen.key;
 	}
 
 	public Canteen getCurrentCanteen() {
