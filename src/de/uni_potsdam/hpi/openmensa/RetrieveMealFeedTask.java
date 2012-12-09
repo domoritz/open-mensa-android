@@ -28,8 +28,8 @@ public class RetrieveMealFeedTask extends RetrieveFeedTask {
 		return mealList;
 	}
 	
-	protected void parseFromJSON() {
-		Meal[] meals = gson.fromJson(getFetchedJSON(), Meal[].class);
+	protected void parseFromJSON(String jsonString) {
+		Meal[] meals = gson.fromJson(jsonString, Meal[].class);
 		for(Meal meal : meals) {
 			mealList.add(meal);
 		}

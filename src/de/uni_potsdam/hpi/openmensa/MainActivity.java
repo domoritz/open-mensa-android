@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.openmensa;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
@@ -16,7 +15,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
@@ -27,24 +25,23 @@ import android.widget.SpinnerAdapter;
 import com.google.gson.Gson;
 
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
+import de.uni_potsdam.hpi.openmensa.api.Day;
+import de.uni_potsdam.hpi.openmensa.api.Days;
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsActivity;
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsProvider;
 import de.uni_potsdam.hpi.openmensa.api.preferences.Storage;
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener;
-import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingMealsListener;
+import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener;
 import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
 
 public class MainActivity extends FragmentActivity implements
 		OnSharedPreferenceChangeListener, OnNavigationListener,
-		OnFinishedFetchingCanteensListener, OnFinishedFetchingMealsListener {
+		OnFinishedFetchingCanteensListener,
+		OnFinishedFetchingDaysListener {
 
 	public static final String TAG = "Canteendroid";
 	public static final Boolean LOGV = true;
 	public static final String PREFS_NAME = "CanteendroidPrefs";
-
-	private int mYear;
-	private int mMonth;
-	private int mDay;
 
 	static Storage storage = new Storage();
 	private SpinnerAdapter spinnerAdapter;
@@ -76,12 +73,6 @@ public class MainActivity extends FragmentActivity implements
 		context = this;
 		
 		createSectionsPageAdapter();
-
-		// get the current date
-		final Calendar c = Calendar.getInstance();
-		mYear = c.get(Calendar.YEAR);
-		mMonth = c.get(Calendar.MONTH);
-		mDay = c.get(Calendar.DAY_OF_MONTH);
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
@@ -133,15 +124,15 @@ public class MainActivity extends FragmentActivity implements
 		
 		if (activeCanteens.size() == 0) {
 			new AlertDialog.Builder(this)
-			.setTitle("No active canteens.")
-			.setMessage("You have not yet set any active canteens. Please select at least one.")
-			.setNeutralButton("Ok",
-			new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				Intent settings = new Intent(MainActivity.context, SettingsActivity.class);
-				startActivity(settings);
-			}
-			}).show();
+				.setTitle("No active canteens.")
+				.setMessage("You have not yet set any active canteens. Please select at least one.")
+				.setNeutralButton("Ok",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						Intent settings = new Intent(MainActivity.context, SettingsActivity.class);
+						startActivity(settings);
+					}
+				}).show();
 		}
 		
 		Log.d(TAG, String.format("%s active canteens", activeCanteens.size()));
@@ -180,15 +171,27 @@ public class MainActivity extends FragmentActivity implements
 		refreshActiveCanteens();
 	}
 	
-	public void fetchMealFeed() {
-		//RetrieveFeedTask task = new RetrieveMealFeedTask(this.getActivity(), this);
-		//task.execute(new String[] { "source_url" });
+	public void fetchDaysFeed() {
+		RetrieveFeedTask task = new RetrieveDaysFeedTask(context, this);
+		task.execute(new String[] { "source_url" });
 	}
 	
 	@Override
-	public void onMealFetchFinished(RetrieveMealFeedTask task) {
-		//listItems.addAll(task.getMealList());
-		//adapter.notifyDataSetChanged();
+	public void onDaysFetchFinished(RetrieveDaysFeedTask task) {
+		// TODO set date in fragments and refresh
+		int numberSection = sectionsPagerAdapter.getCount();
+		Days days = task.getDays();
+		assert numberSection == days.size();
+		
+		for (int position = 0; position < days.size(); position++) {
+			DaySectionFragment fragment = sectionsPagerAdapter.getItem(position);
+			Day day = days.get(position);
+			if (day.closed) {
+				Log.d(TAG, String.format("Canteen is closed on %s", day));
+			} else {
+				fragment.setDate(day.toString());
+			}
+		}
 	}
 
 	@Override

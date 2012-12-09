@@ -13,4 +13,9 @@ public class Day {
 	
 	@SerializedName("closed")
 	public Boolean closed;
+	
+	@Override
+	public String toString() {
+		return date;
+	}
 }

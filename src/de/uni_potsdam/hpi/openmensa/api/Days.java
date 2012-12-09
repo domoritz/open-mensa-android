@@ -1,10 +1,12 @@
 package de.uni_potsdam.hpi.openmensa.api;
 
+import java.util.ArrayList;
+
 /**
  * 
  * @author dominik
  *
  */
-public class Days {
-	Day[] days;
+@SuppressWarnings("serial")
+public class Days extends ArrayList<Day> {
 }

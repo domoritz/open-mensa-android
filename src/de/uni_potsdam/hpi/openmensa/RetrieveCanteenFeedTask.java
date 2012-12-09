@@ -22,14 +22,15 @@ public class RetrieveCanteenFeedTask extends RetrieveFeedTask {
 		super(context);
 		this.canteens = new Canteens();
 		this.fetchListener = fetchListener;
+		this.visible = true;
 	}
 	
 	public Canteens getCanteens() {
 		return canteens;
 	}
 	
-	protected void parseFromJSON()  {
-		Canteen[] canteens_arr = gson.fromJson(getFetchedJSON(), Canteen[].class);
+	protected void parseFromJSON(String jsonString)  {
+		Canteen[] canteens_arr = gson.fromJson(jsonString, Canteen[].class);
 		for(Canteen canteen : canteens_arr) {
 			canteens.put(canteen.key, canteen);
 		}

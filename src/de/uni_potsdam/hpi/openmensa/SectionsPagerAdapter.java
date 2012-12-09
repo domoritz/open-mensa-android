@@ -24,7 +24,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 		// TODO: use adapter properly
 		for (DaySectionFragment fragment : fragments) {
 			if (fragment != null) {
-				fragment.refresh("2012-09-17");
+				fragment.refresh();
 			}
 		}
 	}
@@ -33,9 +33,9 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 	 * Creates/ returns an Item
 	 */	
 	@Override
-	public Fragment getItem(int position) {
+	public DaySectionFragment getItem(int position) {
 		if (fragments[position] == null) {
-			DaySectionFragment fragment = new DaySectionFragment("2012-09-17");
+			DaySectionFragment fragment = new DaySectionFragment();
 			fragments[position] = fragment;
 		}
 

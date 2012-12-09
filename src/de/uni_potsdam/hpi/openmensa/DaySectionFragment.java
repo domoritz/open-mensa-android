@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.openmensa;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -9,22 +10,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.Meal;
+import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsProvider;
+import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingMealsListener;
+import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
 
 /**
  * A fragment representing a section of the app, that displays the Meals for
  * one Day.
  */
-public class DaySectionFragment extends ListFragment{
-	public DaySectionFragment(String date) {
-		setDate(date);
-	}
-
+public class DaySectionFragment extends ListFragment implements OnFinishedFetchingMealsListener{
 	private ArrayList<Meal> listItems;
-	private String date;
+	private String date = null;
 	MealAdapter adapter;
-	private Canteen canteen;
 
 	/**
 	 * When creating, retrieve this instance's number from its arguments.
@@ -60,15 +60,17 @@ public class DaySectionFragment extends ListFragment{
 		// Assign adapter to ListView
 		setListAdapter(adapter);
 		
-		refresh(date);
+		//refresh(date);
 	}
 	
-	public void refresh(String date) {
-		canteen = MainActivity.storage.getCurrentCanteen();
-		ArrayList<Meal> meals = canteen.getMeals(date);
-		listItems.clear();
-		listItems.addAll(meals);
-		adapter.notifyDataSetChanged();
+	public void refresh() {
+		if (this.date != null) {
+			Canteen canteen = MainActivity.storage.getCurrentCanteen();
+			String baseUrl = SettingsProvider.getSourceUrl(MainActivity.context);
+			String url = baseUrl + "canteens/" + canteen.key + "/days/" + date + "/meals";
+			RetrieveFeedTask task = new RetrieveMealFeedTask(this.getActivity(), this);
+			task.execute(new String[] { url });
+		}
 	}
 
 	@Override
@@ -78,5 +80,20 @@ public class DaySectionFragment extends ListFragment{
 	
 	public void setDate(String date) {
 		this.date = date;
+	}
+	
+	/**
+	 * tell the fragment that the canteen is closed today
+	 */
+	public void setToClosed() {
+		// TODO: implement
+	}
+
+	@Override
+	public void onMealFetchFinished(RetrieveMealFeedTask task) {
+		listItems.clear();
+		listItems.addAll(task.getMealList());
+		adapter.notifyDataSetChanged();
+		
 	}
 }

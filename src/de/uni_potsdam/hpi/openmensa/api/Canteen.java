@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.openmensa.api;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -41,11 +42,5 @@ public class Canteen {
 	@Override
 	public String toString() {
 		return name;
-	}
-	
-	public ArrayList<Meal> getMeals(String date) {
-		ArrayList<Meal> meals = new ArrayList<Meal>();
-		meals.add(new Meal(name, "Backfisch mit Remouladensauce(1)(9), dazu Pommes frites und Gurkensalat mit frischem Dill"));
-		return meals;
 	}
 }

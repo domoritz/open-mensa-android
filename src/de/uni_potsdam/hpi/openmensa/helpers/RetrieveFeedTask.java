@@ -30,16 +30,20 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 	protected Context context;
 	protected Gson gson = new Gson();
 	
+	// show dialog while fetching
+	protected Boolean visible = false;
 	protected String name = "";
 	
 	public static final String TAG = MainActivity.TAG;
 	public static final Boolean LOGV = MainActivity.LOGV;
 
 	private final int DEFAULT_BUFFER_SIZE = 1024;
-	protected String fetchedJSON;
 
 	public RetrieveFeedTask(Context context) {
 		// progress dialog
+		if (!visible)
+			return;
+		
 		dialog = new ProgressDialog(context);
 		dialog.setTitle("Fetching ...");
 		if (name.length() > 0) {
@@ -63,10 +67,11 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		dialog.show();
+		if (visible)
+			dialog.show();
 	}
 
-	protected abstract void parseFromJSON();
+	protected abstract void parseFromJSON(String jsonString);
 
 	protected Integer doInBackground(String... urls) {
 		for (String url : urls) {
@@ -84,10 +89,12 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 				int count;
 
 				// content length is sometimes not sent
-				if (fileLength < 0) {
-					dialog.setIndeterminate(true);
-				} else {
-					dialog.setMax((int) fileLength);
+				if (visible) {
+					if (fileLength < 0) {
+						dialog.setIndeterminate(true);
+					} else {
+						dialog.setMax((int) fileLength);
+					}
 				}
 
 				char buf[] = new char[DEFAULT_BUFFER_SIZE];
@@ -107,13 +114,13 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 	}
 
 	private void handleJson(String string) {
-		fetchedJSON = string;
-		parseFromJSON();
+		parseFromJSON(string);
 	}
 
 	protected void onProgressUpdate(Integer... progress) {
 		super.onProgressUpdate(progress);
-		dialog.setProgress(progress[0]);
+		if (visible)
+			dialog.setProgress(progress[0]);
 	}
 
 	protected void onPostExecute(Integer urlsCount) {
@@ -128,8 +135,10 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 			onPostExecuteFinished();
 		}
 
-		if (dialog.isShowing()) {
-			dialog.dismiss();
+		if (visible){
+			if (dialog.isShowing()) {
+				dialog.dismiss();
+			}
 		}
 	}
 
@@ -139,9 +148,5 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 		builder.setTitle(ex.getClass().getName());
 		builder.setMessage(ex.toString());
 		builder.show();
-	}
-
-	public String getFetchedJSON() {
-		return fetchedJSON;
 	}
 }
