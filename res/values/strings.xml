@@ -22,7 +22,7 @@
     <string name="source_title">Source</string>
     <string name="source_url_title">URL</string>
     <string name="source_url_desc">URL of an OpenMensa server.</string>
-    <string name="source_url_default">http://dev.openmensa.org/api/v2/</string>
+    <string name="source_url_default">http://openmensa.org/api/v2/</string>
     <string name="canteen_title">Favourite Canteens</string>
     <string name="canteen_desc">Choose the canteens that appear in the app.</string>
     <string name="canteen_choose_title">Favourite Canteens</string>
