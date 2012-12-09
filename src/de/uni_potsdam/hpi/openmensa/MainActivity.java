@@ -167,7 +167,7 @@ public class MainActivity extends FragmentActivity implements
 		// TODO: but still needs to refresh the view and set the available canteens
 		
 		String baseUrl = SettingsProvider.getSourceUrl(this);
-		String url = baseUrl + "canteens";
+		String url = baseUrl + "canteens" + "?limit=100000";
 		
 		RetrieveFeedTask task = new RetrieveCanteenFeedTask(this, this);
 		task.execute(new String[] { url });
