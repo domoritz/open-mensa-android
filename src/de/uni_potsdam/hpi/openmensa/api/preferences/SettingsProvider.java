@@ -6,12 +6,10 @@ import java.util.Set;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
 import de.uni_potsdam.hpi.openmensa.R;
-import de.uni_potsdam.hpi.openmensa.R.string;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 
 /**
@@ -47,7 +45,7 @@ public class SettingsProvider {
     
     public static void setStorage(Context context, Storage storage) {
     	String json = gson.toJson(storage);
-    	Log.d("json", json);
+    	//Log.d("json", json);
     	SharedPreferences.Editor editor = getSharedPrefs(context).edit();
     	editor.putString(SettingsProvider.KEY_CANTEENS, json);
     	editor.commit();

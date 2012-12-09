@@ -41,9 +41,6 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 
 	public RetrieveFeedTask(Context context) {
 		// progress dialog
-		if (!visible)
-			return;
-		
 		dialog = new ProgressDialog(context);
 		dialog.setTitle("Fetching ...");
 		if (name.length() > 0) {

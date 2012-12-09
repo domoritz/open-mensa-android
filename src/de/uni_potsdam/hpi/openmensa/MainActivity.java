@@ -172,8 +172,12 @@ public class MainActivity extends FragmentActivity implements
 	}
 	
 	public void fetchDaysFeed() {
-		RetrieveFeedTask task = new RetrieveDaysFeedTask(context, this);
-		task.execute(new String[] { "source_url" });
+		Canteen canteen = MainActivity.storage.getCurrentCanteen();
+		String baseUrl = SettingsProvider.getSourceUrl(this);
+		String url = baseUrl + "canteens/" + canteen.key + "/days";
+		
+		RetrieveFeedTask task = new RetrieveDaysFeedTask(this, this);
+		task.execute(new String[] { url });
 	}
 	
 	@Override

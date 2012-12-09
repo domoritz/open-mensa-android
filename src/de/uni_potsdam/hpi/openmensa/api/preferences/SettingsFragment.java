@@ -1,9 +1,8 @@
 package de.uni_potsdam.hpi.openmensa.api.preferences;
 
-import de.uni_potsdam.hpi.openmensa.R;
-import de.uni_potsdam.hpi.openmensa.R.xml;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import de.uni_potsdam.hpi.openmensa.R;
 
 /**
  * The fragment that displays the preferences.
