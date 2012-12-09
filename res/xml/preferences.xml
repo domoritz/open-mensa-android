@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:threefiftyprefs="http://schemas.android.com/apk/res/de.uni_potsdam.hpi.openmensa">
     <PreferenceCategory android:title="@string/source_title">
-        <de.uni_potsdam.hpi.openmensa.DynamicPreference
+        <de.uni_potsdam.hpi.openmensa.api.preferences.DynamicPreference
  			android:title="@string/canteen_title" 
  			android:summary="@string/canteen_desc" 
  			android:key="pref_active_canteens" 
