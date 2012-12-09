@@ -14,6 +14,9 @@ public class Meal {
 	@SerializedName("notes")
 	public String[] notes;
 	
+	@SerializedName("prices")
+	public Prices prices;
+	
 	@SerializedName("category")
 	public String category;
 	
