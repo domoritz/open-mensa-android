@@ -19,11 +19,8 @@ public class Canteen {
 	@SerializedName("address")
 	public String address;
 	
-	@SerializedName("longitude")
-	public Float longitude;
-	
-	@SerializedName("latitude")
-	public Float latitude;
+	@SerializedName("coordinates")
+	public Float[] coordinates;
 	
 	// app only, not api
 	@SerializedName("favourite")
