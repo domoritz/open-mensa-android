@@ -58,7 +58,7 @@ public class SettingsProvider {
 	public static void refreshActiveCanteens(Context context) {
 		Set<String> activeCanteensKeys = getSharedPrefs(context).getStringSet(KEY_ACTIVE_CANTEENS, new HashSet<String>());
 		Storage storage = getStorage(context);
-		for (Canteen canteen : storage.canteens.values()) {
+		for (Canteen canteen : storage.getCanteens().values()) {
 			canteen.favourite = activeCanteensKeys.contains(canteen.key);
 		}
 		setStorage(context, storage);

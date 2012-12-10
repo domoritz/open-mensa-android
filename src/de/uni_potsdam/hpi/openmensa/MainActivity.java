@@ -1,6 +1,8 @@
 package de.uni_potsdam.hpi.openmensa;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
@@ -185,17 +187,18 @@ public class MainActivity extends FragmentActivity implements
 			return;
 
 		String baseUrl = SettingsProvider.getSourceUrl(this);
-		String url = baseUrl + "canteens/" + canteen.key + "/days?limit=4";
+		String url = baseUrl + "canteens/" + canteen.key + "/days";
 		
-		RetrieveFeedTask task = new RetrieveDaysFeedTask(this, this);
+		RetrieveFeedTask task = new RetrieveDaysFeedTask(this, this, canteen);
 		task.execute(new String[] { url });
 	}
 	
 	@Override
 	public void onDaysFetchFinished(RetrieveDaysFeedTask task) {
+		task.canteen.setDays(task.getDays());
+		
 		int numberSection = sectionsPagerAdapter.getCount();
 		Days days = task.getDays();
-		assert numberSection == days.size();
 		
 		int number = Math.min(numberSection, days.size());
 		for (int position = 0; position < number; position++) {
@@ -204,10 +207,10 @@ public class MainActivity extends FragmentActivity implements
 			if (day.closed) {
 				Log.d(TAG, String.format("Canteen is closed on %s", day));
 			} else {
-				Log.d(TAG, String.format("Day %s", day.date));
 				fragment.setDate(day.date);
 			}
 		}
+		sectionsPagerAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -291,15 +294,14 @@ public class MainActivity extends FragmentActivity implements
 	/**
 	 * Refreshes the meals hash by fetching the data from the API and then displays the latest data.
 	 * 
-	 * TODO: make it work
 	 */
 	private void reload() {
 		storage.refreshStorage(this);
 		
 		if (isOnline(MainActivity.this)) {
 			// fetch meal feed and maybe canteens
-			if (storage.isOutOfDate()) {
-				Log.d(TAG, "Fetch canteens because storage is out of date");
+			if (storage.isOutOfDate() || storage.isEmpty()) {
+				Log.d(TAG, "Fetch canteens because storage is out of date or empty");
 				// async
 				refreshAvailableCanteens();
 			}

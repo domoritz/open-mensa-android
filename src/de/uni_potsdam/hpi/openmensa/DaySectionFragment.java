@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.openmensa;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -23,6 +24,7 @@ public class DaySectionFragment extends ListFragment implements OnFinishedFetchi
 	private ArrayList<Meal> listItems = new ArrayList<Meal>();
 	private String date = null;
 	MealAdapter adapter;
+
 
 	/**
 	 * When creating, retrieve this instance's number from its arguments.
@@ -64,9 +66,16 @@ public class DaySectionFragment extends ListFragment implements OnFinishedFetchi
 			return;
 
 		Canteen canteen = MainActivity.storage.getCurrentCanteen();
+		ArrayList<Meal> meals = canteen.getMealList(date);
+		if (meals != null) {
+			setMealList(meals);
+			Log.d(MainActivity.TAG, "Meal cache hit");
+			return;
+		}
+		Log.d(MainActivity.TAG, "Meal cache miss");
 		String baseUrl = SettingsProvider.getSourceUrl(MainActivity.context);
 		String url = baseUrl + "canteens/" + canteen.key + "/days/" + date + "/meals";
-		RetrieveFeedTask task = new RetrieveMealFeedTask(MainActivity.context, this);
+		RetrieveFeedTask task = new RetrieveMealFeedTask(MainActivity.context, this, canteen, date);
 		task.execute(new String[] { url });
 	}
 
@@ -85,16 +94,20 @@ public class DaySectionFragment extends ListFragment implements OnFinishedFetchi
 	public void setToClosed() {
 		// TODO: implement
 	}
+	
+	public void setMealList(ArrayList<Meal> meals) {
+		listItems.clear();
+		listItems.addAll(meals);
+		adapter.notifyDataSetChanged();
+	}
 
 	@Override
 	public void onMealFetchFinished(RetrieveMealFeedTask task) {
 		// the fragment might have been deleted while we were fetching something
 		if (listItems == null || adapter == null)
 			return;
-
-		listItems.clear();
-		listItems.addAll(task.getMealList());
-		adapter.notifyDataSetChanged();
+		task.canteen.setMealList(task.getDate(), task.getMealList());
+		setMealList(task.getMealList());
 		
 	}
 }

@@ -53,13 +53,13 @@ public class Storage {
 	
 	public Canteens getCanteens() {
 		if (canteens == null) {
-			return new Canteens();
+			canteens = new Canteens();
 		}
 		return canteens;
 	}
 	
-	public void setCanteens(Canteens canteens) {
-		this.canteens = canteens;
+	public void setCanteens(Canteens newCanteens) {
+		getCanteens().update(newCanteens);
 	}
 
 	public void saveCanteens(Context context, Canteens canteens) {
@@ -114,6 +114,13 @@ public class Storage {
 			}	
 		}
 		return getCanteens().get(currentCanteen);
+	}
+
+	/**
+	 * Return true if we don't have any canteens in the storage
+	 */
+	public boolean isEmpty() {
+		return getCanteens().size() == 0;
 	}
 	
 	

@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.openmensa;
 
 import android.content.Context;
 import android.util.Log;
+import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.Days;
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener;
 import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
@@ -15,15 +16,20 @@ public class RetrieveDaysFeedTask extends RetrieveFeedTask {
 	private Days days;
 	private OnFinishedFetchingDaysListener fetchListener;
 	protected String name = "Days";
+	protected Canteen canteen;
 
-	public RetrieveDaysFeedTask(Context context, OnFinishedFetchingDaysListener fetchListener) {
+	public RetrieveDaysFeedTask(Context context, OnFinishedFetchingDaysListener fetchListener, Canteen canteen) {
 		super(context);
+		this.canteen = canteen;
 		this.fetchListener = fetchListener;
-		this.visible = true;
 	}
 	
 	Days getDays() {
 		return days;
+	}
+	
+	Canteen getCanteen() {
+		return canteen;
 	}
 	
 	protected void parseFromJSON(String jsonString) {
