@@ -106,8 +106,8 @@ public class Storage {
 	}
 
 	public Canteen getCurrentCanteen() {
-		if (currentCanteen == null) {
-			if (currentCanteen != null && currentCanteen.length() > 0) {
+		if (currentCanteen == null || currentCanteen.isEmpty()) {
+			if (getActiveCanteens().size() > 0) {
 				currentCanteen = getActiveCanteens().get(0).key;
 			} else {
 				return null;

@@ -66,7 +66,7 @@ public class DaySectionFragment extends ListFragment implements OnFinishedFetchi
 			Canteen canteen = MainActivity.storage.getCurrentCanteen();
 			String baseUrl = SettingsProvider.getSourceUrl(MainActivity.context);
 			String url = baseUrl + "canteens/" + canteen.key + "/days/" + date + "/meals";
-			RetrieveFeedTask task = new RetrieveMealFeedTask(this.getActivity(), this);
+			RetrieveFeedTask task = new RetrieveMealFeedTask(MainActivity.context, this);
 			task.execute(new String[] { url });
 		}
 	}
@@ -89,6 +89,10 @@ public class DaySectionFragment extends ListFragment implements OnFinishedFetchi
 
 	@Override
 	public void onMealFetchFinished(RetrieveMealFeedTask task) {
+		// the fragment might have been deleted while we were fetching something
+		if (listItems == null)
+			return;
+
 		listItems.clear();
 		listItems.addAll(task.getMealList());
 		adapter.notifyDataSetChanged();

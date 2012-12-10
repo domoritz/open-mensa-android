@@ -9,14 +9,14 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Prices {
 	@SerializedName("students")
-	public int students;
+	public float students;
 	
 	@SerializedName("employees")
-	public int employees;
+	public float employees;
 	
 	@SerializedName("pupils")
-	public int pupils;
+	public float pupils;
 	
 	@SerializedName("others")
-	public int others;
+	public float others;
 }

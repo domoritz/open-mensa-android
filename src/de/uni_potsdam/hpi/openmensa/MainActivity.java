@@ -83,6 +83,7 @@ public class MainActivity extends FragmentActivity implements
 		reload();
 		
 		refreshActiveCanteens();
+		fetchDaysFeed();
 	}
 
 	private void createSectionsPageAdapter() {
@@ -171,8 +172,17 @@ public class MainActivity extends FragmentActivity implements
 		refreshActiveCanteens();
 	}
 	
+	/**
+	 * Fetch days for active canteen. The fragments will be updated on
+	 * callback.
+	 */
 	public void fetchDaysFeed() {
-		Canteen canteen = MainActivity.storage.getCurrentCanteen();
+		Canteen canteen = storage.getCurrentCanteen();
+		Log.d(TAG, String.format("Fetching days for canteen %s", canteen));
+
+		if (canteen == null)
+			return;
+
 		String baseUrl = SettingsProvider.getSourceUrl(this);
 		String url = baseUrl + "canteens/" + canteen.key + "/days";
 		
@@ -182,12 +192,12 @@ public class MainActivity extends FragmentActivity implements
 	
 	@Override
 	public void onDaysFetchFinished(RetrieveDaysFeedTask task) {
-		// TODO set date in fragments and refresh
 		int numberSection = sectionsPagerAdapter.getCount();
 		Days days = task.getDays();
 		assert numberSection == days.size();
 		
-		for (int position = 0; position < days.size(); position++) {
+		int number = Math.min(numberSection, days.size());
+		for (int position = 0; position < number; position++) {
 			DaySectionFragment fragment = sectionsPagerAdapter.getItem(position);
 			Day day = days.get(position);
 			if (day.closed) {
@@ -284,25 +294,21 @@ public class MainActivity extends FragmentActivity implements
 	private void reload() {
 		storage.refreshStorage(this);
 		
-		if (!isOnline(MainActivity.this)) {
+		if (isOnline(MainActivity.this)) {
+			// fetch meal feed and maybe canteens
+			if (storage.isOutOfDate()) {
+				Log.d(TAG, "Fetch canteens because storage is out of date");
+				// async
+				refreshAvailableCanteens();
+			}
+			fetchDaysFeed();
+		} else {
 			new AlertDialog.Builder(MainActivity.this).setNegativeButton("Okay",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						dialog.cancel();
 					}
 				}).setTitle("Not Connected").setMessage("You are not connected to the Internet.");
-		} else {
-			// fetch menu feed and maybe canteens
-			
-			if (storage.isOutOfDate()) {
-				Log.d(TAG, "Fetch canteens because storage is out of date");
-				// async
-				refreshAvailableCanteens();
-			}
 		}
-
-//		int index = mViewPager.getCurrentItem();
-//		mSectionsPagerAdapter.getItem(index);
-//		mSectionsPagerAdapter.notifyDataSetChanged();
 	}
 }
