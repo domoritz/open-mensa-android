@@ -110,6 +110,7 @@ public class MainActivity extends FragmentActivity implements
 		storage.setCurrentCanteen(canteen);
 		storage.flush(this);
 		
+		fetchDaysFeed();
 		sectionsPagerAdapter.notifyDataSetChanged();
 	}
 
@@ -184,7 +185,7 @@ public class MainActivity extends FragmentActivity implements
 			return;
 
 		String baseUrl = SettingsProvider.getSourceUrl(this);
-		String url = baseUrl + "canteens/" + canteen.key + "/days";
+		String url = baseUrl + "canteens/" + canteen.key + "/days?limit=4";
 		
 		RetrieveFeedTask task = new RetrieveDaysFeedTask(this, this);
 		task.execute(new String[] { url });
@@ -203,7 +204,8 @@ public class MainActivity extends FragmentActivity implements
 			if (day.closed) {
 				Log.d(TAG, String.format("Canteen is closed on %s", day));
 			} else {
-				fragment.setDate(day.toString());
+				Log.d(TAG, String.format("Day %s", day.date));
+				fragment.setDate(day.date);
 			}
 		}
 	}

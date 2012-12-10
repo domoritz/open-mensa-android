@@ -19,6 +19,7 @@ public class RetrieveDaysFeedTask extends RetrieveFeedTask {
 	public RetrieveDaysFeedTask(Context context, OnFinishedFetchingDaysListener fetchListener) {
 		super(context);
 		this.fetchListener = fetchListener;
+		this.visible = true;
 	}
 	
 	Days getDays() {

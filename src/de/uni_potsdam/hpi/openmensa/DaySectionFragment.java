@@ -20,7 +20,7 @@ import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
  * one Day.
  */
 public class DaySectionFragment extends ListFragment implements OnFinishedFetchingMealsListener{
-	private ArrayList<Meal> listItems;
+	private ArrayList<Meal> listItems = new ArrayList<Meal>();
 	private String date = null;
 	MealAdapter adapter;
 
@@ -51,24 +51,23 @@ public class DaySectionFragment extends ListFragment implements OnFinishedFetchi
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		listItems = new ArrayList<Meal>();
-
 		adapter = new MealAdapter(getActivity(), R.layout.list_item, listItems);
 
 		// Assign adapter to ListView
 		setListAdapter(adapter);
-		
-		//refresh(date);
+
+		refresh();
 	}
 	
 	public void refresh() {
-		if (this.date != null) {
-			Canteen canteen = MainActivity.storage.getCurrentCanteen();
-			String baseUrl = SettingsProvider.getSourceUrl(MainActivity.context);
-			String url = baseUrl + "canteens/" + canteen.key + "/days/" + date + "/meals";
-			RetrieveFeedTask task = new RetrieveMealFeedTask(MainActivity.context, this);
-			task.execute(new String[] { url });
-		}
+		if (this.date == null)
+			return;
+
+		Canteen canteen = MainActivity.storage.getCurrentCanteen();
+		String baseUrl = SettingsProvider.getSourceUrl(MainActivity.context);
+		String url = baseUrl + "canteens/" + canteen.key + "/days/" + date + "/meals";
+		RetrieveFeedTask task = new RetrieveMealFeedTask(MainActivity.context, this);
+		task.execute(new String[] { url });
 	}
 
 	@Override
@@ -90,7 +89,7 @@ public class DaySectionFragment extends ListFragment implements OnFinishedFetchi
 	@Override
 	public void onMealFetchFinished(RetrieveMealFeedTask task) {
 		// the fragment might have been deleted while we were fetching something
-		if (listItems == null)
+		if (listItems == null || adapter == null)
 			return;
 
 		listItems.clear();
