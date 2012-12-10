@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.openmensa;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,19 +28,15 @@ import android.widget.SpinnerAdapter;
 import com.google.gson.Gson;
 
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
-import de.uni_potsdam.hpi.openmensa.api.Day;
-import de.uni_potsdam.hpi.openmensa.api.Days;
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsActivity;
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsProvider;
 import de.uni_potsdam.hpi.openmensa.api.preferences.Storage;
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener;
-import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener;
 import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
 
 public class MainActivity extends FragmentActivity implements
 		OnSharedPreferenceChangeListener, OnNavigationListener,
-		OnFinishedFetchingCanteensListener,
-		OnFinishedFetchingDaysListener {
+		OnFinishedFetchingCanteensListener {
 
 	public static final String TAG = "Canteendroid";
 	public static final Boolean LOGV = true;
@@ -85,7 +82,7 @@ public class MainActivity extends FragmentActivity implements
 		reload();
 		
 		refreshActiveCanteens();
-		fetchDaysFeed();
+		setDatesForFragments();
 	}
 
 	private void createSectionsPageAdapter() {
@@ -112,7 +109,7 @@ public class MainActivity extends FragmentActivity implements
 		storage.setCurrentCanteen(canteen);
 		storage.flush(this);
 		
-		fetchDaysFeed();
+		setDatesForFragments();
 		sectionsPagerAdapter.notifyDataSetChanged();
 	}
 
@@ -176,41 +173,27 @@ public class MainActivity extends FragmentActivity implements
 	}
 	
 	/**
-	 * Fetch days for active canteen. The fragments will be updated on
-	 * callback.
+	 * Set dates for fragments
 	 */
-	public void fetchDaysFeed() {
+	public void setDatesForFragments() {
 		Canteen canteen = storage.getCurrentCanteen();
-		Log.d(TAG, String.format("Fetching days for canteen %s", canteen));
 
 		if (canteen == null)
 			return;
-
-		String baseUrl = SettingsProvider.getSourceUrl(this);
-		String url = baseUrl + "canteens/" + canteen.key + "/days";
 		
-		RetrieveFeedTask task = new RetrieveDaysFeedTask(this, this, canteen);
-		task.execute(new String[] { url });
-	}
-	
-	@Override
-	public void onDaysFetchFinished(RetrieveDaysFeedTask task) {
-		task.canteen.setDays(task.getDays());
+		Date now = new Date();
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		
-		int numberSection = sectionsPagerAdapter.getCount();
-		Days days = task.getDays();
-		
-		int number = Math.min(numberSection, days.size());
-		for (int position = 0; position < number; position++) {
+		int numberSections = sectionsPagerAdapter.getCount();
+		for (int position = 0; position < numberSections; position++) {
+			cal.setTime(now);
+			cal.add(Calendar.DAY_OF_YEAR, position-1);
+			Date date = cal.getTime();
+			
 			DaySectionFragment fragment = sectionsPagerAdapter.getItem(position);
-			Day day = days.get(position);
-			if (day.closed) {
-				Log.d(TAG, String.format("Canteen is closed on %s", day));
-			} else {
-				fragment.setDate(day.date);
-			}
+			fragment.setDate(df.format(date));
 		}
-		sectionsPagerAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -305,7 +288,7 @@ public class MainActivity extends FragmentActivity implements
 				// async
 				refreshAvailableCanteens();
 			}
-			fetchDaysFeed();
+			setDatesForFragments();
 		} else {
 			new AlertDialog.Builder(MainActivity.this).setNegativeButton("Okay",
 				new DialogInterface.OnClickListener() {

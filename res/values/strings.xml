@@ -1,9 +1,10 @@
 <resources>
 
     <string name="app_name">OpenMensa</string>
-    <string name="title_section2">The day after tomorrow</string>
-    <string name="title_section1">Tomorrow</string>
-    <string name="title_section0">Today</string>
+    <string name="title_section3">The day after tomorrow</string>
+    <string name="title_section2">Tomorrow</string>
+    <string name="title_section1">Today</string>
+    <string name="title_section0">Yesterday</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">OpenMensa</string>

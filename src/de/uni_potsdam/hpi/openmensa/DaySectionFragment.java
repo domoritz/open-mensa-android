@@ -96,6 +96,9 @@ public class DaySectionFragment extends ListFragment implements OnFinishedFetchi
 	}
 	
 	public void setMealList(ArrayList<Meal> meals) {
+		if (listItems == null || adapter == null)
+			return;
+
 		listItems.clear();
 		listItems.addAll(meals);
 		adapter.notifyDataSetChanged();
@@ -104,8 +107,6 @@ public class DaySectionFragment extends ListFragment implements OnFinishedFetchi
 	@Override
 	public void onMealFetchFinished(RetrieveMealFeedTask task) {
 		// the fragment might have been deleted while we were fetching something
-		if (listItems == null || adapter == null)
-			return;
 		task.canteen.setMealList(task.getDate(), task.getMealList());
 		setMealList(task.getMealList());
 		

@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.openmensa.helpers;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -72,7 +73,6 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 	protected abstract void parseFromJSON(String jsonString);
 
 	protected Integer doInBackground(String... urls) {
-		Integer statusCode = 0;
 		for (String url : urls) {
 			try {
 				URL feed = new URL(url);
@@ -80,10 +80,7 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 				BufferedReader in = new BufferedReader(new InputStreamReader(
 						urlConnection.getInputStream()));
 				
-				statusCode = urlConnection.getResponseCode();
-				if (statusCode != 200) {
-					continue;
-				}
+				Log.d(TAG, String.format("%s", urlConnection.getResponseCode()));
 
 				StringBuilder builder = new StringBuilder();
 				long fileLength = urlConnection.getContentLength();
@@ -112,7 +109,7 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 				this.exception = ex;
 			}
 		}
-		return statusCode;
+		return urls.length;
 	}
 
 	private void handleJson(String string) {
@@ -125,12 +122,8 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 			dialog.setProgress(progress[0]);
 	}
 
-	protected void onPostExecute(Integer statusCode) {
-		if (statusCode != 200) {
-			Log.w(TAG, String.format("Status code: %s", statusCode));
-		}
-
-		if (this.exception != null) {
+	protected void onPostExecute(Integer numberUrls) {
+		if (this.exception != null && !this.exception.getClass().equals(FileNotFoundException.class)) {
 			Log.w(TAG, "Exception: " + exception.getMessage());
 			if (LOGV) {
 				Log.d(TAG, Log.getStackTraceString(exception));
