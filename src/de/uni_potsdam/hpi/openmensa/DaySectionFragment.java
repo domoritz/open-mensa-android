@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.Meal;
@@ -31,21 +29,6 @@ public class DaySectionFragment extends ListFragment implements OnFinishedFetchi
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	}
-
-	/**
-	 * The Fragment's UI is just a simple text view showing its instance
-	 * number.
-	 */
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-		View listView = inflater.inflate(R.layout.fragment_pager_list,
-				container, false);
-		// TextView titleView = (TextView)
-		// listView.findViewById(R.id.title);
-		// titleView.setText(mensaName);
-		return listView;
 	}
 
 	@Override
@@ -91,12 +74,17 @@ public class DaySectionFragment extends ListFragment implements OnFinishedFetchi
 	 * tell the fragment that the canteen is closed today
 	 */
 	public void setToClosed() {
-		// TODO: implement
+		setEmptyText(getResources().getString(R.string.noinfo));
 	}
 	
 	public void setMealList(ArrayList<Meal> meals) {
 		if (listItems == null || adapter == null)
 			return;
+		
+		if (meals.isEmpty()) {
+			setToClosed();
+			return;
+		}
 
 		listItems.clear();
 		listItems.addAll(meals);

@@ -14,6 +14,8 @@
     <string name="tomorrow">tomorrow</string>
     
     <string name="noconnection">No internet connection. Please connect!</string>
+    <string name="canteenclosed">This canteen is closed on this date</string>
+    <string name="noinfo">No information available</string>
     <string name="reload">Reload</string>
     
     <string name="title_activity_preferences">PreferencesActivity</string>

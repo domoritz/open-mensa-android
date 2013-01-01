@@ -59,7 +59,6 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 								dialog.cancel();
 							}
 						});
-		;
 	}
 
 	@Override
