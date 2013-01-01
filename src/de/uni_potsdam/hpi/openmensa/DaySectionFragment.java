@@ -39,8 +39,12 @@ public class DaySectionFragment extends ExpandableListFragment implements OnFini
 
 		// Assign adapter to ListView
 		setListAdapter(adapter);
-
+	}
+	
+	@Override
+	public void onResume() {
 		refresh();
+		super.onResume() ; 
 	}
 	
 	public void refresh() {
