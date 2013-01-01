@@ -4,21 +4,23 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" 
     android:paddingBottom="10dip"
-    android:paddingLeft="10dip"
     android:paddingTop="10dip"
-    android:paddingRight="10dip">
+    android:paddingRight="10dip"
+    android:paddingLeft="10dip">
 
     <TextView
         android:id="@+id/txtCategory"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Lorem Ipsum"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceListItem" />
 
     <TextView
         android:id="@+id/txtName"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:text="Lorem Ipsum"/>
+        android:text="Lorem Ipsum"
+        android:color="?android:attr/textColorPrimary"
+        android:textAppearance="?android:attr/textAppearance" />
 
 </LinearLayout>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:paddingBottom="10dip"
+    android:paddingLeft="@dimen/expanderPadding"
+    android:paddingTop="10dip"
+    android:paddingRight="10dip">
+
+    <RelativeLayout
+	    xmlns:android="http://schemas.android.com/apk/res/android" 
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content">
+	    
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:text="@string/students" />
+	
+	    <TextView
+	        android:id="@+id/txtPriceStudents"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="@dimen/priceListFloat"
+	        android:text="Lorem Ipsum" />
+    
+    </RelativeLayout>
+    
+    <RelativeLayout
+	    xmlns:android="http://schemas.android.com/apk/res/android" 
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content">
+	    
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:text="@string/employees" />
+	
+	    <TextView
+	        android:id="@+id/txtPriceEmployees"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="@dimen/priceListFloat"
+	        android:text="Lorem Ipsum"/>
+    
+    </RelativeLayout>
+    
+    <RelativeLayout
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content">
+	    
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:text="@string/pupils" />
+	
+	       <TextView
+		        android:id="@+id/txtPricePupils"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:paddingLeft="@dimen/priceListFloat"
+		        android:text="Lorem Ipsum"/>
+    
+    </RelativeLayout>
+    
+    <RelativeLayout
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content">
+	    
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:text="@string/other" />
+	
+	    <TextView
+	        android:id="@+id/txtPriceOthers"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="@dimen/priceListFloat"
+	        android:text="Lorem Ipsum"/>
+    
+    </RelativeLayout>
+
+</LinearLayout>

@@ -3,7 +3,7 @@ package de.uni_potsdam.hpi.openmensa;
 import java.util.ArrayList;
 
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.ExpandableListFragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -17,7 +17,7 @@ import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
  * A fragment representing a section of the app, that displays the Meals for
  * one Day.
  */
-public class DaySectionFragment extends ListFragment implements OnFinishedFetchingMealsListener{
+public class DaySectionFragment extends ExpandableListFragment implements OnFinishedFetchingMealsListener{
 	private ArrayList<Meal> listItems = new ArrayList<Meal>();
 	private String date = null;
 	MealAdapter adapter;

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="priceListFloat">120dip</dimen>
+    <dimen name="expanderPadding">40dip</dimen>
+    <dimen name="indention">10dip</dimen>
+</resources>

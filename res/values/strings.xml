@@ -13,9 +13,16 @@
     <string name="yesterday">yesterday</string>
     <string name="tomorrow">tomorrow</string>
     
+    <string name="students">Students:</string>
+    <string name="employees">Employees:</string>
+    <string name="pupils">Pupils:</string>
+    <string name="other">Other:</string>
+    
     <string name="noconnection">No internet connection. Please connect!</string>
     <string name="canteenclosed">This canteen is closed on this date</string>
     <string name="noinfo">No information available</string>
+    <string name="noprice">Not available</string>
+    
     <string name="reload">Reload</string>
     
     <string name="title_activity_preferences">PreferencesActivity</string>
