@@ -281,6 +281,7 @@ public class ExpandableListFragment extends Fragment
         }
         mListShown = true;
         mList.setOnItemClickListener(mOnClickListener);
+        // add invisible indicator
         mList.setGroupIndicator(getResources().getDrawable(R.layout.expandable_list_icon_selector));
         if (mAdapter != null) {
             setListAdapter(mAdapter);

@@ -8,6 +8,13 @@
     android:paddingTop="10dip"
     android:paddingRight="10dip">
 
+    <TextView
+        android:id="@+id/txtNotes"
+        android:paddingBottom="10dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Details" />
+	    
     <RelativeLayout
 	    xmlns:android="http://schemas.android.com/apk/res/android" 
 	    android:layout_width="fill_parent" 
@@ -87,5 +94,4 @@
 	        android:text="Lorem Ipsum"/>
     
     </RelativeLayout>
-
 </LinearLayout>

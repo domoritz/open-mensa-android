@@ -60,6 +60,7 @@ public class MealAdapter extends BaseExpandableListAdapter {
             holder.priceEmployees = (TextView)row.findViewById(R.id.txtPriceEmployees);
             holder.pricePupils = (TextView)row.findViewById(R.id.txtPricePupils);
             holder.priceOthers = (TextView)row.findViewById(R.id.txtPriceOthers);
+            holder.notes = (TextView)row.findViewById(R.id.txtNotes);
            
             row.setTag(holder);
         } else {
@@ -71,6 +72,15 @@ public class MealAdapter extends BaseExpandableListAdapter {
         holder.priceEmployees.setText(stringOrNone(meal.prices.employees));
         holder.pricePupils.setText(stringOrNone(meal.prices.pupils));
         holder.priceOthers.setText(stringOrNone(meal.prices.others));
+        
+        holder.notes.setText("");
+        int i = meal.notes.length;
+        for (String note : meal.notes) {
+			holder.notes.append(note);
+			if (--i > 0) {
+				holder.notes.append(", ");
+			}
+		}
        
         return row;
     }

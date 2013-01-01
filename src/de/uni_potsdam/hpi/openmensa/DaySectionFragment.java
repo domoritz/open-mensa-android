@@ -44,7 +44,7 @@ public class DaySectionFragment extends ExpandableListFragment implements OnFini
 	}
 	
 	public void refresh() {
-		if (this.date == null)
+		if (this.date == null || this.isDetached())
 			return;
 
 		Canteen canteen = MainActivity.storage.getCurrentCanteen();
@@ -95,6 +95,10 @@ public class DaySectionFragment extends ExpandableListFragment implements OnFini
 	public void onMealFetchFinished(RetrieveMealFeedTask task) {
 		// the fragment might have been deleted while we were fetching something
 		task.canteen.setMealList(task.getDate(), task.getMealList());
+		
+		if (this.isDetached())
+			return;
+		
 		setMealList(task.getMealList());
 		
 	}
