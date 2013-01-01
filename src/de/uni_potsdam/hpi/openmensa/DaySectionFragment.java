@@ -2,7 +2,6 @@ package de.uni_potsdam.hpi.openmensa;
 
 import java.util.ArrayList;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;

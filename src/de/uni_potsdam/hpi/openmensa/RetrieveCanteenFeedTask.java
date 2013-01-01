@@ -1,7 +1,5 @@
 package de.uni_potsdam.hpi.openmensa;
 
-import java.io.FileNotFoundException;
-
 import android.content.Context;
 import android.util.Log;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
