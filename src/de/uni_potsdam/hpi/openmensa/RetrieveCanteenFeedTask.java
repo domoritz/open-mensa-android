@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.openmensa;
 
+import java.io.FileNotFoundException;
+
 import android.content.Context;
 import android.util.Log;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
@@ -17,9 +19,13 @@ public class RetrieveCanteenFeedTask extends RetrieveFeedTask {
 	private Canteens canteens;
 	private OnFinishedFetchingCanteensListener fetchListener;
 	protected String name = "Canteens";
+	private int currentPage = 1;
+	private String url;
 	
-	public RetrieveCanteenFeedTask(Context context, OnFinishedFetchingCanteensListener fetchListener) {
+	public RetrieveCanteenFeedTask(Context context, OnFinishedFetchingCanteensListener fetchListener, String url) {
 		super(context);
+		
+		this.url = url;
 		this.canteens = new Canteens();
 		this.fetchListener = fetchListener;
 		this.visible = true;
@@ -34,9 +40,22 @@ public class RetrieveCanteenFeedTask extends RetrieveFeedTask {
 		for(Canteen canteen : canteens_arr) {
 			canteens.put(canteen.key, canteen);
 		}
+		
+		if (canteens_arr.length > 0) {
+			currentPage++;
+			doInBackground(url + "&page=" + currentPage);
+		}
+	}
+	
+	protected void onProgressUpdate(Integer... progress) {
+		super.onProgressUpdate(progress);
+		if (visible){
+			dialog.setProgress(progress[0]);
+			dialog.setTitle(String.format("Fetching [%s]...", currentPage));
+		}
 	}
 
-	protected void onPostExecuteFinished() {	
+	protected void onPostExecuteFinished() {
 		Log.d(TAG, String.format("Fetched %s canteen items", canteens.size()));
 		
 		// notify that we are done

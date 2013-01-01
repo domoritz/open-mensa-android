@@ -33,6 +33,7 @@ import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsProvider;
 import de.uni_potsdam.hpi.openmensa.api.preferences.Storage;
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener;
 import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
+import de.uni_potsdam.hpi.openmensa.RetrieveCanteenFeedTask;
 
 public class MainActivity extends FragmentActivity implements
 		OnSharedPreferenceChangeListener, OnNavigationListener,
@@ -123,7 +124,7 @@ public class MainActivity extends FragmentActivity implements
 		
 		ArrayList<Canteen> activeCanteens = storage.getActiveCanteens();
 		
-		if (activeCanteens.size() == 0) {
+		if (activeCanteens.size() == 0 && !storage.getCanteens(this).isEmpty()) {
 			new AlertDialog.Builder(this)
 				.setTitle("No active canteens.")
 				.setMessage("You have not yet set any active canteens. Please select at least one.")
@@ -159,10 +160,10 @@ public class MainActivity extends FragmentActivity implements
 		// TODO: but still needs to refresh the view and set the available canteens
 		
 		String baseUrl = SettingsProvider.getSourceUrl(this);
-		String url = baseUrl + "canteens" + "?limit=100000";
-		
-		RetrieveFeedTask task = new RetrieveCanteenFeedTask(this, this);
-		task.execute(new String[] { url });
+		String url = baseUrl + "canteens" + "?limit=50";
+
+		RetrieveFeedTask task = new RetrieveCanteenFeedTask(this, this, url);
+		task.execute(url);
 	}
 	
 	@Override

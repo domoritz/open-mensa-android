@@ -26,8 +26,8 @@ import de.uni_potsdam.hpi.openmensa.MainActivity;
  * @author dominik
  */
 public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Integer> {
-	private Exception exception;
-	private ProgressDialog dialog;
+	protected Exception exception;
+	protected ProgressDialog dialog;
 	private Builder builder;
 	protected Context context;
 	protected Gson gson = new Gson();
@@ -143,7 +143,7 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 
 	protected abstract void onPostExecuteFinished();
 
-	private void showErrorMessage(Exception ex) {
+	protected void showErrorMessage(Exception ex) {
 		builder.setTitle(ex.getClass().getName());
 		builder.setMessage(ex.toString());
 		builder.show();
