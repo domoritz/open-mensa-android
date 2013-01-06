@@ -37,7 +37,7 @@ public class RetrieveDaysFeedTask extends RetrieveFeedTask {
 	}
 
 	protected void onPostExecuteFinished() {
-		Log.d(TAG, String.format("Fetched days"));
+		Log.d(TAG, String.format("Fetched %s days", days.size()));
 		
 		// notify that we are done
 		fetchListener.onDaysFetchFinished(this);

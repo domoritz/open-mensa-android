@@ -21,11 +21,10 @@ public class RetrieveMealFeedTask extends RetrieveFeedTask {
 	protected Canteen canteen;
 	private String date;
 
-	public RetrieveMealFeedTask(Context context, OnFinishedFetchingMealsListener fetchListener, Canteen canteen, String date) {
+	public RetrieveMealFeedTask(Context context, OnFinishedFetchingMealsListener fetchListener, Canteen canteen) {
 		super(context);
 		this.mealList = new ArrayList<Meal>();
 		this.canteen = canteen;
-		this.date = date;
 		this.fetchListener = fetchListener;
 	}
 	

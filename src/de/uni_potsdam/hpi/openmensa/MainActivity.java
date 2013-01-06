@@ -8,6 +8,7 @@ import java.util.Date;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -95,9 +96,8 @@ public class MainActivity extends FragmentActivity implements
 		viewPager.setAdapter(sectionsPagerAdapter);
 	}
 	
-	@Override
-	public void onPause() {
-		super.onPause();
+	public void onSaveInstanceState(Bundle outState) {
+		Log.d(TAG, "Flushed cache storage");
 		storage.flush(this);
 	}
 	
@@ -125,16 +125,22 @@ public class MainActivity extends FragmentActivity implements
 		ArrayList<Canteen> activeCanteens = storage.getActiveCanteens();
 		
 		if (activeCanteens.size() == 0 && !storage.getCanteens(this).isEmpty()) {
-			new AlertDialog.Builder(this)
-				.setTitle("No active canteens.")
-				.setMessage("You have not yet set any active canteens. Please select at least one.")
-				.setNeutralButton("Ok",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						Intent settings = new Intent(MainActivity.context, SettingsActivity.class);
-						startActivity(settings);
-					}
-				}).show();
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(R.string.noactivecanteens)
+				.setMessage(R.string.chooseone)
+				.setCancelable(false)
+				.setNeutralButton(android.R.string.ok,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								Intent settings = new Intent(
+										MainActivity.context,
+										SettingsActivity.class);
+								startActivity(settings);
+							}
+						});
+			AlertDialog alert = builder.create();
+			alert.show();
 		}
 		
 		Log.d(TAG, String.format("%s active canteens", activeCanteens.size()));

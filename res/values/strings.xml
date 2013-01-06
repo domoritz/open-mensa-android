@@ -22,6 +22,8 @@
     <string name="canteenclosed">This canteen is closed on this date</string>
     <string name="noinfo">No information available</string>
     <string name="noprice">Not available</string>
+    <string name="noactivecanteens">No active canteens.</string>
+    <string name="chooseone">You have not yet set any active canteens. Please select at least one.</string>
     
     <string name="reload">Reload</string>
     

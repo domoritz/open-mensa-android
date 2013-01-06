@@ -8,16 +8,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
+import de.uni_potsdam.hpi.openmensa.api.Day;
 import de.uni_potsdam.hpi.openmensa.api.Meal;
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsProvider;
-import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingMealsListener;
+import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener;
 import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
 
 /**
  * A fragment representing a section of the app, that displays the Meals for
  * one Day.
  */
-public class DaySectionFragment extends ExpandableListFragment implements OnFinishedFetchingMealsListener{
+public class DaySectionFragment extends ExpandableListFragment implements OnFinishedFetchingDaysListener {
 	private ArrayList<Meal> listItems = new ArrayList<Meal>();
 	private String date = null;
 	MealAdapter adapter;
@@ -52,16 +53,16 @@ public class DaySectionFragment extends ExpandableListFragment implements OnFini
 			return;
 
 		Canteen canteen = MainActivity.storage.getCurrentCanteen();
-		ArrayList<Meal> meals = canteen.getMealList(date);
-		if (meals != null) {
-			setMealList(meals);
+		Day day = canteen.getDay(date);
+		if (day != null) {
+			setMealList(day);
 			Log.d(MainActivity.TAG, "Meal cache hit");
 			return;
 		}
 		Log.d(MainActivity.TAG, "Meal cache miss");
 		String baseUrl = SettingsProvider.getSourceUrl(MainActivity.context);
-		String url = baseUrl + "canteens/" + canteen.key + "/days/" + date + "/meals";
-		RetrieveFeedTask task = new RetrieveMealFeedTask(MainActivity.context, this, canteen, date);
+		String url = baseUrl + "canteens/" + canteen.key + "/meals/?start=" + date;
+		RetrieveFeedTask task = new RetrieveDaysFeedTask(MainActivity.context, this, canteen);
 		task.execute(new String[] { url });
 	}
 
@@ -78,32 +79,42 @@ public class DaySectionFragment extends ExpandableListFragment implements OnFini
 	 * tell the fragment that the canteen is closed today
 	 */
 	public void setToClosed() {
+		setEmptyText(getResources().getString(R.string.canteenclosed));
+	}
+	
+	public void setToNoInformation() {
 		setEmptyText(getResources().getString(R.string.noinfo));
 	}
 	
-	public void setMealList(ArrayList<Meal> meals) {
-		if (listItems == null || adapter == null)
+	public void setMealList(Day day) {
+		if (listItems == null || adapter == null || this.isDetached())
 			return;
 		
-		if (meals.isEmpty()) {
+		if (day.closed) {
 			setToClosed();
 			return;
 		}
 
 		listItems.clear();
-		listItems.addAll(meals);
+		listItems.addAll(day.getMeals());
 		adapter.notifyDataSetChanged();
 	}
 
 	@Override
-	public void onMealFetchFinished(RetrieveMealFeedTask task) {
+	public void onDaysFetchFinished(RetrieveDaysFeedTask task) {
 		// the fragment might have been deleted while we were fetching something
-		task.canteen.setMealList(task.getDate(), task.getMealList());
-		
+		task.canteen.updateDays(task.getDays());
+
 		if (this.isDetached())
 			return;
 		
-		setMealList(task.getMealList());
+		Day day = task.canteen.getDay(date);
 		
+		if (day == null) {
+			setToNoInformation();
+			return;
+		}
+
+		setMealList(day);
 	}
 }

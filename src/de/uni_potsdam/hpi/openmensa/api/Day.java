@@ -14,8 +14,15 @@ public class Day {
 	@SerializedName("closed")
 	public Boolean closed;
 	
+	@SerializedName("meals")
+	public Meals meals;
+	
 	@Override
 	public String toString() {
 		return date;
+	}
+
+	public Meals getMeals() {
+		return meals;
 	}
 }
