@@ -37,6 +37,9 @@ public class RetrieveDaysFeedTask extends RetrieveFeedTask {
 	}
 
 	protected void onPostExecuteFinished() {
+		if (days == null) {
+			throw new IllegalStateException("Days cannot be null.");
+		}
 		Log.d(TAG, String.format("Fetched %s days", days.size()));
 		
 		// notify that we are done

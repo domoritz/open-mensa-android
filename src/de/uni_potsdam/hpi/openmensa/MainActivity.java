@@ -8,7 +8,6 @@ import java.util.Date;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,16 +28,17 @@ import android.widget.SpinnerAdapter;
 import com.google.gson.Gson;
 
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
+import de.uni_potsdam.hpi.openmensa.api.Day;
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsActivity;
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsProvider;
 import de.uni_potsdam.hpi.openmensa.api.preferences.Storage;
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener;
+import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener;
 import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
-import de.uni_potsdam.hpi.openmensa.RetrieveCanteenFeedTask;
 
 public class MainActivity extends FragmentActivity implements
 		OnSharedPreferenceChangeListener, OnNavigationListener,
-		OnFinishedFetchingCanteensListener {
+		OnFinishedFetchingCanteensListener, OnFinishedFetchingDaysListener {
 
 	public static final String TAG = "Canteendroid";
 	public static final Boolean LOGV = true;
@@ -64,7 +64,7 @@ public class MainActivity extends FragmentActivity implements
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
-	ViewPager viewPager;
+	static ViewPager viewPager;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -82,9 +82,7 @@ public class MainActivity extends FragmentActivity implements
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		
 		reload();
-		
 		refreshActiveCanteens();
-		setDatesForFragments();
 	}
 
 	private void createSectionsPageAdapter() {
@@ -94,11 +92,20 @@ public class MainActivity extends FragmentActivity implements
 		// Set up the ViewPager with the sections adapter.
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(sectionsPagerAdapter);
+		viewPager.setCurrentItem(2);
 	}
 	
-	public void onSaveInstanceState(Bundle outState) {
-		Log.d(TAG, "Flushed cache storage");
+	protected void onSaveInstanceState(Bundle outState) {
+		Log.d(TAG, "Save state, flushed cache storage");
+		outState.putParcelable("fragments", sectionsPagerAdapter.saveState());
+		outState.putInt("page",	viewPager.getCurrentItem());
 		storage.flush(this);
+	}
+	
+	protected void onRestoreInstanceState(Bundle savedState, ClassLoader loader) {
+		Log.d(TAG, "Resstore state");
+		sectionsPagerAdapter.restoreState(savedState.getParcelable("fragments"), loader);
+		viewPager.setCurrentItem(savedState.getInt("page"));
 	}
 	
 	/**
@@ -110,7 +117,70 @@ public class MainActivity extends FragmentActivity implements
 		storage.setCurrentCanteen(canteen);
 		storage.flush(this);
 		
-		setDatesForFragments();
+		updateMealStorage();
+		sectionsPagerAdapter.notifyDataSetChanged();
+	}
+	
+	public void updateMealStorage() {
+		updateMealStorage(false);
+	}
+	
+	/**
+	 * Fetch meal data, if not already in storage. Also sets the date for fragments.
+	 */
+	public void updateMealStorage(Boolean force) {
+		Canteen canteen = storage.getCurrentCanteen();
+
+		if (canteen == null)
+			return;
+		
+		Date now = new Date();
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Boolean startedFetching = false;
+		
+		int numberSections = sectionsPagerAdapter.getCount();
+		for (int position = 0; position < numberSections; position++) {
+			cal.setTime(now);
+			cal.add(Calendar.DAY_OF_YEAR, position-1);
+			Date date = cal.getTime();
+			
+			String dateString = df.format(date);
+			
+			Day day = canteen.getDay(dateString);
+			
+			DaySectionFragment fragment = sectionsPagerAdapter.getItem(position);
+			fragment.setDate(df.format(date));
+			
+			if (startedFetching) {
+				fragment.setToFetching(true, false);
+				continue;
+			}
+			
+			if (day == null)
+				Log.d(MainActivity.TAG, "Meal cache miss");
+			else
+				Log.d(MainActivity.TAG, "Meal cache hit");
+			
+			if (day == null || force) {
+				fragment.setToFetching(true, true);
+				String baseUrl = SettingsProvider.getSourceUrl(MainActivity.context);
+				String url = baseUrl + "canteens/" + canteen.key + "/meals/?start=" + dateString;
+				RetrieveFeedTask task = new RetrieveDaysFeedTask(MainActivity.context, this, canteen);
+				task.execute(new String[] { url });
+				startedFetching = true;				
+			} else {
+				fragment.setToFetching(false, false);
+			}
+		}
+	}
+	
+	@Override
+	public void onDaysFetchFinished(RetrieveDaysFeedTask task) {
+		// the fragment might have been deleted while we were fetching something
+		sectionsPagerAdapter.setToFetching(false, false);
+		task.canteen.updateDays(task.getDays());
 		sectionsPagerAdapter.notifyDataSetChanged();
 	}
 
@@ -177,30 +247,6 @@ public class MainActivity extends FragmentActivity implements
 		storage.saveCanteens(this, task.getCanteens());
 		
 		refreshActiveCanteens();
-	}
-	
-	/**
-	 * Set dates for fragments
-	 */
-	public void setDatesForFragments() {
-		Canteen canteen = storage.getCurrentCanteen();
-
-		if (canteen == null)
-			return;
-		
-		Date now = new Date();
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		
-		int numberSections = sectionsPagerAdapter.getCount();
-		for (int position = 0; position < numberSections; position++) {
-			cal.setTime(now);
-			cal.add(Calendar.DAY_OF_YEAR, position-1);
-			Date date = cal.getTime();
-			
-			DaySectionFragment fragment = sectionsPagerAdapter.getItem(position);
-			fragment.setDate(df.format(date));
-		}
 	}
 
 	@Override
@@ -295,7 +341,8 @@ public class MainActivity extends FragmentActivity implements
 				// async
 				refreshAvailableCanteens();
 			}
-			setDatesForFragments();
+			updateMealStorage(true);
+			sectionsPagerAdapter.notifyDataSetChanged();
 		} else {
 			new AlertDialog.Builder(MainActivity.this).setNegativeButton("Okay",
 				new DialogInterface.OnClickListener() {

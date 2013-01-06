@@ -71,7 +71,11 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 	protected abstract void parseFromJSON(String jsonString);
 
 	protected Integer doInBackground(String... urls) {
+		if (urls.length == 0)
+			throw new IllegalArgumentException("You need to provide a url.");
+
 		for (String url : urls) {
+			Log.d(TAG, String.format("Fetching from %s", url));
 			try {
 				URL feed = new URL(url);
 				HttpURLConnection urlConnection = (HttpURLConnection)feed.openConnection();
@@ -121,12 +125,11 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 	}
 
 	protected void onPostExecute(Integer numberUrls) {
-		if (this.exception != null && !this.exception.getClass().equals(FileNotFoundException.class)) {
+		if (this.exception != null) {
 			Log.w(TAG, "Exception: " + exception.getMessage());
 			if (LOGV) {
 				Log.d(TAG, Log.getStackTraceString(exception));
 			}
-
 			showErrorMessage(this.exception);
 		} else {
 			onPostExecuteFinished();

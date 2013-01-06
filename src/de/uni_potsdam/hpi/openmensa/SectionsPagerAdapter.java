@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.openmensa;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -11,6 +10,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
  * one of the primary sections of the app.
  */
 public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
+	
+	static final int NUM_ITEMS = 4;
 
 	public SectionsPagerAdapter(FragmentManager fm) {
 		super(fm);
@@ -24,7 +25,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 		// TODO: use adapter properly
 		for (DaySectionFragment fragment : fragments) {
 			if (fragment != null) {
-				fragment.refresh();
+				fragment.update();
 			}
 		}
 	}
@@ -44,7 +45,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
 	@Override
 	public int getCount() {
-		return 4;
+		return NUM_ITEMS;
 	}
 
 	@Override
@@ -61,5 +62,13 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 				return context.getString(R.string.title_section3).toUpperCase();
 		}
 		return null;
+	}
+
+	public void setToFetching(boolean on, boolean animated) {
+		for (DaySectionFragment fragment : fragments) {
+			if (fragment != null) {
+				fragment.setToFetching(on, animated);
+			}
+		}
 	}
 }
