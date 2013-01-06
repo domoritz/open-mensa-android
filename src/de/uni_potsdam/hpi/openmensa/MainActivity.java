@@ -95,16 +95,16 @@ public class MainActivity extends FragmentActivity implements
 		viewPager.setCurrentItem(1);
 	}
 	
+	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		Log.d(TAG, "Save state, flushed cache storage");
-		outState.putParcelable("fragments", sectionsPagerAdapter.saveState());
 		outState.putInt("page",	viewPager.getCurrentItem());
 		storage.flush(this);
 	}
 	
-	protected void onRestoreInstanceState(Bundle savedState, ClassLoader loader) {
-		Log.d(TAG, "Resstore state");
-		sectionsPagerAdapter.restoreState(savedState.getParcelable("fragments"), loader);
+	@Override
+	protected void onRestoreInstanceState(Bundle savedState) {
+		Log.d(TAG, "Restore state");
 		viewPager.setCurrentItem(savedState.getInt("page"));
 	}
 	
@@ -232,9 +232,7 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	private void refreshAvailableCanteens() {
 		// load available canteens from settings and afterwards refetch the list from server
-		// TODO: should be avoided by caching..., 
-		// TODO: but still needs to refresh the view and set the available canteens
-		
+
 		String baseUrl = SettingsProvider.getSourceUrl(this);
 		String url = baseUrl + "canteens" + "?limit=50";
 
@@ -262,7 +260,6 @@ public class MainActivity extends FragmentActivity implements
 		Canteen c = storage.getActiveCanteens().get(itemPosition);
 		Log.d(TAG, String.format("Chose canteen %s", c.key));
 		this.changeCanteenTo(c);
-		// TODO: need to refresh the view
 		return false;
 	}
 
@@ -282,7 +279,10 @@ public class MainActivity extends FragmentActivity implements
 				startActivity(settings);
 				return true;
 			case R.id.reload:
-				reload();
+				reload(true);
+				return true;
+			case R.id.today:
+				viewPager.setCurrentItem(1);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -326,22 +326,26 @@ public class MainActivity extends FragmentActivity implements
 		}
 		return true;
 	}
+	
+	private void reload() {
+		reload(false);
+	}
 
 	/**
 	 * Refreshes the meals hash by fetching the data from the API and then displays the latest data.
 	 * 
 	 */
-	private void reload() {
+	private void reload(boolean force) {
 		storage.refreshStorage(this);
 		
 		if (isOnline(MainActivity.this)) {
 			// fetch meal feed and maybe canteens
-			if (storage.isOutOfDate() || storage.isEmpty()) {
+			if (storage.isOutOfDate() || storage.isEmpty() || force) {
 				Log.d(TAG, "Fetch canteens because storage is out of date or empty");
 				// async
 				refreshAvailableCanteens();
 			}
-			updateMealStorage(true);
+			updateMealStorage(force);
 			sectionsPagerAdapter.notifyDataSetChanged();
 		} else {
 			new AlertDialog.Builder(MainActivity.this).setNegativeButton("Okay",
