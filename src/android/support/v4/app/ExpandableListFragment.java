@@ -52,7 +52,7 @@ public class ExpandableListFragment extends Fragment
     boolean mFinishedStart = false;
     View mEmptyView;
     TextView mStandardEmptyView;
-    protected View mProgressContainer;
+    View mProgressContainer;
     View mExpandableListContainer;
     CharSequence mEmptyText;
     boolean mExpandableListShown;

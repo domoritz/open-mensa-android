@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.support.v4.app.ExpandableListFragment;
+import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.Day;
 import de.uni_potsdam.hpi.openmensa.api.Meal;
 
@@ -15,6 +16,7 @@ public class DaySectionFragment extends ExpandableListFragment {
 	private ArrayList<Meal> listItems = new ArrayList<Meal>();
 	private String date = null;
 	private Boolean fetching = false;
+	private boolean listVisible = false;
 
 	MealAdapter adapter;
 
@@ -38,7 +40,11 @@ public class DaySectionFragment extends ExpandableListFragment {
 		if (isDetached() || !isAdded() || date == null)
 			return;
 
-		Day day = MainActivity.storage.getCurrentCanteen().getDay(date);
+		Canteen canteen = MainActivity.storage.getCurrentCanteen();
+		if (canteen == null)
+			return;
+		
+		Day day = canteen.getDay(date);
 		
 		if (day == null) {
 			if (fetching) {
@@ -62,6 +68,7 @@ public class DaySectionFragment extends ExpandableListFragment {
 	 */
 	public void setToClosed() {
 		setToFetching(false, true);
+		listVisible = false;
 		setEmptyText(getResources().getString(R.string.canteenclosed));
 	}
 	
@@ -70,6 +77,7 @@ public class DaySectionFragment extends ExpandableListFragment {
 	 */
 	public void setToNoInformation() {
 		setToFetching(false, true);
+		listVisible = false;
 		setEmptyText(getResources().getString(R.string.noinfo));
 	}
 	
@@ -93,23 +101,27 @@ public class DaySectionFragment extends ExpandableListFragment {
 		} else {
 			setListShownNoAnimation(!on);
 		}
-		
 	}
 	
-	public void setMealList(Day day) {
+	protected void setMealList(Day day) {
 		if (listItems == null || adapter == null)
 			return;
 
+		listVisible = true;
 		setToFetching(false, true);
 		listItems.addAll(day.getMeals());
 		adapter.notifyDataSetChanged();
 	}
-	
+
 	public void setDate(String date) {
 		this.date = date;
 	}
-	
+
 	public String getDate() {
 		return date;
+	}
+
+	public boolean isListShown() {
+		return listVisible;
 	}
 }

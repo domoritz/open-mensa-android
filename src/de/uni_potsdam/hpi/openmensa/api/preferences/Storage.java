@@ -52,9 +52,9 @@ public class Storage {
 	}
 	
 	public Canteens getCanteens() {
-		if (canteens == null) {
+		if (canteens == null)
 			canteens = new Canteens();
-		}
+
 		return canteens;
 	}
 	
@@ -70,14 +70,13 @@ public class Storage {
 		SettingsProvider.refreshActiveCanteens(context);
 	}
 	
-	public ArrayList<Canteen> getActiveCanteens() {
-		ArrayList<Canteen> activeCanteens = new ArrayList<Canteen>();
+	public ArrayList<Canteen> getFavouriteCanteens() {
+		ArrayList<Canteen> favouriteCanteens = new ArrayList<Canteen>();
 		for (Canteen canteen : getCanteens().values()) {
-			if (canteen.isFavourite()) {
-				activeCanteens.add(canteen);
-			}
+			if (canteen.isFavourite())
+				favouriteCanteens.add(canteen);
 		}
-		return activeCanteens;
+		return favouriteCanteens;
 	}
 
 	/**
@@ -107,8 +106,8 @@ public class Storage {
 
 	public Canteen getCurrentCanteen() {
 		if (currentCanteen == null || currentCanteen.isEmpty()) {
-			if (getActiveCanteens().size() > 0) {
-				currentCanteen = getActiveCanteens().get(0).key;
+			if (getFavouriteCanteens().size() > 0) {
+				currentCanteen = getFavouriteCanteens().get(0).key;
 			} else {
 				return null;
 			}	
@@ -122,6 +121,4 @@ public class Storage {
 	public boolean isEmpty() {
 		return getCanteens().size() == 0;
 	}
-	
-	
 }

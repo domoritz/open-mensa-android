@@ -154,24 +154,26 @@ public class MainActivity extends FragmentActivity implements
 			fragment.setDate(df.format(date));
 			
 			if (startedFetching) {
-				fragment.setToFetching(true, false);
+				fragment.setToFetching(true, !fragment.isListShown());
+				canteen.justUpdated(dateString);
 				continue;
 			}
 			
-			if (day == null)
+			if (day == null && canteen.isOutOfDate(dateString))
 				Log.d(MainActivity.TAG, "Meal cache miss");
 			else
 				Log.d(MainActivity.TAG, "Meal cache hit");
 			
-			if (day == null || force) {
+			if (day == null && canteen.isOutOfDate(dateString) || force) {
 				fragment.setToFetching(true, true);
 				String baseUrl = SettingsProvider.getSourceUrl(MainActivity.context);
 				String url = baseUrl + "canteens/" + canteen.key + "/meals/?start=" + dateString;
 				RetrieveFeedTask task = new RetrieveDaysFeedTask(MainActivity.context, this, canteen);
 				task.execute(new String[] { url });
-				startedFetching = true;				
+				startedFetching = true;
+				canteen.justUpdated(dateString);
 			} else {
-				fragment.setToFetching(false, false);
+				fragment.setToFetching(false, !fragment.isListShown());
 			}
 		}
 	}
@@ -192,23 +194,29 @@ public class MainActivity extends FragmentActivity implements
 	private void refreshActiveCanteens() {
 		Log.d(TAG, "Refreshing active canteen list");
 		
-		ArrayList<Canteen> activeCanteens = storage.getActiveCanteens();
+		ArrayList<Canteen> activeCanteens = storage.getFavouriteCanteens();
 		
 		if (activeCanteens.size() == 0 && !storage.getCanteens(this).isEmpty()) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.noactivecanteens)
 				.setMessage(R.string.chooseone)
-				.setCancelable(false)
+				.setCancelable(true)
+				.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog,
+							int which) {
+						dialog.dismiss();
+					}
+				})
 				.setNeutralButton(android.R.string.ok,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								Intent settings = new Intent(
-										MainActivity.context,
-										SettingsActivity.class);
-								startActivity(settings);
-							}
-						});
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int which) {
+							Intent settings = new Intent(
+									MainActivity.context,
+									SettingsActivity.class);
+							startActivity(settings);
+						}
+					});
 			AlertDialog alert = builder.create();
 			alert.show();
 		}
@@ -257,7 +265,7 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		Canteen c = storage.getActiveCanteens().get(itemPosition);
+		Canteen c = storage.getFavouriteCanteens().get(itemPosition);
 		Log.d(TAG, String.format("Chose canteen %s", c.key));
 		this.changeCanteenTo(c);
 		return false;
