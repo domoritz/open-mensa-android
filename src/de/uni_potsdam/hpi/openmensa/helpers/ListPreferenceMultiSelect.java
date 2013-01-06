@@ -37,7 +37,6 @@ public class ListPreferenceMultiSelect extends ListPreference {
 	private String checkAllKey = null;
 	private boolean[] mClickedDialogEntryIndices;
 	
-	// Constructor
 	public ListPreferenceMultiSelect(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ListPreferenceMultiSelect);
@@ -48,14 +47,12 @@ public class ListPreferenceMultiSelect extends ListPreference {
         } else {
         	separator = DEFAULT_SEPARATOR;
         }
-     // Initialize the array of boolean to the same size as number of entries
         mClickedDialogEntryIndices = new boolean[getEntries().length];
     }
 	
 	@Override
     public void setEntries(CharSequence[] entries) {
     	super.setEntries(entries);
-    	// Initialize the array of boolean to the same size as number of entries
         mClickedDialogEntryIndices = new boolean[entries.length];
     }
     

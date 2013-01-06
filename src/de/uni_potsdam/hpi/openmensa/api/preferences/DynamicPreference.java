@@ -1,7 +1,10 @@
 package de.uni_potsdam.hpi.openmensa.api.preferences;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import android.content.Context;
@@ -62,7 +65,15 @@ public class DynamicPreference extends MultiSelectListPreference {
     	//entriesList.add("Select all");
     	//entryValuesList.add("#ALL#");
     	
-        for (Canteen canteen : canteens.values()) {
+    	List<Canteen> orderedCanteens = new ArrayList<Canteen>(canteens.values());
+    	
+        Collections.sort(orderedCanteens, new Comparator<Canteen>() {
+            public int compare(Canteen o1, Canteen o2) {
+                return o1.name.compareTo(o2.name);
+            }
+        });
+    	
+        for (Canteen canteen : orderedCanteens) {
         	entriesList.add(canteen.name);
         	entryValuesList.add(canteen.key);
 		}
