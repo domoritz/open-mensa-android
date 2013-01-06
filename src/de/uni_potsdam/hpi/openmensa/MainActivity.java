@@ -92,7 +92,7 @@ public class MainActivity extends FragmentActivity implements
 		// Set up the ViewPager with the sections adapter.
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(sectionsPagerAdapter);
-		viewPager.setCurrentItem(2);
+		viewPager.setCurrentItem(1);
 	}
 	
 	protected void onSaveInstanceState(Bundle outState) {
