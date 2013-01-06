@@ -36,8 +36,8 @@ public class Storage {
 		}
 		
 		Calendar now = Calendar.getInstance();
-		// 1 hour
-		int maxDiff = 1000*60*60;
+		// 48 hours
+		int maxDiff = 1000*60*60*48;
 		if (now.getTimeInMillis() - lastUpdate.getTimeInMillis() > maxDiff) {
 			return true;
 		}
