@@ -99,7 +99,7 @@ public class MainActivity extends FragmentActivity implements
 	protected void onSaveInstanceState(Bundle outState) {
 		Log.d(TAG, "Save state, flushed cache storage");
 		outState.putInt("page",	viewPager.getCurrentItem());
-		storage.flush(this);
+		storage.saveToPreferences(this);
 	}
 	
 	@Override
@@ -115,7 +115,7 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	public void changeCanteenTo(Canteen canteen) {
 		storage.setCurrentCanteen(canteen);
-		storage.flush(this);
+		storage.saveToPreferences(this);
 		
 		updateMealStorage();
 		sectionsPagerAdapter.notifyDataSetChanged();
@@ -344,11 +344,11 @@ public class MainActivity extends FragmentActivity implements
 	 * 
 	 */
 	private void reload(boolean force) {
-		storage.refreshStorage(this);
+		storage.loadFromPreferences(this);
 		
 		if (isOnline(MainActivity.this)) {
 			// fetch meal feed and maybe canteens
-			if (storage.isOutOfDate() || storage.isEmpty() || force) {
+			if (storage.areCanteensOutOfDate() || storage.isEmpty() || force) {
 				Log.d(TAG, "Fetch canteens because storage is out of date or empty");
 				// async
 				refreshAvailableCanteens();

@@ -27,10 +27,10 @@ public class Storage {
 	public String currentCanteen;
 	
 	@SerializedName("lastUpdate")
-	public Calendar lastUpdate;
+	public Calendar lastCanteensUpdate;
 	
-	public Boolean isOutOfDate() {
-		if (lastUpdate == null) {
+	public Boolean areCanteensOutOfDate() {
+		if (lastCanteensUpdate == null) {
 			Log.d(MainActivity.TAG, "Out of date because no last fetch date is set.");
 			return true;
 		}
@@ -38,7 +38,7 @@ public class Storage {
 		Calendar now = Calendar.getInstance();
 		// 48 hours
 		int maxDiff = 1000*60*60*48;
-		if (now.getTimeInMillis() - lastUpdate.getTimeInMillis() > maxDiff) {
+		if (now.getTimeInMillis() - lastCanteensUpdate.getTimeInMillis() > maxDiff) {
 			return true;
 		}
 		return false;
@@ -46,7 +46,7 @@ public class Storage {
 	
 	public Canteens getCanteens(Context context) {
 		if (canteens == null) {
-			refreshStorage(context);
+			loadFromPreferences(context);
 		}
 		return canteens;
 	}
@@ -64,9 +64,9 @@ public class Storage {
 
 	public void saveCanteens(Context context, Canteens canteens) {
 		setCanteens(canteens);
-		lastUpdate = Calendar.getInstance();
+		lastCanteensUpdate = Calendar.getInstance();
 		
-		flush(context);
+		saveToPreferences(context);
 		SettingsProvider.refreshActiveCanteens(context);
 	}
 	
@@ -81,22 +81,24 @@ public class Storage {
 
 	/**
 	 * Gets the canteens from the shared preferences without fetching
-	 * opposite: flush
+	 * opposite: saveToPreferences
+	 * 
+	 * @param context
 	 */
-	public void refreshStorage(Context context) {
+	public void loadFromPreferences(Context context) {
 		Storage storage = SettingsProvider.getStorage(context);
 		canteens = storage.canteens;
-		lastUpdate = storage.lastUpdate;
+		lastCanteensUpdate = storage.lastCanteensUpdate;
 		currentCanteen = storage.currentCanteen;
 	}
 	
 	/**
 	 * saves the storage object in the shared preferences
-	 * opposite: refreshStorage
+	 * opposite: loadFromPreferences
 	 * 
 	 * @param context
 	 */
-	public void flush(Context context) {
+	public void saveToPreferences(Context context) {
 		SettingsProvider.setStorage(context, this);
 	}
 

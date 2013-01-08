@@ -52,7 +52,7 @@ public class SettingsProvider {
     }
 
     /**
-     * sets the active canteens in the canteens object
+     * sets the active canteens in the canteens object from the preferences
      * @param context
      */
 	public static void refreshActiveCanteens(Context context) {
