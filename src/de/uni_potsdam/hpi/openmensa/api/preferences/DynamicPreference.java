@@ -8,6 +8,8 @@ import java.util.List;
 
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.MultiSelectListPreference;
 import android.util.AttributeSet;
 import android.view.View;
@@ -48,13 +50,18 @@ public class DynamicPreference extends MultiSelectListPreference {
         ListView view = new ListView(getContext());
         view.setAdapter(adapter());
         
-        initializeValues();
+        return view;
+    }
+    
+    @Override
+    protected void showDialog(Bundle state) {
+    	initializeValues();
         
         setEntries(entries());
         setEntryValues(entryValues());
         //setValueIndex(initializeIndex());
         
-        return view;
+    	super.showDialog(state);
     }
 
 	private void initializeValues() {
