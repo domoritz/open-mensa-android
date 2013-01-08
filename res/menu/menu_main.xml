@@ -8,7 +8,7 @@
     </item>
     <item android:id="@+id/reload" 
         android:title="@string/reload" 
-        android:showAsAction="always|withText"
+        android:showAsAction="ifRoom|withText"
         android:icon="@drawable/ic_refresh" 
         android:menuCategory="container">
     </item>
