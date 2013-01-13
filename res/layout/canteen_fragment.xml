@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/txtName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/titlePadding"
+        android:paddingTop="@dimen/titlePadding"
+        android:gravity="center"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+     <RelativeLayout
+         xmlns:android="http://schemas.android.com/apk/res/android"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:paddingLeft="@dimen/indention" >
+	    
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:text="@string/address"
+	        android:textAppearance="?android:attr/textAppearanceMedium"/>
+	
+       <TextView
+	        android:id="@+id/txtAddress"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="@dimen/priceListFloat"
+	        android:text="Lorem Ipsum"
+	        android:textAppearance="?android:attr/textAppearanceMedium"/>
+	 </RelativeLayout>
+
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:orientation="vertical"
+         android:padding="@dimen/mapPadding" >
+
+         <org.osmdroid.views.MapView
+             xmlns:android="http://schemas.android.com/apk/res/android"
+             android:id="@+id/mapview"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent"
+             android:clickable="false" >
+         </org.osmdroid.views.MapView>
+
+     </LinearLayout>
+
+</LinearLayout>

@@ -125,9 +125,6 @@ public class MealAdapter extends BaseExpandableListAdapter {
 		        name.setText(meal.name);
 				int i = meal.notes.length;
 				notes.setText("");
-				if (i > 0) {
-					notes.setText("~");
-				}
 				for (String note : meal.notes) {
 					notes.append(note);
 					if (--i > 0) {

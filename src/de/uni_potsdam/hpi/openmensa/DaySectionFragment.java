@@ -4,15 +4,17 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.support.v4.app.ExpandableListFragment;
+import android.util.Log;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.Day;
 import de.uni_potsdam.hpi.openmensa.api.Meal;
+import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment;
 
 /**
  * A fragment representing a section of the app, that displays the Meals for
  * one Day.
  */
-public class DaySectionFragment extends ExpandableListFragment {
+public class DaySectionFragment extends ExpandableListFragment implements RefreshableFragment {
 	private ArrayList<Meal> listItems = new ArrayList<Meal>();
 	private String date = null;
 	private Boolean fetching = false;
@@ -32,11 +34,11 @@ public class DaySectionFragment extends ExpandableListFragment {
 	
 	@Override
 	public void onResume() {
-		update();
+		refresh();
 		super.onResume() ; 
 	}
 	
-	public void update() {
+	public void refresh() {
 		if (isDetached() || !isAdded() || date == null)
 			return;
 

@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.osmdroid.tileprovider.util.CloudmadeUtil;
+
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.AlertDialog;
@@ -36,6 +39,7 @@ import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener;
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener;
 import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
 
+@SuppressLint("SimpleDateFormat")
 public class MainActivity extends FragmentActivity implements
 		OnSharedPreferenceChangeListener, OnNavigationListener,
 		OnFinishedFetchingCanteensListener, OnFinishedFetchingDaysListener {
@@ -81,6 +85,8 @@ public class MainActivity extends FragmentActivity implements
 		ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		
+		CloudmadeUtil.retrieveCloudmadeKey(MainActivity.context);
+		
 		reload();
 		refreshActiveCanteens();
 	}
@@ -92,7 +98,7 @@ public class MainActivity extends FragmentActivity implements
 		// Set up the ViewPager with the sections adapter.
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(sectionsPagerAdapter);
-		viewPager.setCurrentItem(1);
+		viewPager.setCurrentItem(2);
 	}
 	
 	@Override
@@ -140,17 +146,18 @@ public class MainActivity extends FragmentActivity implements
 		
 		Boolean startedFetching = false;
 		
-		int numberSections = sectionsPagerAdapter.getCount();
-		for (int position = 0; position < numberSections; position++) {
+		ArrayList<Integer> sections = sectionsPagerAdapter.getDaySections();
+		int i = -1;
+		for (Integer position : sections) {
 			cal.setTime(now);
-			cal.add(Calendar.DAY_OF_YEAR, position-1);
+			cal.add(Calendar.DAY_OF_YEAR, i++);
 			Date date = cal.getTime();
 			
 			String dateString = df.format(date);
 			
 			Day day = canteen.getDay(dateString);
 			
-			DaySectionFragment fragment = sectionsPagerAdapter.getItem(position);
+			DaySectionFragment fragment = (DaySectionFragment) sectionsPagerAdapter.getItem(position);
 			fragment.setDate(df.format(date));
 			
 			if (startedFetching) {
@@ -289,8 +296,11 @@ public class MainActivity extends FragmentActivity implements
 			case R.id.reload:
 				reload(true);
 				return true;
+			case R.id.canteen_info:
+				viewPager.setCurrentItem(0);
+				return true;
 			case R.id.today:
-				viewPager.setCurrentItem(1);
+				viewPager.setCurrentItem(2);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

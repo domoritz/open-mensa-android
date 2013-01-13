@@ -11,6 +11,7 @@
         	<dependency org="com.google.android" name="support-v4" rev="r10"/>
         -->
         <dependency org="com.google.code.gson" name="gson" rev="2.2.2"/>
+        <dependency org="org.osmdroid" name="osmdroid-android" rev="3.0.8"/>
 
         <!-- strip all Javadoc and sources -->
         <exclude org="*" ext="*" type="javadoc"/>

@@ -4,19 +4,23 @@
         android:orderInCategory="100"
         android:showAsAction="always|withText" 
         android:menuCategory="system" 
-        android:icon="@drawable/ic_action_settings">
-    </item>
-    <item android:id="@+id/reload" 
-        android:title="@string/reload" 
-        android:showAsAction="ifRoom|withText"
-        android:icon="@drawable/ic_refresh" 
-        android:menuCategory="container">
+        android:icon="@android:drawable/ic_menu_preferences">
     </item>
     <item android:id="@+id/today" 
-        android:icon="@drawable/ic_go_to_today" 
+        android:icon="@android:drawable/ic_menu_today" 
         android:title="@string/today"
         android:showAsAction="ifRoom|withText"
         android:menuCategory="container">
-        
+    </item>
+    <item android:id="@+id/reload" 
+        android:title="@string/reload" 
+        android:showAsAction="never"
+        android:menuCategory="container">
+    </item>
+    <item android:id="@+id/canteen_info" 
+        android:icon="@android:drawable/ic_dialog_info" 
+        android:title="@string/canteen_info"
+        android:showAsAction="ifRoom|withText"
+        android:menuCategory="container">
     </item>
 </menu>

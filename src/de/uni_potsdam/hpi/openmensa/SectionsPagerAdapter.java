@@ -1,9 +1,14 @@
 package de.uni_potsdam.hpi.openmensa;
 
+import java.util.ArrayList;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
+import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment;
 
 /**
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -11,21 +16,21 @@ import android.support.v4.app.FragmentStatePagerAdapter;
  */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	
-	static final int NUM_ITEMS = 4;
+	static final int NUM_ITEMS = 5;
 
 	public SectionsPagerAdapter(FragmentManager fm) {
 		super(fm);
 	}
 	
-	private DaySectionFragment[] fragments = new DaySectionFragment[getCount()];
+	private Fragment[] fragments = new Fragment[getCount()];
 	
 	public void notifyDataSetChanged() {
 		super.notifyDataSetChanged();
 		
 		// TODO: use adapter properly
-		for (DaySectionFragment fragment : fragments) {
+		for (Fragment fragment : fragments) {
 			if (fragment != null) {
-				fragment.update();
+				((RefreshableFragment) fragment).refresh();
 			}
 		}
 	}
@@ -34,10 +39,16 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	 * Creates/ returns an Item
 	 */	
 	@Override
-	public DaySectionFragment getItem(int position) {
+	public Fragment getItem(int position) {
 		if (fragments[position] == null) {
-			DaySectionFragment fragment = new DaySectionFragment();
-			fragments[position] = fragment;
+			if (position == 0) {
+				CanteenFragment fragment = new CanteenFragment();
+				fragments[0] = fragment;
+			} else {
+				DaySectionFragment fragment = new DaySectionFragment();
+				fragments[position] = fragment;
+			}
+			
 		}
 
 		return fragments[position];
@@ -53,22 +64,36 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		Context context = MainActivity.context;
 		switch (position) {
 			case 0:
-				return context.getString(R.string.title_section0).toUpperCase();
+				return context.getString(R.string.section_canteen).toUpperCase();
 			case 1:
-				return context.getString(R.string.title_section1).toUpperCase();
+				return context.getString(R.string.section_yesterday).toUpperCase();
 			case 2:
-				return context.getString(R.string.title_section2).toUpperCase();
+				return context.getString(R.string.section_today).toUpperCase();
 			case 3:
-				return context.getString(R.string.title_section3).toUpperCase();
+				return context.getString(R.string.section_tomorrow).toUpperCase();
+			case 4:
+				return context.getString(R.string.section_da_tomorrow).toUpperCase();
 		}
 		return null;
 	}
 
 	public void setToFetching(boolean on, boolean animated) {
-		for (DaySectionFragment fragment : fragments) {
+		ArrayList<Integer> daySections = getDaySections();
+		int i = 0;
+		for (Fragment fragment : fragments) {
+			if (!daySections.contains(i++))
+				continue;
 			if (fragment != null) {
-				fragment.setToFetching(on, animated);
+				((DaySectionFragment) fragment).setToFetching(on, animated);
 			}
 		}
+	}
+
+	public ArrayList<Integer> getDaySections() {
+		ArrayList<Integer> sections = new ArrayList<Integer>();
+		for (int i = 1; i < getCount(); i++) {
+			sections.add(i);
+		}
+		return sections;
 	}
 }

@@ -8,9 +8,13 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="16" android:maxSdkVersion="16"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> 
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -33,6 +37,16 @@
     		</intent-filter>
             <meta-data android:value=".MainActivity" android:name="android.support.PARENT_ACTIVITY"/>
         </activity>
+        
+        <meta-data android:name="CLOUDMADE_KEY" android:value="cd90d029cdd64f7e87e30920103d1720" />
+        
+        <service android:name="org.andnav.osm.services.OpenStreetMapTileProviderService"
+             android:process=":remote"
+             android:label="OpenStreetMapTileProviderService">
+        <intent-filter>
+            <action android:name="org.andnav.osm.services.IOpenStreetMapTileProviderService" />
+          </intent-filter>
+    </service>
     </application>
 
 </manifest>
