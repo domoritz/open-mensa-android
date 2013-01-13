@@ -18,9 +18,15 @@
     <TextView
         android:id="@+id/txtName"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:text="Lorem Ipsum"
         android:color="?android:attr/textColorPrimary"
         android:textAppearance="?android:attr/textAppearance" />
+    
+    <TextView
+        android:id="@+id/txtNotes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Details" />
 
 </LinearLayout>

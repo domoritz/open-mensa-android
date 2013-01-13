@@ -50,12 +50,7 @@ public class MealAdapter extends BaseExpandableListAdapter {
         {
             row = inflater.inflate(R.layout.details, parent, false);
            
-            holder = new MealHolder();
-            holder.priceStudents = (TextView)row.findViewById(R.id.txtPriceStudents);
-            holder.priceEmployees = (TextView)row.findViewById(R.id.txtPriceEmployees);
-            holder.pricePupils = (TextView)row.findViewById(R.id.txtPricePupils);
-            holder.priceOthers = (TextView)row.findViewById(R.id.txtPriceOthers);
-            holder.notes = (TextView)row.findViewById(R.id.txtNotes);
+            holder = new MealHolder(row);
            
             row.setTag(holder);
         } else {
@@ -63,29 +58,10 @@ public class MealAdapter extends BaseExpandableListAdapter {
         }
        
         Meal meal = data.get(groupPosition);
-        holder.priceStudents.setText(stringOrNone(meal.prices.students));
-        holder.priceEmployees.setText(stringOrNone(meal.prices.employees));
-        holder.pricePupils.setText(stringOrNone(meal.prices.pupils));
-        holder.priceOthers.setText(stringOrNone(meal.prices.others));
-        
-        holder.notes.setText("");
-        int i = meal.notes.length;
-        for (String note : meal.notes) {
-			holder.notes.append(note);
-			if (--i > 0) {
-				holder.notes.append(", ");
-			}
-		}
+        holder.setData(meal);
        
         return row;
     }
-    
-    private String stringOrNone(float price) {
-    	if (price > 0)
-    		return String.format("%s", price);
-    	return context.getResources().getString(R.string.noprice);
-    }
-
     public Object getGroup(int groupPosition) {
         return data.get(groupPosition);
     }
@@ -107,9 +83,7 @@ public class MealAdapter extends BaseExpandableListAdapter {
         {
             row = inflater.inflate(R.layout.list_item, parent, false);
            
-            holder = new MealHolder();
-            holder.category = (TextView)row.findViewById(R.id.txtCategory);
-            holder.name = (TextView)row.findViewById(R.id.txtName);
+            holder = new MealHolder(row);
            
             row.setTag(holder);
         } else {
@@ -117,8 +91,8 @@ public class MealAdapter extends BaseExpandableListAdapter {
         }
        
         Meal meal = data.get(groupPosition);
-        holder.category.setText(meal.category);
-        holder.name.setText(meal.name);
+        
+        holder.setData(meal);
        
         return row;
     }
@@ -133,7 +107,50 @@ public class MealAdapter extends BaseExpandableListAdapter {
     
     static class MealHolder
     {
-    	TextView category;
+    	public MealHolder() {}
+    	
+    	public MealHolder(View row) {
+    		category = (TextView)row.findViewById(R.id.txtCategory);
+            name = (TextView)row.findViewById(R.id.txtName);
+    		priceStudents = (TextView)row.findViewById(R.id.txtPriceStudents);
+            priceEmployees = (TextView)row.findViewById(R.id.txtPriceEmployees);
+            pricePupils = (TextView)row.findViewById(R.id.txtPricePupils);
+            priceOthers = (TextView)row.findViewById(R.id.txtPriceOthers);
+            notes = (TextView)row.findViewById(R.id.txtNotes);
+		}
+    	
+		public void setData(Meal meal) {
+			if (category != null) {
+				category.setText(meal.category);
+		        name.setText(meal.name);
+				int i = meal.notes.length;
+				notes.setText("");
+				if (i > 0) {
+					notes.setText("~");
+				}
+				for (String note : meal.notes) {
+					notes.append(note);
+					if (--i > 0) {
+						notes.append(", ");
+					}
+				}
+			}
+			
+			if (priceStudents != null) {
+				priceStudents.setText(stringOrNone(meal.prices.students));
+				priceEmployees.setText(stringOrNone(meal.prices.employees));
+				pricePupils.setText(stringOrNone(meal.prices.pupils));
+				priceOthers.setText(stringOrNone(meal.prices.others));
+			}
+		}
+		
+		private String stringOrNone(float price) {
+	    	if (price > 0)
+	    		return String.format("%s", price);
+	    	return MainActivity.context.getResources().getString(R.string.noprice);
+	    }
+		
+		TextView category;
         TextView name;
         TextView priceStudents;
         TextView priceEmployees;
