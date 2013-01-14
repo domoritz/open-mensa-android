@@ -28,11 +28,11 @@
     <string name="noactivecanteens">No active canteens.</string>
     <string name="chooseone">You have not yet set any active canteens. Please select at least one.</string>
     
-    <string name="reload">Reload</string>
+    <string name="reload">Refresh canteens</string>
     <string name="canteen_info">Canteen</string>
     
-    <string name="title_activity_preferences">PreferencesActivity</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_preferences">Preferences</string>
+    <string name="title_activity_settings">Preferences</string>
     
     <string name="source_title">Source</string>
     <string name="source_url_title">URL</string>
