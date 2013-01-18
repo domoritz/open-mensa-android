@@ -38,8 +38,8 @@ public class RetrieveCanteenFeedTask extends RetrieveFeedTask {
 		for(Canteen canteen : canteens_arr) {
 			canteens.put(canteen.key, canteen);
 		}
-		
-		if (canteens_arr.length > 0) {
+
+		if (canteens_arr.length > 0 && (totalPages == null || currentPage < totalPages)) {
 			currentPage++;
 			doInBackground(url + "&page=" + currentPage);
 		}
@@ -49,7 +49,12 @@ public class RetrieveCanteenFeedTask extends RetrieveFeedTask {
 		super.onProgressUpdate(progress);
 		if (visible){
 			dialog.setProgress(progress[0]);
-			dialog.setTitle(String.format("Fetching [%s]...", currentPage));
+
+			if (totalPages != null) {
+				dialog.setTitle(String.format("Fetching [%s/%s]...", currentPage, totalPages));
+			} else {
+				dialog.setTitle(String.format("Fetching [%s]...", currentPage));
+			}
 		}
 	}
 

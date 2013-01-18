@@ -30,6 +30,9 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 	protected Context context;
 	protected Gson gson = new Gson();
 	
+	// provided by the header "X-Total-Pages"
+	protected Integer totalPages = null;
+	
 	// show dialog while fetching
 	protected Boolean visible = false;
 	protected String name = "";
@@ -52,12 +55,12 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 
 		// error dialog that may be needed
 		builder = new AlertDialog.Builder(context)
-				.setNegativeButton("Okay",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-							}
-						});
+			.setNegativeButton("Okay",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
 	}
 
 	@Override
@@ -87,6 +90,11 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 				long fileLength = urlConnection.getContentLength();
 				long total = 0;
 				int count;
+				
+				totalPages = urlConnection.getHeaderFieldInt("X-Total-Pages", -1);
+				if (totalPages < 0) {
+					totalPages = null;
+				}
 
 				// content length is sometimes not sent
 				if (visible) {

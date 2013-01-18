@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.openmensa;
 import android.content.Context;
 import android.util.Log;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
+import de.uni_potsdam.hpi.openmensa.api.Day;
 import de.uni_potsdam.hpi.openmensa.api.Days;
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener;
 import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
@@ -34,6 +35,12 @@ public class RetrieveDaysFeedTask extends RetrieveFeedTask {
 	
 	protected void parseFromJSON(String jsonString) {
 		days = gson.fromJson(jsonString, Days.class);
+		for (Day day : days) {
+			if (day.meals == null || day.date == null) {
+				Log.w(MainActivity.TAG, "Incomplete json response from server. Meals or date is null");
+				this.exception = new Exception("Incomplete response from server.");
+			}
+		}
 	}
 
 	protected void onPostExecuteFinished() {
