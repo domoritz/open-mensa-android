@@ -10,8 +10,6 @@
 	<!-- Import android ant tasks -->
 	<import file="${sdk.dir}/tools/ant/build.xml" />
 
-	<target name="default" depends="resolve,release" description="Retrieve dependencies and build app." />
-
 	<property name="lib.dir" value="libs"/>
 
 	<target name="-find-support-lib">
@@ -32,4 +30,6 @@
 
 		<ivy:retrieve pattern="${lib.dir}/[artifact]-[revision]-[type].[ext]"/>
 	</target>
+
+	<target name="-build-setup" depends="resolve,android_rules.-build-setup" />
 </project>
