@@ -30,7 +30,7 @@ public class DaySectionFragment extends ExpandableListFragment implements Refres
 		// Assign adapter to ListView
 		setListAdapter(adapter);
 	}
-	
+
 	@Override
 	public void onResume() {
 		refresh();
