@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Use this script with 'ant -f build.xml' or simply 'ant'.
+-->
+<project xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<loadproperties srcFile="local.properties" />
+	<loadproperties srcFile="project.properties" />
+
+	<!-- Import android ant tasks -->
+	<import file="${sdk.dir}/tools/ant/build.xml" />
+
+	<property name="lib.dir" value="libs"/>
+	<property name="reports.dir" value="reports"/>
+
+	<target name="resolve" description="Retrieve dependencies">
+		<mkdir dir="${lib.dir}"/>
+
+		<ivy:retrieve pattern="${lib.dir}/[artifact]-[revision]-[type].[ext]"/>
+	</target>
+
+	<target name="ivy-report" depends="resolve" description="Dependency report">
+		<mkdir dir="${reports.dir}/ivy"/>
+
+		<ivy:report
+			xsl="true"
+			todir="${reports.dir}/ivy"
+			outputpattern="[organisation]-[module]-[conf]-report.[ext]"
+			organisation="de.uni_potsdam.hpi"
+			module="openmensa"/>
+	</target>
+</project>
