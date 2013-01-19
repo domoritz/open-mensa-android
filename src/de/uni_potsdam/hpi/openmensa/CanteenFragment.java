@@ -2,17 +2,6 @@ package de.uni_potsdam.hpi.openmensa;
 
 import java.util.ArrayList;
 
-import de.uni_potsdam.hpi.openmensa.api.Canteen;
-import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -20,16 +9,32 @@ import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.OverlayItem.HotspotPlace;
 
-public class CanteenFragment extends Fragment implements RefreshableFragment {
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import de.uni_potsdam.hpi.openmensa.api.Canteen;
+import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment;
+
+public class CanteenFragment extends Fragment implements RefreshableFragment, OnClickListener {
 
 	private MapView mapView;
 	private MapController mapController;
 	private OverlayItem canteenLocation;
 	private ItemizedIconOverlay overlay;
 	private DefaultResourceProxyImpl resourceProxy;
-
+	
+	private int zoom = 18;
+	private GeoPoint center;
+	private Canteen canteen;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -37,10 +42,16 @@ public class CanteenFragment extends Fragment implements RefreshableFragment {
 		
 		mapView = (MapView) view.findViewById(R.id.mapview);
 		mapView.setTileSource(TileSourceFactory.CLOUDMADESTANDARDTILES);
-		mapView.setBuiltInZoomControls(true);
+		mapView.setBuiltInZoomControls(false);
         mapView.setMultiTouchControls(true);
-        mapView.setClickable(true);
+        
 		mapController = mapView.getController();
+		
+		TextView address = (TextView) view.findViewById(R.id.txtAddress);
+		address.setOnClickListener(this);
+		
+		TextView title = (TextView) view.findViewById(R.id.txtName);
+		title.setOnClickListener(this);
 		
 		return view;
 	}
@@ -56,7 +67,7 @@ public class CanteenFragment extends Fragment implements RefreshableFragment {
 		if (isDetached() || !isAdded())
 			return;
 
-		Canteen canteen = MainActivity.storage.getCurrentCanteen();
+		canteen = MainActivity.storage.getCurrentCanteen();
 		if (canteen == null)
 			return;
 		
@@ -66,13 +77,12 @@ public class CanteenFragment extends Fragment implements RefreshableFragment {
 		TextView name = (TextView) getView().findViewById(R.id.txtName);
 		name.setText(canteen.name);
 		
-		mapController.setZoom(18);
+		mapController.setZoom(zoom);
 		int lat = (int) (canteen.coordinates[0]*1E6);
 		int lon = (int) (canteen.coordinates[1]*1E6);
 		
-		GeoPoint center = new GeoPoint(lat, lon);
+		center = new GeoPoint(lat, lon);
 		mapController.setCenter(center);
-
 		
 		canteenLocation = new OverlayItem(canteen.name,canteen.address, center);
         Drawable canteenMarker = this.getResources().getDrawable(R.drawable.marker_blue);
@@ -96,4 +106,21 @@ public class CanteenFragment extends Fragment implements RefreshableFragment {
         this.mapView.getOverlays().add(this.overlay);
 	}
 
+	@Override
+	public void onClick(View v) {
+		openMapIntent();
+	}
+	
+	private void openMapIntent() {
+		if (center == null || canteen == null)
+			return;
+		
+		double lat = center.getLatitudeE6()/1E6;
+		double lon = center.getLongitudeE6()/1E6;
+		String latlon = lat + "," + lon;
+		String uri = "geo:"+ latlon +
+				"?z=" + zoom +
+				"&q=" + latlon + "(" + canteen.name + ")";
+		startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+	}
 }
