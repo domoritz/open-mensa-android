@@ -10,6 +10,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment;
 
@@ -121,6 +123,11 @@ public class CanteenFragment extends Fragment implements RefreshableFragment, On
 		String uri = "geo:"+ latlon +
 				"?z=" + zoom +
 				"&q=" + latlon + "(" + canteen.name + ")";
-		startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+		try {
+			startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+		} catch (ActivityNotFoundException e) {
+			Toast.makeText(MainActivity.context, getResources().getString(R.string.nomapapp), Toast.LENGTH_LONG).show();
+		}
+		
 	}
 }
