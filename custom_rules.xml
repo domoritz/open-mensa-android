@@ -2,7 +2,7 @@
 <!--
 	Use this script with 'ant -f build.xml' or simply 'ant'.
 -->
-<project name="open-mensa-android" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project xmlns:ivy="antlib:org.apache.ivy.ant">
 
 	<loadproperties srcFile="local.properties" />
 	<loadproperties srcFile="project.properties" />
