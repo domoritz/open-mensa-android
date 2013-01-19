@@ -20,9 +20,9 @@
 		<!-- Abort unless support v4 library is present -->
 		<available file="${sdk.dir}/extras/android/support/v4/android-support-v4.jar" property="support.v4.present" />
 		<fail message="Android Support Library cannot be found. Install it via the SDK manager."
-            unless="support.v4.present" />
+			unless="support.v4.present" />
 
-    	<copy file="${sdk.dir}/extras/android/support/v4/android-support-v4.jar" todir="${lib.dir}/" />
+		<copy file="${sdk.dir}/extras/android/support/v4/android-support-v4.jar" todir="${lib.dir}/" />
 	</target>
 
 	<target name="resolve" depends="-req-support-lib" description="Retrieve dependencies">
@@ -34,12 +34,13 @@
 	<target name="-build-setup" depends="resolve,android_rules.-build-setup" />
 
 	<target name="ivy-report" depends="resolve" description="Dependency report">
-        <mkdir dir="${reports.dir}/ivy"/>
+		<mkdir dir="${reports.dir}/ivy"/>
 
-        <ivy:report
-            xsl="true"
-            todir="${reports.dir}/ivy"
-            outputpattern="[organisation]-[module]-[conf]-report.[ext]"
-            organisation="de.uni_potsdam.hpi"
-            module="openmensa"/>
+		<ivy:report
+			xsl="true"
+			todir="${reports.dir}/ivy"
+			outputpattern="[organisation]-[module]-[conf]-report.[ext]"
+			organisation="de.uni_potsdam.hpi"
+			module="openmensa"/>
+	</target>
 </project>
