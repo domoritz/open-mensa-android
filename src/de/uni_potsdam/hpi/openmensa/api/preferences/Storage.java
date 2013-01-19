@@ -76,7 +76,7 @@ public class Storage {
 	}
 	
 	public void setCanteens(Canteens newCanteens) {
-		canteens.clear();
+		getCanteens().clear();
 		canteens.putAll(newCanteens);
 	}
 
