@@ -32,8 +32,6 @@
 		<ivy:retrieve pattern="${lib.dir}/[artifact]-[revision]-[type].[ext]"/>
 	</target>
 
-	<target name="-build-setup" depends="resolve,android_rules.-build-setup" />
-
 	<target name="ivy-report" depends="resolve" description="Dependency report">
 		<mkdir dir="${reports.dir}/ivy"/>
 
