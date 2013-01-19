@@ -90,13 +90,11 @@ public class Storage {
 	
 	public ArrayList<Canteen> getFavouriteCanteens() {
 		ArrayList<Canteen> favouriteCanteens = new ArrayList<Canteen>();
-		Log.d(MainActivity.TAG, String.format("Number of favourites in keys: %s", favouriteCanteensKeys));
 		for (Canteen canteen : getCanteens().values()) {
 			if (favouriteCanteensKeys.contains(canteen.key)) {
 				favouriteCanteens.add(canteen);
 			}
 		}
-		Log.d(MainActivity.TAG, String.format("Number of favourites: %s", favouriteCanteens));
 		return favouriteCanteens;
 	}
 
@@ -112,7 +110,7 @@ public class Storage {
 		lastCanteensUpdate = storage.lastCanteensUpdate;
 		currentCanteen = storage.currentCanteen;
 		favouriteCanteensKeys = storage.favouriteCanteensKeys;
-		
+
 		SettingsProvider.updateFavouriteCanteensFromPreferences(context);
 	}
 	

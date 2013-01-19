@@ -40,10 +40,9 @@ import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener;
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener;
 import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
 
-@SuppressLint("SimpleDateFormat")
+@SuppressLint("NewApi")
 public class MainActivity extends FragmentActivity implements
-		OnSharedPreferenceChangeListener, OnNavigationListener,
-		OnFinishedFetchingCanteensListener, OnFinishedFetchingDaysListener {
+		OnNavigationListener, OnFinishedFetchingCanteensListener, OnFinishedFetchingDaysListener {
 
 	public static final String TAG = "Canteendroid";
 	public static final Boolean LOGV = true;
@@ -55,6 +54,8 @@ public class MainActivity extends FragmentActivity implements
 	static Context context;
 	
 	Gson gson = new Gson();
+	
+	OnSharedPreferenceChangeListener listener;
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -81,14 +82,32 @@ public class MainActivity extends FragmentActivity implements
 		createSectionsPageAdapter();
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		prefs.registerOnSharedPreferenceChangeListener(this);
+		
+		listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+			@Override
+			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {	
+				if (key.equals(SettingsProvider.KEY_FAVOURITES)) {
+					refreshFavouriteCanteens();
+				} else if (key.equals(SettingsProvider.KEY_SOURCE_URL)) {
+					reload();
+				}
+			}
+		};
+
+		prefs.registerOnSharedPreferenceChangeListener(listener);
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		actionBar.setHomeButtonEnabled(true);
 		
 		CloudmadeUtil.retrieveCloudmadeKey(MainActivity.context);
 		
 		reload();
+		refreshFavouriteCanteens();
+	}
+	
+	public void onResume() {
+		super.onResume();
 		refreshFavouriteCanteens();
 	}
 
@@ -202,6 +221,8 @@ public class MainActivity extends FragmentActivity implements
 	private void refreshFavouriteCanteens() {
 		Log.d(TAG, "Refreshing favourite canteen list");
 		
+		SettingsProvider.updateFavouriteCanteensFromPreferences(context);
+		
 		ArrayList<Canteen> favouriteCanteens = storage.getFavouriteCanteens();
 		
 		if (favouriteCanteens.size() == 0 && !storage.getCanteens(this).isEmpty()) {
@@ -229,7 +250,7 @@ public class MainActivity extends FragmentActivity implements
 			alert.show();
 		}
 		
-		Log.d(TAG, String.format("%s active canteens", favouriteCanteens.size()));
+		Log.d(TAG, String.format("favourite canteens: %s", favouriteCanteens));
 		
 		ActionBar actionBar = getActionBar();
 		spinnerAdapter = new ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, favouriteCanteens);
@@ -291,6 +312,9 @@ public class MainActivity extends FragmentActivity implements
 
 		// Handle item selection
 		switch (item.getItemId()) {
+			case android.R.id.home:
+	        	viewPager.setCurrentItem(2);
+	            return true;
 			case R.id.menu_settings:
 				startActivity(settings);
 				return true;
@@ -300,24 +324,8 @@ public class MainActivity extends FragmentActivity implements
 			case R.id.canteen_info:
 				viewPager.setCurrentItem(0);
 				return true;
-			case R.id.today:
-				viewPager.setCurrentItem(2);
-				return true;
 			default:
 				return super.onOptionsItemSelected(item);
-		}
-	}
-
-	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
-		if (key.equals(SettingsProvider.KEY_FAVOURITES)) {
-			// when changed in settings -> also change in canteens object
-			SettingsProvider.updateFavouriteCanteensFromPreferences(context);
-			refreshFavouriteCanteens();
-		}
-		if (key.equals(SettingsProvider.KEY_SOURCE_URL)) {
-			reload();
 		}
 	}
 
