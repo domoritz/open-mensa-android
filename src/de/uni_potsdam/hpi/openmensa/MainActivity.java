@@ -89,7 +89,7 @@ public class MainActivity extends FragmentActivity implements
 		CloudmadeUtil.retrieveCloudmadeKey(MainActivity.context);
 		
 		reload();
-		refreshActiveCanteens();
+		refreshFavouriteCanteens();
 	}
 
 	private void createSectionsPageAdapter() {
@@ -199,12 +199,12 @@ public class MainActivity extends FragmentActivity implements
 	 * 
 	 * TODO: should wait for completion of refreshAvailableCanteens()
 	 */
-	private void refreshActiveCanteens() {
-		Log.d(TAG, "Refreshing active canteen list");
+	private void refreshFavouriteCanteens() {
+		Log.d(TAG, "Refreshing favourite canteen list");
 		
-		ArrayList<Canteen> activeCanteens = storage.getFavouriteCanteens();
+		ArrayList<Canteen> favouriteCanteens = storage.getFavouriteCanteens();
 		
-		if (activeCanteens.size() == 0 && !storage.getCanteens(this).isEmpty()) {
+		if (favouriteCanteens.size() == 0 && !storage.getCanteens(this).isEmpty()) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.noactivecanteens)
 				.setMessage(R.string.chooseone)
@@ -229,16 +229,16 @@ public class MainActivity extends FragmentActivity implements
 			alert.show();
 		}
 		
-		Log.d(TAG, String.format("%s active canteens", activeCanteens.size()));
+		Log.d(TAG, String.format("%s active canteens", favouriteCanteens.size()));
 		
 		ActionBar actionBar = getActionBar();
-		spinnerAdapter = new ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, activeCanteens);
+		spinnerAdapter = new ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, favouriteCanteens);
 		actionBar.setListNavigationCallbacks(spinnerAdapter, this);
 		
 		Canteen curr = storage.getCurrentCanteen();
 		if(curr != null) {
 			Log.d(TAG, curr.toString());
-			int displayedCanteenPosition = activeCanteens.indexOf(curr);
+			int displayedCanteenPosition = favouriteCanteens.indexOf(curr);
 			actionBar.setSelectedNavigationItem(displayedCanteenPosition);
 		}
 	}
@@ -260,7 +260,7 @@ public class MainActivity extends FragmentActivity implements
 	public void onCanteenFetchFinished(RetrieveCanteenFeedTask task) {
 		storage.saveCanteens(this, task.getCanteens());
 		
-		refreshActiveCanteens();
+		refreshFavouriteCanteens();
 	}
 
 	@Override
@@ -311,10 +311,10 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		if (key.equals(SettingsProvider.KEY_ACTIVE_CANTEENS)) {
+		if (key.equals(SettingsProvider.KEY_FAVOURITES)) {
 			// when changed in settings -> also change in canteens object
-			SettingsProvider.refreshActiveCanteens(this);
-			refreshActiveCanteens();
+			SettingsProvider.updateFavouriteCanteensFromPreferences(context);
+			refreshFavouriteCanteens();
 		}
 		if (key.equals(SettingsProvider.KEY_SOURCE_URL)) {
 			reload();

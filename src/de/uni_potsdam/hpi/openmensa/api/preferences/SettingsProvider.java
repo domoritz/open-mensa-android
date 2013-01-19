@@ -6,11 +6,12 @@ import java.util.Set;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
+import de.uni_potsdam.hpi.openmensa.MainActivity;
 import de.uni_potsdam.hpi.openmensa.R;
-import de.uni_potsdam.hpi.openmensa.api.Canteen;
 
 /**
  * Provides simple methods to access shared settings.
@@ -21,8 +22,10 @@ import de.uni_potsdam.hpi.openmensa.api.Canteen;
 public class SettingsProvider {
 
 	public static final String KEY_SOURCE_URL = "pref_source_url";
-	public static final String KEY_CANTEENS = "pref_canteens";
-	public static final String KEY_ACTIVE_CANTEENS = "pref_active_canteens";
+	public static final String KEY_STORAGE = "om_storage";
+	
+	// Make sure to update xml/preferences.xml as well
+	public static final String KEY_FAVOURITES = "pref_favourites";
 	
 	private static Gson gson = new Gson();
 	
@@ -38,7 +41,7 @@ public class SettingsProvider {
     
     public static Storage getStorage(Context context) {
     	// Throws ClassCastException if there is a preference with this name that is not a Set.
-    	String json = getSharedPrefs(context).getString(KEY_CANTEENS, "{}");
+    	String json = getSharedPrefs(context).getString(KEY_STORAGE, "{}");
     	Storage storage = gson.fromJson(json, Storage.class);
 		return storage;
     }
@@ -47,20 +50,20 @@ public class SettingsProvider {
     	String json = gson.toJson(storage);
     	//Log.d("json", json);
     	SharedPreferences.Editor editor = getSharedPrefs(context).edit();
-    	editor.putString(SettingsProvider.KEY_CANTEENS, json);
+    	editor.putString(SettingsProvider.KEY_STORAGE, json);
     	editor.commit();
     }
 
     /**
-     * sets the active canteens in the canteens object from the preferences
+     * saves the active canteens from the preferences in the storage object
      * @param context
      */
-	public static void refreshActiveCanteens(Context context) {
-		Set<String> activeCanteensKeys = getSharedPrefs(context).getStringSet(KEY_ACTIVE_CANTEENS, new HashSet<String>());
+	public static void updateFavouriteCanteensFromPreferences(Context context) {
+		// TODO: getStringSet requires API Level 11
+		Set<String> favouriteCanteenKeys = getSharedPrefs(context).getStringSet(KEY_FAVOURITES, new HashSet<String>());
+		Log.d(MainActivity.TAG, String.format("Got favourites %s", favouriteCanteenKeys));
 		Storage storage = getStorage(context);
-		for (Canteen canteen : storage.getCanteens().values()) {
-			canteen.favourite = activeCanteensKeys.contains(canteen.key);
-		}
-		setStorage(context, storage);
+		storage.setFavouriteCanteens(favouriteCanteenKeys);
+		storage.saveToPreferences(context);
 	}
 }

@@ -26,9 +26,6 @@ public class Canteen {
 	//==================
 	// app only, not api
 
-	@SerializedName("_favourite")
-	public Boolean favourite;
-
 	/**
 	 * date -> meals
 	 */
@@ -44,13 +41,6 @@ public class Canteen {
 	public Canteen(String key, String name) {
 		this.name = name;
 		this.key = key;
-	}
-	
-	public Boolean isFavourite() {
-		if (favourite != null) {
-			return favourite;
-		}
-		return false;
 	}
 
 	@Override

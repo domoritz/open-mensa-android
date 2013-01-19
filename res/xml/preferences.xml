@@ -6,7 +6,7 @@
         <de.uni_potsdam.hpi.openmensa.api.preferences.DynamicPreference
  			android:title="@string/canteen_title" 
  			android:summary="@string/canteen_desc" 
- 			android:key="pref_active_canteens" 
+ 			android:key="pref_favourites"
  			android:dialogMessage="@string/canteen_choose_desc" 
  			android:dialogTitle="@string/canteen_choose_title"/>
     	<EditTextPreference 

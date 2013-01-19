@@ -2,7 +2,10 @@ package de.uni_potsdam.hpi.openmensa.api.preferences;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 
@@ -20,15 +23,29 @@ import de.uni_potsdam.hpi.openmensa.api.Canteens;
  */
 
 public class Storage {
+	/*========
+	 * Don't forget to add the members to loadFromPreferences() 
+	 */
+	
 	@SerializedName("canteens")
 	Canteens canteens;
 	
+	/**
+	 * ID of the canteen that is shown in the app
+	 */
 	@SerializedName("currentCanteen")
 	public String currentCanteen;
 	
 	@SerializedName("lastUpdate")
 	public Calendar lastCanteensUpdate;
 	
+	/**
+	 * IDs of favourite canteens
+	 */
+	@SerializedName("favouriteCanteensKeys")
+	public Set<String> favouriteCanteensKeys = new HashSet<String>();
+	
+
 	public Boolean areCanteensOutOfDate() {
 		if (lastCanteensUpdate == null) {
 			Log.d(MainActivity.TAG, "Out of date because no last fetch date is set.");
@@ -48,7 +65,7 @@ public class Storage {
 		if (canteens == null) {
 			loadFromPreferences(context);
 		}
-		return canteens;
+		return getCanteens();
 	}
 	
 	public Canteens getCanteens() {
@@ -59,7 +76,8 @@ public class Storage {
 	}
 	
 	public void setCanteens(Canteens newCanteens) {
-		getCanteens().update(newCanteens);
+		canteens.clear();
+		canteens.putAll(newCanteens);
 	}
 
 	public void saveCanteens(Context context, Canteens canteens) {
@@ -67,15 +85,18 @@ public class Storage {
 		lastCanteensUpdate = Calendar.getInstance();
 		
 		saveToPreferences(context);
-		SettingsProvider.refreshActiveCanteens(context);
+		SettingsProvider.updateFavouriteCanteensFromPreferences(context);
 	}
 	
 	public ArrayList<Canteen> getFavouriteCanteens() {
 		ArrayList<Canteen> favouriteCanteens = new ArrayList<Canteen>();
+		Log.d(MainActivity.TAG, String.format("Number of favourites in keys: %s", favouriteCanteensKeys));
 		for (Canteen canteen : getCanteens().values()) {
-			if (canteen.isFavourite())
+			if (favouriteCanteensKeys.contains(canteen.key)) {
 				favouriteCanteens.add(canteen);
+			}
 		}
+		Log.d(MainActivity.TAG, String.format("Number of favourites: %s", favouriteCanteens));
 		return favouriteCanteens;
 	}
 
@@ -90,6 +111,9 @@ public class Storage {
 		canteens = storage.canteens;
 		lastCanteensUpdate = storage.lastCanteensUpdate;
 		currentCanteen = storage.currentCanteen;
+		favouriteCanteensKeys = storage.favouriteCanteensKeys;
+		
+		SettingsProvider.updateFavouriteCanteensFromPreferences(context);
 	}
 	
 	/**
@@ -122,5 +146,11 @@ public class Storage {
 	 */
 	public boolean isEmpty() {
 		return getCanteens().size() == 0;
+	}
+
+	public void setFavouriteCanteens(Set<String> favourites) {
+		Log.d(MainActivity.TAG, String.format("Update favourites: %s", favourites));
+		favouriteCanteensKeys.clear();
+		favouriteCanteensKeys.addAll(favourites);
 	}
 }
