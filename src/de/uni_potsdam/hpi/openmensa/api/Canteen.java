@@ -1,6 +1,5 @@
 package de.uni_potsdam.hpi.openmensa.api;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 

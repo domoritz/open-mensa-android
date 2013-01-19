@@ -25,6 +25,7 @@
     <string name="canteenclosed">This canteen is closed on this date</string>
     <string name="noinfo">No information available</string>
     <string name="noprice">Not available</string>
+    <string name="nomapapp">Could not find a map application</string>
     <string name="noactivecanteens">No active canteens.</string>
     <string name="chooseone">You have not yet set any active canteens. Please select at least one.</string>
     
@@ -41,7 +42,7 @@
     <string name="canteen_title">Favourite Canteens</string>
     <string name="canteen_desc">Choose the canteens that appear in the app.</string>
     <string name="canteen_choose_title">Favourite Canteens</string>
-    <string name="canteen_choose_desc">"Choose your preferred canteens from the list."</string>
+    <string name="canteen_choose_desc">Choose your preferred canteens from the list.</string>
     
     <string name="about_title">About</string>
     <string name="version_title">Version</string>

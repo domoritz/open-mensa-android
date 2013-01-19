@@ -6,16 +6,15 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.preference.MultiSelectListPreference;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import de.uni_potsdam.hpi.openmensa.api.Canteen;
 
 /**
  * A multi select list preference for the preferences file (res->xml->preferences). 
