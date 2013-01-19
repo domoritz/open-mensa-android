@@ -32,4 +32,14 @@
 	</target>
 
 	<target name="-build-setup" depends="resolve,android_rules.-build-setup" />
+
+	<target name="ivy-report" depends="resolve" description="Dependency report">
+        <mkdir dir="${reports.dir}/ivy"/>
+
+        <ivy:report
+            xsl="true"
+            todir="${reports.dir}/ivy"
+            outputpattern="[organisation]-[module]-[conf]-report.[ext]"
+            organisation="de.uni_potsdam.hpi"
+            module="openmensa"/>
 </project>
