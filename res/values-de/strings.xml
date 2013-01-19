@@ -1,0 +1,54 @@
+<resources>
+
+    <string name="app_name">OpenMensa</string>
+    <string name="section_da_tomorrow">Übermorgen</string>
+    <string name="section_tomorrow">Morgen</string>
+    <string name="section_today">Heute</string>
+    <string name="section_yesterday">Gestern</string>
+    <string name="section_canteen">Mensa</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Einstellungen</string>
+    <string name="title_activity_main">OpenMensa</string>
+    
+    <string name="today">heute</string>
+    <string name="yesterday">gestern</string>
+    <string name="tomorrow">morgen</string>
+    
+    <string name="students">Studenten:</string>
+    <string name="employees">Mitarbeiter:</string>
+    <string name="pupils">Schüler:</string>
+    <string name="other">Andere:</string>
+    
+    <string name="address">Adresse:</string>
+    
+    <string name="noconnection">Keine Internetverbindung. Bitte verbinden!</string>
+    <string name="canteenclosed">Die Mensa ist an diesem Tag geschlossen</string>
+    <string name="noinfo">Keine Informationen verfügbar</string>
+    <string name="noprice">Nicht verfügbar</string>
+    <string name="nomapapp">Konnte keine Kartenanwendung finden</string>
+    <string name="noactivecanteens">Keine bevorzugten Mensen eingestellt.</string>
+    <string name="chooseone">Du hast keine bevorzugten Mensen eingestellt. Bitte wähle mindestens eine.</string>
+    
+    <string name="reload">Mensen neu laden</string>
+    <string name="canteen_info">Mensa</string>
+    
+    <string name="title_activity_preferences">Einstellungen</string>
+    <string name="title_activity_settings">Einstellungen</string>
+    
+    <string name="source_title">Datenquelle</string>
+    <string name="source_url_title">URL</string>
+    <string name="source_url_desc">URL eines OpenMensa Servers.</string>
+    <string name="canteen_title">Bevorzugte Mensa</string>
+    <string name="canteen_desc">Wähle Mensen, die in der App verfügbar sein sollen.</string>
+    <string name="canteen_choose_title">Bevorzugte Mensen</string>
+    <string name="canteen_choose_desc">Wähle Deine bervorzugten mensen aus der Liste.</string>
+    
+    <string name="about_title">Über</string>
+    <string name="version_title">Version</string>
+    <string name="license_title">Lizenz</string>
+    <string name="powered_by_title">Daten von</string>
+    <string name="author_title">Autor</string>
+    <string name="feedback_title">Feedback</string>
+    <string name="feedback_desc">Schreibe mit eine kurze Email, stelle Fragen, danke mir oder beschwere dich.</string>
+
+</resources>
