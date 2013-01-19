@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Use this script with 'ant -f build.xml' or simply 'ant'.
+-->
+<project name="open-mensa-android" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<loadproperties srcFile="local.properties" />
+	<loadproperties srcFile="project.properties" />
+
+	<!-- Import android ant tasks -->
+	<import file="${sdk.dir}/tools/ant/build.xml" />
+
+	<target name="default" depends="resolve,release" description="Retrieve dependencies and build app." />
+
+	<property name="lib.dir" value="libs"/>
+
+	<target name="-find-support-lib">
+		<available file="${lib.dir}/android-support-v4.jar" property="support.v4.installed" />
+	</target>
+
+	<target name="-req-support-lib" depends="-find-support-lib" unless="support.v4.installed">
+		<!-- Abort unless support v4 library is present -->
+		<available file="${sdk.dir}/extras/android/support/v4/android-support-v4.jar" property="support.v4.present" />
+		<fail message="Android Support Library cannot be found. Install it via the SDK manager."
+            unless="support.v4.present" />
+
+    	<copy file="${sdk.dir}/extras/android/support/v4/android-support-v4.jar" todir="${lib.dir}/" />
+	</target>
+
+	<target name="resolve" depends="-req-support-lib" description="Retrieve dependencies">
+		<mkdir dir="${lib.dir}"/>
+
+		<ivy:retrieve pattern="${lib.dir}/[artifact]-[revision]-[type].[ext]"/>
+	</target>
+</project>
