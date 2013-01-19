@@ -4,16 +4,22 @@
 -->
 <project name="open-mensa-android" default="default" basedir="."
     xmlns:ivy="antlib:org.apache.ivy.ant">
-    
-    <target name="default" depends="resolve"/>
+
+    <loadproperties srcFile="local.properties" />
+    <loadproperties srcFile="project.properties" />
+
+    <!-- Import android ant tasks -->
+    <import file="${sdk.dir}/tools/ant/build.xml" />
+
+    <target name="default" depends="resolve,release" description="Retrieve dependencies and build app." />
 
     <target name="init">
         <property name="lib.dir" value="libs"/>
     </target>
-    
+
     <target name="resolve" depends="init" description="Retrieve dependencies">
         <mkdir dir="${lib.dir}"/>
-        
+
         <ivy:retrieve pattern="${lib.dir}/[artifact]-[revision]-[type].[ext]"/>
     </target>
 </project>
