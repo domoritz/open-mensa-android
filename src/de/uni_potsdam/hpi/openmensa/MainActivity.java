@@ -48,7 +48,7 @@ public class MainActivity extends FragmentActivity implements
 	public static final Boolean LOGV = true;
 	public static final String PREFS_NAME = "CanteendroidPrefs";
 
-	static Storage storage = new Storage();
+	static Storage storage;
 	private SpinnerAdapter spinnerAdapter;
 	
 	static Context context;
@@ -79,6 +79,8 @@ public class MainActivity extends FragmentActivity implements
 		
 		context = this;
 		
+		storage = SettingsProvider.getStorage(context);
+		
 		createSectionsPageAdapter();
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -106,9 +108,16 @@ public class MainActivity extends FragmentActivity implements
 		refreshFavouriteCanteens();
 	}
 	
+	@Override
+	public void onPause() {
+		super.onPause();
+		storage.saveToPreferences(context);
+	}
+	
+	@Override
 	public void onResume() {
 		super.onResume();
-		refreshFavouriteCanteens();
+		storage.loadFromPreferences(context);
 	}
 
 	private void createSectionsPageAdapter() {
@@ -222,7 +231,8 @@ public class MainActivity extends FragmentActivity implements
 		Log.d(TAG, "Refreshing favourite canteen list");
 		
 		SettingsProvider.updateFavouriteCanteensFromPreferences(context);
-		
+
+		storage.loadFromPreferences(context);
 		ArrayList<Canteen> favouriteCanteens = storage.getFavouriteCanteens();
 		
 		if (favouriteCanteens.size() == 0 && !storage.getCanteens(this).isEmpty()) {

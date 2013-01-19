@@ -90,10 +90,13 @@ public class Storage {
 	
 	public ArrayList<Canteen> getFavouriteCanteens() {
 		ArrayList<Canteen> favouriteCanteens = new ArrayList<Canteen>();
-		for (Canteen canteen : getCanteens().values()) {
-			if (favouriteCanteensKeys.contains(canteen.key)) {
+		Canteens canteens = getCanteens();
+		for (String key : favouriteCanteensKeys) {
+			Canteen canteen = canteens.get(key);
+			if (canteen != null)
 				favouriteCanteens.add(canteen);
-			}
+			else
+				Log.w(MainActivity.TAG, String.format("A favourite canteen was requested that is not in the storage. Key: %s", key));
 		}
 		return favouriteCanteens;
 	}
@@ -148,7 +151,6 @@ public class Storage {
 
 	public void setFavouriteCanteens(Set<String> favourites) {
 		Log.d(MainActivity.TAG, String.format("Update favourites: %s", favourites));
-		favouriteCanteensKeys.clear();
-		favouriteCanteensKeys.addAll(favourites);
+		favouriteCanteensKeys = favourites;
 	}
 }
