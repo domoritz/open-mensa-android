@@ -11,7 +11,6 @@
         android:paddingBottom="@dimen/titlePadding"
         android:paddingTop="@dimen/titlePadding"
         android:gravity="center"
-        android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
     
      <RelativeLayout
@@ -32,7 +31,6 @@
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:paddingLeft="@dimen/priceListFloat"
-	        android:text="Lorem Ipsum"
 	        android:textAppearance="?android:attr/textAppearanceMedium"/>
 	 </RelativeLayout>
 

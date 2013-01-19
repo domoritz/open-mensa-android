@@ -47,6 +47,8 @@ public class CanteenFragment extends Fragment implements RefreshableFragment, On
 		mapView.setBuiltInZoomControls(false);
         mapView.setMultiTouchControls(true);
         
+        mapView.setVisibility(MapView.INVISIBLE);
+
 		mapController = mapView.getController();
 		
 		TextView address = (TextView) view.findViewById(R.id.txtAddress);
@@ -73,6 +75,8 @@ public class CanteenFragment extends Fragment implements RefreshableFragment, On
 		if (canteen == null)
 			return;
 		
+		mapView.setVisibility(MapView.VISIBLE);
+
 		TextView address = (TextView) getView().findViewById(R.id.txtAddress);
 		address.setText(canteen.address);
 		
