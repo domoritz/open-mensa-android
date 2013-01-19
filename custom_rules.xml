@@ -13,20 +13,7 @@
 	<property name="lib.dir" value="libs"/>
 	<property name="reports.dir" value="reports"/>
 
-	<target name="-find-support-lib">
-		<available file="${lib.dir}/android-support-v4.jar" property="support.v4.installed" />
-	</target>
-
-	<target name="-req-support-lib" depends="-find-support-lib" unless="support.v4.installed">
-		<!-- Abort unless support v4 library is present -->
-		<available file="${sdk.dir}/extras/android/support/v4/android-support-v4.jar" property="support.v4.present" />
-		<fail message="Android Support Library cannot be found. Install it via the SDK manager."
-			unless="support.v4.present" />
-
-		<copy file="${sdk.dir}/extras/android/support/v4/android-support-v4.jar" todir="${lib.dir}/" />
-	</target>
-
-	<target name="resolve" depends="-req-support-lib" description="Retrieve dependencies">
+	<target name="resolve" description="Retrieve dependencies">
 		<mkdir dir="${lib.dir}"/>
 
 		<ivy:retrieve pattern="${lib.dir}/[artifact]-[revision]-[type].[ext]"/>

@@ -5,9 +5,10 @@
         <!-- no artifacts -->
     </publications>
     <dependencies>
-        <dependency org="com.google.code.gson" name="gson" rev="2.2.2"/>
-        <dependency org="org.osmdroid" name="osmdroid-android" rev="3.0.8"/>
-        <dependency org="com.actionbarsherlock" name="actionbarsherlock" rev="4.2.0"/>
+        <dependency org="com.google.android" name="support-v4" rev="r7" transitive="false"/>
+        <dependency org="com.google.code.gson" name="gson" rev="2.2.2" transitive="false"/>
+        <dependency org="org.osmdroid" name="osmdroid-android" rev="3.0.8" transitive="false"/>
+        <dependency org="com.actionbarsherlock" name="actionbarsherlock" rev="4.2.0" transitive="false"/>
 
         <!-- strip all Javadoc and sources -->
         <exclude org="*" ext="*" type="javadoc"/>
