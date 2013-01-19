@@ -11,6 +11,7 @@
 	<import file="${sdk.dir}/tools/ant/build.xml" />
 
 	<property name="lib.dir" value="libs"/>
+	<property name="reports.dir" value="reports"/>
 
 	<target name="-find-support-lib">
 		<available file="${lib.dir}/android-support-v4.jar" property="support.v4.installed" />
