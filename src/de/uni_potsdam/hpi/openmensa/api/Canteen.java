@@ -3,14 +3,20 @@ package de.uni_potsdam.hpi.openmensa.api;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import android.util.Log;
+
 import com.google.gson.annotations.SerializedName;
+
+import de.uni_potsdam.hpi.openmensa.MainActivity;
+import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsProvider;
+import de.uni_potsdam.hpi.openmensa.helpers.SpinnerItem;
 
 /**
  * 
  * @author dominik
  *
  */
-public class Canteen {	
+public class Canteen implements SpinnerItem {	
 	@SerializedName("id")
 	public String key = null;
 	
@@ -94,5 +100,13 @@ public class Canteen {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean execute(MainActivity mainActivity, int itemPosition) {
+		Canteen c = SettingsProvider.getStorage(mainActivity).getFavouriteCanteens().get(itemPosition);
+		Log.d(MainActivity.TAG, String.format("Chose canteen %s", c.key));
+		mainActivity.changeCanteenTo(c);
+		return true;
 	}
 }

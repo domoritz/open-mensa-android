@@ -7,8 +7,10 @@
     <string name="section_yesterday">Yesterday</string>
     <string name="section_canteen">Canteen</string>
     <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Preferences</string>
+    <string name="menu_preferences">Preferences</string>
     <string name="title_activity_main">OpenMensa</string>
+    
+    <string name="spinner_favourites">Choose Favourites</string>
     
     <string name="today">today</string>
     <string name="yesterday">yesterday</string>
@@ -34,7 +36,6 @@
     <string name="canteen_info">Canteen information</string>
     
     <string name="title_activity_preferences">Preferences</string>
-    <string name="title_activity_settings">Preferences</string>
     
     <string name="source_title">Source</string>
     <string name="source_url_title">URL</string>

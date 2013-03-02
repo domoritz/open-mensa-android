@@ -40,6 +40,7 @@ import de.uni_potsdam.hpi.openmensa.helpers.CustomViewPager;
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener;
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener;
 import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
+import de.uni_potsdam.hpi.openmensa.helpers.SpinnerItem;
 
 @SuppressLint("NewApi")
 public class MainActivity extends FragmentActivity implements
@@ -51,6 +52,7 @@ public class MainActivity extends FragmentActivity implements
 
 	static Storage storage;
 	private SpinnerAdapter spinnerAdapter;
+	private ArrayList<SpinnerItem> spinnerItems;
 	
 	private static Context context;
 	
@@ -99,6 +101,7 @@ public class MainActivity extends FragmentActivity implements
 
 		prefs.registerOnSharedPreferenceChangeListener(listener);
 
+		spinnerItems = new ArrayList<SpinnerItem>();
 		ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		actionBar.setHomeButtonEnabled(true);
@@ -133,6 +136,7 @@ public class MainActivity extends FragmentActivity implements
 		// Set up the ViewPager with the sections adapter.
 		viewPager = (CustomViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(sectionsPagerAdapter);
+		// 2 is today
 		viewPager.setCurrentItem(2);
 	}
 
@@ -245,9 +249,10 @@ public class MainActivity extends FragmentActivity implements
 		SettingsProvider.updateFavouriteCanteensFromPreferences(context);
 
 		storage.loadFromPreferences(context);
-		ArrayList<Canteen> favouriteCanteens = storage.getFavouriteCanteens();
+		spinnerItems.clear();
+		spinnerItems.addAll(storage.getFavouriteCanteens());
 		
-		if (favouriteCanteens.size() == 0 && !storage.getCanteens(this).isEmpty()) {
+		if (spinnerItems.size() == 0 && !storage.getCanteens(this).isEmpty()) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.noactivecanteens)
 				.setMessage(R.string.chooseone)
@@ -272,16 +277,34 @@ public class MainActivity extends FragmentActivity implements
 			alert.show();
 		}
 		
-		Log.d(TAG, String.format("favourite canteens: %s", favouriteCanteens));
+		Log.d(TAG, String.format("favourite canteens: %s", spinnerItems));
+		
+		// show a link to settings if list is empty
+		if (spinnerItems.isEmpty()) {
+			class ShowFavouritesCaller implements SpinnerItem {
+				@Override
+				public boolean execute(MainActivity mainActivity, int itemPosition) {
+					Intent settings = new Intent(mainActivity, SettingsActivity.class);
+					startActivity(settings);
+					return true;
+				}
+				
+				@Override
+				public String toString() {
+					return getString(R.string.spinner_favourites);
+				}
+			}
+			spinnerItems.add(new ShowFavouritesCaller());
+		}
 		
 		ActionBar actionBar = getActionBar();
-		spinnerAdapter = new ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, favouriteCanteens);
+		spinnerAdapter = new ArrayAdapter<SpinnerItem>(this, android.R.layout.simple_spinner_dropdown_item, spinnerItems);
 		actionBar.setListNavigationCallbacks(spinnerAdapter, this);
 		
 		Canteen curr = storage.getCurrentCanteen();
 		if(curr != null) {
 			Log.d(TAG, curr.toString());
-			int displayedCanteenPosition = favouriteCanteens.indexOf(curr);
+			int displayedCanteenPosition = spinnerItems.indexOf(curr);
 			actionBar.setSelectedNavigationItem(displayedCanteenPosition);
 		}
 	}
@@ -312,14 +335,12 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	/**
-	 * Is called when another canteen is selected
+	 * Is called when an item from the spinner in the action bar is selected.
 	 */
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		Canteen c = storage.getFavouriteCanteens().get(itemPosition);
-		Log.d(TAG, String.format("Chose canteen %s", c.key));
-		this.changeCanteenTo(c);
-		return false;
+		SpinnerItem item = spinnerItems.get(itemPosition);
+		return item.execute(this, itemPosition);
 	}
 
 	@Override
@@ -330,14 +351,13 @@ public class MainActivity extends FragmentActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent settings = new Intent(this, SettingsActivity.class);
-
 		// Handle item selection
 		switch (item.getItemId()) {
 			case android.R.id.home:
 	        	viewPager.setCurrentItem(2);
 	            return true;
 			case R.id.menu_settings:
+				Intent settings = new Intent(this, SettingsActivity.class);
 				startActivity(settings);
 				return true;
 			case R.id.reload:
