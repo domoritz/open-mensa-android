@@ -30,7 +30,7 @@ public class CanteenFragment extends Fragment implements RefreshableFragment, On
 	private MapView mapView;
 	private MapController mapController;
 	private OverlayItem canteenLocation;
-	private ItemizedIconOverlay overlay;
+	private ItemizedIconOverlay<OverlayItem> overlay;
 	private DefaultResourceProxyImpl resourceProxy;
 	
 	private int zoom = 18;
@@ -97,7 +97,7 @@ public class CanteenFragment extends Fragment implements RefreshableFragment, On
         final ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
         items.add(canteenLocation);
         
-        resourceProxy = new DefaultResourceProxyImpl(MainActivity.context);
+        resourceProxy = new DefaultResourceProxyImpl(MainActivity.getAppContext());
 
         overlay = new ItemizedIconOverlay<OverlayItem>(items,
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
@@ -130,7 +130,7 @@ public class CanteenFragment extends Fragment implements RefreshableFragment, On
 		try {
 			startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
 		} catch (ActivityNotFoundException e) {
-			Toast.makeText(MainActivity.context, getResources().getString(R.string.nomapapp), Toast.LENGTH_LONG).show();
+			Toast.makeText(MainActivity.getAppContext(), getResources().getString(R.string.nomapapp), Toast.LENGTH_LONG).show();
 		}
 		
 	}

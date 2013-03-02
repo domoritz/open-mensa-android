@@ -21,7 +21,8 @@
     
     <string name="address">Address:</string>
     
-    <string name="noconnection">No internet connection. Please connect!</string>
+    <string name="noconnection">No internet connection.</string>
+    <string name="pleaseconnect">No internet connection available. Please connect.</string>
     <string name="canteenclosed">This canteen is closed on this date</string>
     <string name="noinfo">No information available</string>
     <string name="noprice">Not available</string>
@@ -30,7 +31,7 @@
     <string name="chooseone">You have not yet set any active canteens. Please select at least one.</string>
     
     <string name="reload">Refresh canteens</string>
-    <string name="canteen_info">Canteen</string>
+    <string name="canteen_info">Canteen information</string>
     
     <string name="title_activity_preferences">Preferences</string>
     <string name="title_activity_settings">Preferences</string>

@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.openmensa;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -143,8 +144,8 @@ public class MealAdapter extends BaseExpandableListAdapter {
 		
 		private String stringOrNone(float price) {
 	    	if (price > 0)
-	    		return String.format("%s", price);
-	    	return MainActivity.context.getResources().getString(R.string.noprice);
+	    		return String.format(Locale.getDefault(), "%.2f", price);
+	    	return MainActivity.getAppContext().getResources().getString(R.string.noprice);
 	    }
 		
 		TextView category;

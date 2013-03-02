@@ -18,9 +18,11 @@ public class RetrieveDaysFeedTask extends RetrieveFeedTask {
 	private OnFinishedFetchingDaysListener fetchListener;
 	protected String name = "Days";
 	protected Canteen canteen;
+	public String dateString = "";
 
-	public RetrieveDaysFeedTask(Context context, OnFinishedFetchingDaysListener fetchListener, Canteen canteen) {
+	public RetrieveDaysFeedTask(Context context, OnFinishedFetchingDaysListener fetchListener, Canteen canteen, String dateString) {
 		super(context);
+		this.dateString = dateString;
 		this.canteen = canteen;
 		this.fetchListener = fetchListener;
 	}

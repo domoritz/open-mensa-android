@@ -27,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -51,7 +52,7 @@ public class MainActivity extends FragmentActivity implements
 	static Storage storage;
 	private SpinnerAdapter spinnerAdapter;
 	
-	static Context context;
+	private static Context context;
 	
 	Gson gson = new Gson();
 	
@@ -113,12 +114,17 @@ public class MainActivity extends FragmentActivity implements
 		super.onPause();
 		storage.saveToPreferences(context);
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
 		storage.loadFromPreferences(context);
+		updateMealStorage();
 	}
+
+	public static Context getAppContext() {
+        return MainActivity.context;
+    }
 
 	private void createSectionsPageAdapter() {
 		// Create the adapter that will return a fragment for each day fragment views
@@ -129,20 +135,20 @@ public class MainActivity extends FragmentActivity implements
 		viewPager.setAdapter(sectionsPagerAdapter);
 		viewPager.setCurrentItem(2);
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		Log.d(TAG, "Save state, flushed cache storage");
 		outState.putInt("page",	viewPager.getCurrentItem());
 		storage.saveToPreferences(this);
 	}
-	
+
 	@Override
 	protected void onRestoreInstanceState(Bundle savedState) {
 		Log.d(TAG, "Restore state");
 		viewPager.setCurrentItem(savedState.getInt("page"));
 	}
-	
+
 	/**
 	 * Change the current canteen
 	 * 
@@ -155,11 +161,11 @@ public class MainActivity extends FragmentActivity implements
 		updateMealStorage();
 		sectionsPagerAdapter.notifyDataSetChanged();
 	}
-	
+
 	public void updateMealStorage() {
 		updateMealStorage(false);
 	}
-	
+
 	/**
 	 * Fetch meal data, if not already in storage. Also sets the date for fragments.
 	 */
@@ -194,31 +200,37 @@ public class MainActivity extends FragmentActivity implements
 				canteen.justUpdated(dateString);
 				continue;
 			}
-			
-			if (day == null && canteen.isOutOfDate(dateString))
-				Log.d(MainActivity.TAG, "Meal cache miss");
-			else
-				Log.d(MainActivity.TAG, "Meal cache hit");
-			
-			if (day == null && canteen.isOutOfDate(dateString) || force) {
-				fragment.setToFetching(true, true);
-				String baseUrl = SettingsProvider.getSourceUrl(MainActivity.context);
-				String url = baseUrl + "canteens/" + canteen.key + "/meals/?start=" + dateString;
-				RetrieveFeedTask task = new RetrieveDaysFeedTask(MainActivity.context, this, canteen);
-				task.execute(new String[] { url });
-				startedFetching = true;
-				canteen.justUpdated(dateString);
+
+			if (day == null || canteen.isOutOfDate(dateString) || force) {
+				if (day == null) {
+					Log.d(MainActivity.TAG, "Meal cache miss");
+				} else if (canteen.isOutOfDate(dateString)) {
+					Log.d(MainActivity.TAG, "Out of date");
+				} else if (force) {
+					Log.d(MainActivity.TAG, "Forced update");
+				}
+				
+				if (isOnline(this)) {
+					fragment.setToFetching(true, !fragment.isListShown());
+					String baseUrl = SettingsProvider.getSourceUrl(MainActivity.context);
+					String url = baseUrl + "canteens/" + canteen.key + "/meals/?start=" + dateString;
+					RetrieveFeedTask task = new RetrieveDaysFeedTask(MainActivity.context, this, canteen, dateString);
+					task.execute(new String[] { url });
+					startedFetching = true;
+				}
 			} else {
+				Log.d(MainActivity.TAG, "Meal cache hit");
 				fragment.setToFetching(false, !fragment.isListShown());
 			}
 		}
 	}
-	
+
 	@Override
 	public void onDaysFetchFinished(RetrieveDaysFeedTask task) {
 		// the fragment might have been deleted while we were fetching something
 		sectionsPagerAdapter.setToFetching(false, false);
 		task.canteen.updateDays(task.getDays());
+		task.canteen.justUpdated(task.dateString);
 		sectionsPagerAdapter.notifyDataSetChanged();
 	}
 
@@ -286,7 +298,7 @@ public class MainActivity extends FragmentActivity implements
 		RetrieveFeedTask task = new RetrieveCanteenFeedTask(this, this, url);
 		task.execute(url);
 	}
-	
+
 	@Override
 	public void onCanteenFetchFinished(RetrieveCanteenFeedTask task) {
 		storage.saveCanteens(this, task.getCanteens());
@@ -329,7 +341,7 @@ public class MainActivity extends FragmentActivity implements
 				startActivity(settings);
 				return true;
 			case R.id.reload:
-				reload(true);
+				reload(true);  // force update
 				return true;
 			case R.id.canteen_info:
 				viewPager.setCurrentItem(0);
@@ -363,7 +375,7 @@ public class MainActivity extends FragmentActivity implements
 		}
 		return true;
 	}
-	
+
 	private void reload() {
 		reload(false);
 	}
@@ -383,14 +395,17 @@ public class MainActivity extends FragmentActivity implements
 				refreshAvailableCanteens();
 			}
 			updateMealStorage(force);
-			sectionsPagerAdapter.notifyDataSetChanged();
 		} else {
-			new AlertDialog.Builder(MainActivity.this).setNegativeButton("Okay",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						dialog.cancel();
-					}
-				}).setTitle("Not Connected").setMessage("You are not connected to the Internet.");
+			if (force) {
+				new AlertDialog.Builder(MainActivity.this).setNegativeButton(android.R.string.ok,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						}).setTitle(R.string.noconnection).setMessage(R.string.pleaseconnect).create().show();
+			} else {
+				Toast.makeText(getApplicationContext(), R.string.noconnection, Toast.LENGTH_LONG).show();
+			}
 		}
 	}
 }

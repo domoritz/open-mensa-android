@@ -21,7 +21,8 @@
     
     <string name="address">Adresse:</string>
     
-    <string name="noconnection">Keine Internetverbindung. Bitte verbinden!</string>
+    <string name="noconnection">Keine Internetverbindung.</string>
+    <string name="pleaseconnect">Keine Internetverbindung verfügbar. Bitte verbinden.</string>
     <string name="canteenclosed">Die Mensa ist an diesem Tag geschlossen</string>
     <string name="noinfo">Keine Informationen verfügbar</string>
     <string name="noprice">Nicht verfügbar</string>
@@ -30,7 +31,7 @@
     <string name="chooseone">Du hast keine bevorzugten Mensen eingestellt. Bitte wähle mindestens eine.</string>
     
     <string name="reload">Mensen neu laden</string>
-    <string name="canteen_info">Mensa</string>
+    <string name="canteen_info">Mensainformationen</string>
     
     <string name="title_activity_preferences">Einstellungen</string>
     <string name="title_activity_settings">Einstellungen</string>

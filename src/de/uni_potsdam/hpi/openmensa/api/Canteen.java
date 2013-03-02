@@ -33,7 +33,7 @@ public class Canteen {
 	public HashMap<String, Day> days;
 	
 	/**
-	 * when we last fetched
+	 * save when we last fetched
 	 */
 	@SerializedName("_updates")
 	public HashMap<String, Long> updates;

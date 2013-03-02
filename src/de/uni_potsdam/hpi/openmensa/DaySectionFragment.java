@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.support.v4.app.ExpandableListFragment;
+import android.util.Log;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.Day;
 import de.uni_potsdam.hpi.openmensa.api.Meal;
@@ -51,7 +52,12 @@ public class DaySectionFragment extends ExpandableListFragment implements Refres
 			if (fetching) {
 				setToFetching(true, false);
 			} else {
-				setToNoInformation();
+				if (MainActivity.isOnline(MainActivity.getAppContext())) {
+					setToNoInformation();
+				} else {
+					setNotOnline();
+				}
+				
 			}
 			return;
 		}
@@ -64,22 +70,40 @@ public class DaySectionFragment extends ExpandableListFragment implements Refres
 		setMealList(day);
 	}
 	
+	public void setEmptyText(String text) {
+		if (getView() == null) {
+        	Log.w(MainActivity.TAG, "List not yet created.");
+        	return;
+        }
+		super.setEmptyText(text);
+	}
+
 	/**
 	 * tell the fragment that the canteen is closed today
 	 */
 	public void setToClosed() {
+		setEmptyText(getResources().getString(R.string.canteenclosed));
 		setToFetching(false, true);
 		listVisible = false;
-		setEmptyText(getResources().getString(R.string.canteenclosed));
 	}
 	
 	/**
 	 * tell the fragment that there is no information available for today
 	 */
 	public void setToNoInformation() {
+		setEmptyText(getResources().getString(R.string.noinfo));
 		setToFetching(false, true);
 		listVisible = false;
-		setEmptyText(getResources().getString(R.string.noinfo));
+	}
+	
+	/**
+	 * tell the fragment that there we are currently not online
+	 */
+	public void setNotOnline() {
+		Log.d(MainActivity.TAG, "not online");
+		setEmptyText(getResources().getString(R.string.noconnection));
+		setToFetching(false, true);
+		listVisible = false;
 	}
 	
 	/**
@@ -109,7 +133,7 @@ public class DaySectionFragment extends ExpandableListFragment implements Refres
 			return;
 
 		listVisible = true;
-		setToFetching(false, true);
+		setToFetching(false, false);
 		listItems.addAll(day.getMeals());
 		adapter.notifyDataSetChanged();
 	}

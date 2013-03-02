@@ -25,7 +25,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	public void notifyDataSetChanged() {
 		super.notifyDataSetChanged();
 		
-		// TODO: use adapter properly
 		for (Fragment fragment : fragments) {
 			if (fragment != null) {
 				((RefreshableFragment) fragment).refresh();
@@ -59,7 +58,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public CharSequence getPageTitle(int position) {
-		Context context = MainActivity.context;
+		Context context = MainActivity.getAppContext();
 		switch (position) {
 			case 0:
 				return context.getString(R.string.section_canteen).toUpperCase();
