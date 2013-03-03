@@ -109,7 +109,11 @@ public class MainActivity extends FragmentActivity implements
 		spinnerItems = new ArrayList<SpinnerItem>();
 		ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		actionBar.setHomeButtonEnabled(true);
+		try {
+			actionBar.setHomeButtonEnabled(true);
+		} catch (NoSuchMethodError e) {
+			// ignore this error which happens on Android 3
+		}
 		
 		CloudmadeUtil.retrieveCloudmadeKey(MainActivity.context);
 		

@@ -48,7 +48,7 @@
     
     <string name="about_title">About</string>
     <string name="version_title">Version</string>
-    <string name="version_desc">0.2</string>
+    <string name="version_desc">0.3</string>
     <string name="license_title">License</string>
     <string name="license">Apache License, Version 2.0</string>
     <string name="powered_by_title">Powered by</string>
