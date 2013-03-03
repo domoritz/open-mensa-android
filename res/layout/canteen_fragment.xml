@@ -17,7 +17,8 @@
          xmlns:android="http://schemas.android.com/apk/res/android"
          android:layout_width="fill_parent"
          android:layout_height="wrap_content"
-         android:paddingLeft="@dimen/indention" >
+         android:paddingLeft="@dimen/indention"
+         android:paddingRight="@dimen/indention" >
 	    
 	    <TextView
 	        android:layout_width="wrap_content"
