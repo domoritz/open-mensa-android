@@ -80,18 +80,27 @@ public class DynamicPreference extends MultiSelectListPreference {
     	
     	location = getLastBestLocation();
     	
-        Collections.sort(orderedCanteens, new Comparator<Canteen>() {
-        	private Float distanceToCurrentLocation(Canteen canteen) {
-        		Location point = new Location("");
-        		point.setLatitude(canteen.coordinates[0]);
-        		point.setLongitude(canteen.coordinates[1]);
-        		return location.distanceTo(point);
-        	}
-        	
-            public int compare(Canteen o1, Canteen o2) {
-                return distanceToCurrentLocation(o1).compareTo(distanceToCurrentLocation(o2));
-            }
-        });
+    	if (location != null) {
+    		Collections.sort(orderedCanteens, new Comparator<Canteen>() {
+            	private Float distanceToCurrentLocation(Canteen canteen) {
+            		Location point = new Location("");
+            		point.setLatitude(canteen.coordinates[0]);
+            		point.setLongitude(canteen.coordinates[1]);
+            		return location.distanceTo(point);
+            	}
+            	
+                public int compare(Canteen o1, Canteen o2) {
+                    return distanceToCurrentLocation(o1).compareTo(distanceToCurrentLocation(o2));
+                }
+            });
+		} else {
+			Collections.sort(orderedCanteens, new Comparator<Canteen>() {
+	            public int compare(Canteen o1, Canteen o2) {
+	                return o1.name.compareTo(o2.name);
+	            }
+	        });
+		}
+        
     	
         for (Canteen canteen : orderedCanteens) {
         	entriesList.add(canteen.name);
