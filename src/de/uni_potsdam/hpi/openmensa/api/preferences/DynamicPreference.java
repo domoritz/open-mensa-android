@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.MultiSelectListPreference;
 import android.util.AttributeSet;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import de.uni_potsdam.hpi.openmensa.MainActivity;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 
 /**
@@ -33,6 +36,8 @@ public class DynamicPreference extends MultiSelectListPreference {
 	protected Context context;
 	protected CharSequence[] entries = {};
 	protected CharSequence[] entryValues = {};
+	
+	private Location location = null;
 
     public DynamicPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -62,7 +67,7 @@ public class DynamicPreference extends MultiSelectListPreference {
         
     	super.showDialog(state);
     }
-
+    
 	private void initializeValues() {
 		HashMap<String, Canteen> canteens = SettingsProvider.getStorage(context).getCanteens();
     	ArrayList<CharSequence> entriesList = new ArrayList<CharSequence>();
@@ -73,9 +78,18 @@ public class DynamicPreference extends MultiSelectListPreference {
     	
     	List<Canteen> orderedCanteens = new ArrayList<Canteen>(canteens.values());
     	
+    	location = getLastBestLocation();
+    	
         Collections.sort(orderedCanteens, new Comparator<Canteen>() {
+        	private Float distanceToCurrentLocation(Canteen canteen) {
+        		Location point = new Location("");
+        		point.setLatitude(canteen.coordinates[0]);
+        		point.setLongitude(canteen.coordinates[1]);
+        		return location.distanceTo(point);
+        	}
+        	
             public int compare(Canteen o1, Canteen o2) {
-                return o1.name.compareTo(o2.name);
+                return distanceToCurrentLocation(o1).compareTo(distanceToCurrentLocation(o2));
             }
         });
     	
@@ -99,5 +113,30 @@ public class DynamicPreference extends MultiSelectListPreference {
 
     private CharSequence[] entryValues() {
     	return entryValues;
+    }
+    
+    /**
+     * @return the last know best location
+     */
+    private Location getLastBestLocation() {
+		Location locationGPS = MainActivity.getLocationManager().getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location locationNet = MainActivity.getLocationManager().getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        long GPSLocationTime = 0;
+        if (null != locationGPS) { GPSLocationTime = locationGPS.getTime(); }
+
+        long NetLocationTime = 0;
+
+        if (null != locationNet) {
+            NetLocationTime = locationNet.getTime();
+        }
+
+        if ( 0 < GPSLocationTime - NetLocationTime ) {
+            return locationGPS;
+        }
+        else{
+            return locationNet;
+        }
+
     }
 }

@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -54,6 +55,8 @@ public class MainActivity extends FragmentActivity implements
 	private SpinnerAdapter spinnerAdapter;
 	private ArrayList<SpinnerItem> spinnerItems;
 	
+	private static LocationManager locationManager;
+	
 	private static Context context;
 	
 	Gson gson = new Gson();
@@ -81,6 +84,8 @@ public class MainActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_main);
 		
 		context = this;
+		
+		locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		
 		storage = SettingsProvider.getStorage(context);
 		
@@ -128,6 +133,10 @@ public class MainActivity extends FragmentActivity implements
 	public static Context getAppContext() {
         return MainActivity.context;
     }
+	
+	public static LocationManager getLocationManager() {
+		return MainActivity.locationManager;
+	}
 
 	private void createSectionsPageAdapter() {
 		// Create the adapter that will return a fragment for each day fragment views
