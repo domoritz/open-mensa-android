@@ -83,8 +83,6 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 				HttpURLConnection urlConnection = (HttpURLConnection)feed.openConnection();
 				BufferedReader in = new BufferedReader(new InputStreamReader(
 						urlConnection.getInputStream()));
-				
-				Log.d(TAG, String.format("%s", urlConnection.getResponseCode()));
 
 				StringBuilder builder = new StringBuilder();
 				long fileLength = urlConnection.getContentLength();
