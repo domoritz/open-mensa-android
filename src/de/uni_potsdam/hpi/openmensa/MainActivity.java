@@ -292,24 +292,6 @@ public class MainActivity extends FragmentActivity implements
 		
 		Log.d(TAG, String.format("favourite canteens: %s", spinnerItems));
 		
-		// show a link to settings if list is empty
-		if (spinnerItems.isEmpty()) {
-			class ShowFavouritesCaller implements SpinnerItem {
-				@Override
-				public boolean execute(MainActivity mainActivity, int itemPosition) {
-					Intent settings = new Intent(mainActivity, SettingsActivity.class);
-					startActivity(settings);
-					return true;
-				}
-				
-				@Override
-				public String toString() {
-					return getString(R.string.spinner_favourites);
-				}
-			}
-			spinnerItems.add(new ShowFavouritesCaller());
-		}
-		
 		ActionBar actionBar = getActionBar();
 		spinnerAdapter = new ArrayAdapter<SpinnerItem>(this, android.R.layout.simple_spinner_dropdown_item, spinnerItems);
 		actionBar.setListNavigationCallbacks(spinnerAdapter, this);

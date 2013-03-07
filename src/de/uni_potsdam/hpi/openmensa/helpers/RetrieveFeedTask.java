@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
@@ -152,6 +153,8 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 	protected void showErrorMessage(Exception ex) {
 		builder.setTitle(ex.getClass().getName());
 		builder.setMessage(ex.toString());
-		builder.show();
+		if(!((Activity)MainActivity.getAppContext()).isFinishing()) {
+			builder.show();
+		}
 	}
 }

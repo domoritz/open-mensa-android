@@ -11,6 +11,7 @@
     <string name="title_activity_main">OpenMensa</string>
     
     <string name="spinner_favourites">Choose Favourites</string>
+    <string name="empty"></string>
     
     <string name="today">today</string>
     <string name="yesterday">yesterday</string>
@@ -29,7 +30,7 @@
     <string name="noinfo">No information available</string>
     <string name="noprice">Not available</string>
     <string name="nomapapp">Could not find a map application</string>
-    <string name="noactivecanteens">No active canteens.</string>
+    <string name="noactivecanteens">No favourite canteens.</string>
     <string name="chooseone">You have not yet set any active canteens. Please select at least one.</string>
     
     <string name="reload">Refresh canteens</string>
@@ -48,7 +49,7 @@
     
     <string name="about_title">About</string>
     <string name="version_title">Version</string>
-    <string name="version_desc">0.3</string>
+    <string name="version_desc">0.4</string>
     <string name="license_title">License</string>
     <string name="license">Apache License, Version 2.0</string>
     <string name="powered_by_title">Powered by</string>
