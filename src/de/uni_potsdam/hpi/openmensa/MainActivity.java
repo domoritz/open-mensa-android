@@ -172,6 +172,8 @@ public class MainActivity extends FragmentActivity implements
 	 * @param canteen
 	 */
 	public void changeCanteenTo(Canteen canteen) {
+		if (storage.getCurrentCanteen().key.compareTo(canteen.key) == 0)
+			return;
 		storage.setCurrentCanteen(canteen);
 		storage.saveToPreferences(this);
 		
@@ -290,7 +292,7 @@ public class MainActivity extends FragmentActivity implements
 			alert.show();
 		}
 		
-		Log.d(TAG, String.format("favourite canteens: %s", spinnerItems));
+		Log.d(TAG, String.format("Spinner items: %s", spinnerItems));
 		
 		ActionBar actionBar = getActionBar();
 		spinnerAdapter = new ArrayAdapter<SpinnerItem>(this, android.R.layout.simple_spinner_dropdown_item, spinnerItems);
@@ -305,11 +307,9 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	/**
-	 * Refreshes the available canteens list
+	 * Fetches the available canteens list form the server
 	 */
 	private void refreshAvailableCanteens() {
-		// load available canteens from settings and afterwards refetch the list from server
-
 		String baseUrl = SettingsProvider.getSourceUrl(this);
 		String url = baseUrl + "canteens" + "?limit=50";
 
@@ -322,11 +322,6 @@ public class MainActivity extends FragmentActivity implements
 		storage.saveCanteens(this, task.getCanteens());
 		
 		refreshFavouriteCanteens();
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
 	}
 
 	/**

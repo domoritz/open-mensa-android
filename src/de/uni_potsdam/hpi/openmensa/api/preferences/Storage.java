@@ -85,7 +85,6 @@ public class Storage {
 		lastCanteensUpdate = Calendar.getInstance();
 		
 		saveToPreferences(context);
-		SettingsProvider.updateFavouriteCanteensFromPreferences(context);
 	}
 	
 	public ArrayList<Canteen> getFavouriteCanteens() {
