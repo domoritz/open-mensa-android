@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.openmensa.api.preferences;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.Observable;
 import java.util.Set;
 
 import android.annotation.SuppressLint;
@@ -22,7 +23,7 @@ import de.uni_potsdam.hpi.openmensa.api.Canteens;
  *
  */
 
-public class Storage {
+public class Storage extends Observable {
 	/*========
 	 * Don't forget to add the members to loadFromPreferences() 
 	 */
@@ -78,6 +79,8 @@ public class Storage {
 	public void setCanteens(Canteens newCanteens) {
 		getCanteens().clear();
 		canteens.putAll(newCanteens);
+		setChanged();
+		
 	}
 
 	public void saveCanteens(Context context, Canteens canteens) {
@@ -114,6 +117,7 @@ public class Storage {
 		favouriteCanteensKeys = storage.favouriteCanteensKeys;
 
 		SettingsProvider.updateFavouriteCanteensFromPreferences(context);
+		setChanged();
 	}
 	
 	/**
@@ -128,6 +132,7 @@ public class Storage {
 
 	public void setCurrentCanteen(Canteen canteen) {
 		currentCanteen = canteen.key;
+		setChanged();
 	}
 
 	public Canteen getCurrentCanteen() {
@@ -151,5 +156,6 @@ public class Storage {
 	public void setFavouriteCanteens(Set<String> favourites) {
 		Log.d(MainActivity.TAG, String.format("Update favourites: %s", favourites));
 		favouriteCanteensKeys = favourites;
+		setChanged();
 	}
 }
