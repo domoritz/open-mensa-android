@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.Set;
 
 import android.app.Activity;
@@ -25,14 +26,14 @@ import de.uni_potsdam.hpi.openmensa.MainActivity;
  * 
  * @author dominik
  */
-public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, String> {
+public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Void> {
 	protected Exception exception;
 	protected ProgressDialog dialog;
 	private Builder builder;
 	protected Context context;
 	protected Gson gson = new Gson();
 	
-	protected static Set<String> currentlyRequestingFrom;
+	protected static Set<String> currentlyRequestingFrom = new HashSet<String>();
 	
 	// provided by the header "X-Total-Pages"
 	protected Integer totalPages = null;
@@ -76,7 +77,7 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, String
 
 	protected abstract void parseFromJSON(String jsonString);
 
-	protected String doInBackground(String... urls) {
+	protected Void doInBackground(String... urls) {
 		if (urls.length != 1)
 			throw new IllegalArgumentException("You need to provide exactly one.");
 
@@ -87,13 +88,13 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, String
 		}
 		currentlyRequestingFrom.add(url);
 		Log.d(TAG, String.format("Fetching from %s", url));
+		
 		try {
 			URL feed = new URL(url);
 			HttpURLConnection urlConnection = (HttpURLConnection)feed.openConnection();
 			BufferedReader in = new BufferedReader(new InputStreamReader(
 					urlConnection.getInputStream()));
 
-			StringBuilder builder = new StringBuilder();
 			long fileLength = urlConnection.getContentLength();
 			long total = 0;
 			int count;
@@ -111,6 +112,8 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, String
 					dialog.setMax((int) fileLength);
 				}
 			}
+			
+			StringBuilder builder = new StringBuilder();
 
 			char buf[] = new char[DEFAULT_BUFFER_SIZE];
 			while ((count = in.read(buf, 0, DEFAULT_BUFFER_SIZE)) > 0) {
@@ -119,13 +122,14 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, String
 				publishProgress((int) (total));
 				builder.append(buf, 0, count);
 			}
+			
+			parseFromJSON(builder.toString());
 		} catch (Exception ex) {
 			this.exception = ex;
 		} finally {
 			currentlyRequestingFrom.remove(url);
 		}
-		
-		return builder.toString();
+		return null;
 	}
 
 	protected void onProgressUpdate(Integer... progress) {
@@ -134,8 +138,7 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, String
 			dialog.setProgress(progress[0]);
 	}
 
-	protected void onPostExecute(String jsonString) {
-		parseFromJSON(jsonString);
+	protected void onPostExecute(Void v) {
 		if (this.exception != null) {
 			Log.w(TAG, "Exception: " + exception.getMessage());
 			if (LOGV) {

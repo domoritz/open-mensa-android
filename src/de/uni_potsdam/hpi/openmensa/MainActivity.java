@@ -26,6 +26,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
@@ -82,6 +83,8 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
 		setContentView(R.layout.activity_main);
 		
 		context = this;
@@ -104,8 +107,6 @@ public class MainActivity extends FragmentActivity implements
 				}
 			}
 		};
-		
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
 		prefs.registerOnSharedPreferenceChangeListener(listener);
 
@@ -117,6 +118,10 @@ public class MainActivity extends FragmentActivity implements
 		} catch (NoSuchMethodError e) {
 			// ignore this error which happens on Android 3
 		}
+		
+		View spinner = getLayoutInflater().inflate(R.layout.spinner_layout, null);
+		actionBar.setCustomView(spinner);
+		actionBar.setDisplayShowCustomEnabled(true);
 		
 		CloudmadeUtil.retrieveCloudmadeKey(MainActivity.context);
 		
@@ -257,7 +262,7 @@ public class MainActivity extends FragmentActivity implements
 		sectionsPagerAdapter.notifyDataSetChanged();
 		
 		if (task.noPending()) {
-			setProgressBarIndeterminateVisibility(Boolean.TRUE);
+			setProgressBarIndeterminateVisibility(Boolean.FALSE);
 		}
 	}
 
