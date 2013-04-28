@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment;
 
 /**
@@ -37,6 +38,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	 */	
 	@Override
 	public Fragment getItem(int position) {
+		Log.d(MainActivity.TAG, String.format("New Fragment %d", position));
 		if (fragments[position] == null) {
 			if (position == 0) {
 				CanteenFragment fragment = new CanteenFragment();
