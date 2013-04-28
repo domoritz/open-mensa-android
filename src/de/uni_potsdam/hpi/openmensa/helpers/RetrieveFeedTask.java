@@ -157,4 +157,8 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Intege
 			builder.show();
 		}
 	}
+
+	public Boolean noPending() {
+		return currentlyRequestingFrom.isEmpty();
+	}
 }

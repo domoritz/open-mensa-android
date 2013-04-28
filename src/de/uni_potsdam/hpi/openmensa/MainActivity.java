@@ -26,6 +26,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
@@ -103,6 +104,8 @@ public class MainActivity extends FragmentActivity implements
 				}
 			}
 		};
+
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
 		prefs.registerOnSharedPreferenceChangeListener(listener);
 
@@ -236,6 +239,7 @@ public class MainActivity extends FragmentActivity implements
 					RetrieveFeedTask task = new RetrieveDaysFeedTask(MainActivity.context, this, canteen, dateString);
 					task.execute(new String[] { url });
 					startedFetching = true;
+					setProgressBarIndeterminateVisibility(Boolean.TRUE);
 				}
 			} else {
 				Log.d(MainActivity.TAG, "Meal cache hit");
@@ -251,6 +255,10 @@ public class MainActivity extends FragmentActivity implements
 		task.canteen.updateDays(task.getDays());
 		task.canteen.justUpdated(task.dateString);
 		sectionsPagerAdapter.notifyDataSetChanged();
+
+		if (task.noPending()) {
+			setProgressBarIndeterminateVisibility(Boolean.TRUE);
+		}
 	}
 
 	/**
