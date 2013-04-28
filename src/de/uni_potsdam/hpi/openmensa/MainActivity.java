@@ -104,7 +104,7 @@ public class MainActivity extends FragmentActivity implements
 				}
 			}
 		};
-
+		
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
 		prefs.registerOnSharedPreferenceChangeListener(listener);
@@ -255,7 +255,7 @@ public class MainActivity extends FragmentActivity implements
 		task.canteen.updateDays(task.getDays());
 		task.canteen.justUpdated(task.dateString);
 		sectionsPagerAdapter.notifyDataSetChanged();
-
+		
 		if (task.noPending()) {
 			setProgressBarIndeterminateVisibility(Boolean.TRUE);
 		}
@@ -330,6 +330,7 @@ public class MainActivity extends FragmentActivity implements
 		storage.saveCanteens(this, task.getCanteens());
 		
 		refreshFavouriteCanteens();
+		updateMealStorage();
 	}
 
 	/**
