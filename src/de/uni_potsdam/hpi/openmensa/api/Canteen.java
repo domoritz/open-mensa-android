@@ -19,7 +19,7 @@ import de.uni_potsdam.hpi.openmensa.helpers.SpinnerItem;
 public class Canteen implements SpinnerItem {
 	
 	// 1 hour
-	private static final int DAY_OUTDATED = 1000*60*60;
+	private static final int DAY_OUTDATED = 1000*60*60*1;
 	
 	@SerializedName("id")
 	public String key = null;
