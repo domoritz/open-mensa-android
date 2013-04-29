@@ -16,7 +16,11 @@ import de.uni_potsdam.hpi.openmensa.helpers.SpinnerItem;
  * @author dominik
  *
  */
-public class Canteen implements SpinnerItem {	
+public class Canteen implements SpinnerItem {
+	
+	// 1 hour
+	private static final int DAY_OUTDATED = 1000*60*60;
+	
 	@SerializedName("id")
 	public String key = null;
 	
@@ -39,11 +43,11 @@ public class Canteen implements SpinnerItem {
 	public HashMap<String, Day> days;
 	
 	/**
-	 * save when we last fetched
+	 * Save when we last fetched for each day
 	 */
 	@SerializedName("_updates")
 	public HashMap<String, Long> updates;
-	
+
 	public Canteen(String key, String name) {
 		this.name = name;
 		this.key = key;
@@ -59,6 +63,7 @@ public class Canteen implements SpinnerItem {
 			days = new HashMap<String, Day>();
 		for (Day day : newDays) {
 			days.put(day.date, day);
+			justUpdated(day.date);
 		}
 	}
 	
@@ -72,16 +77,17 @@ public class Canteen implements SpinnerItem {
 	public void justUpdated(String date) {
 		if (updates == null)
 			updates = new HashMap<String, Long>();
+		
 		Calendar now = Calendar.getInstance();
 		updates.put(date, now.getTimeInMillis());
 	}
 
 	/**
-	 * normally, you should fetch whenever no day is present,
+	 * Normally, you should fetch whenever no day is present,
 	 * but some open mensa feeds are not complete. So let's see whether
 	 * we have already fetched the information for a certain day lately.
 	 * 
-	 * @param string
+	 * @param string the date as string
 	 * @return
 	 */
 	public boolean isOutOfDate(String date) {
@@ -94,14 +100,12 @@ public class Canteen implements SpinnerItem {
 		if (lastUpdate == null)
 			return true;
 		
-		// 1 hour
-		int maxDiff = 1000*60*60;
-		if (now.getTimeInMillis() - lastUpdate > maxDiff) {
+		if (now.getTimeInMillis() - lastUpdate > DAY_OUTDATED) {
 			return true;
 		}
 		return false;
 	}
-
+	
 	@Override
 	public boolean execute(MainActivity mainActivity, int itemPosition) {
 		Canteen c = SettingsProvider.getStorage(mainActivity).getFavouriteCanteens().get(itemPosition);

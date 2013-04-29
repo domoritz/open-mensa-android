@@ -38,13 +38,13 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	 */	
 	@Override
 	public Fragment getItem(int position) {
-		Log.d(MainActivity.TAG, String.format("New Fragment %d", position));
+		Log.d(MainActivity.TAG, String.format("New Fragment requested %d", position));
 		if (fragments[position] == null) {
 			if (position == 0) {
 				CanteenFragment fragment = new CanteenFragment();
 				fragments[0] = fragment;
 			} else {
-				DaySectionFragment fragment = new DaySectionFragment();
+				DayFragment fragment = new DayFragment();
 				fragments[position] = fragment;
 			}
 			
@@ -83,7 +83,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 			if (!daySections.contains(i++))
 				continue;
 			if (fragment != null) {
-				((DaySectionFragment) fragment).setToFetching(on, animated);
+				((DayFragment) fragment).setToFetching(on, animated);
 			}
 		}
 	}

@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Observable;
 import java.util.Set;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 

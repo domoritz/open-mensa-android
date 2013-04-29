@@ -36,6 +36,7 @@ import com.google.gson.Gson;
 
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.Day;
+import de.uni_potsdam.hpi.openmensa.api.Days;
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsActivity;
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsProvider;
 import de.uni_potsdam.hpi.openmensa.api.preferences.Storage;
@@ -219,7 +220,7 @@ public class MainActivity extends FragmentActivity implements
 			
 			Day day = canteen.getDay(dateString);
 			
-			DaySectionFragment fragment = (DaySectionFragment) sectionsPagerAdapter.getItem(position);
+			DayFragment fragment = (DayFragment) sectionsPagerAdapter.getItem(position);
 			fragment.setDate(df.format(date));
 			
 			if (startedFetching) {
@@ -238,6 +239,12 @@ public class MainActivity extends FragmentActivity implements
 				}
 				
 				if (isOnline(this)) {
+					if (day == null) {
+						Days newDay = new Days();
+						Day nullDay = new Day(dateString);
+						newDay.add(nullDay);
+						canteen.updateDays(newDay);
+					}
 					fragment.setToFetching(true, !fragment.isListShown());
 					String baseUrl = SettingsProvider.getSourceUrl(MainActivity.context);
 					String url = baseUrl + "canteens/" + canteen.key + "/meals/?start=" + dateString;
@@ -245,6 +252,8 @@ public class MainActivity extends FragmentActivity implements
 					task.execute(new String[] { url });
 					startedFetching = true;
 					setProgressBarIndeterminateVisibility(Boolean.TRUE);
+				} else {
+					Toast.makeText(getApplicationContext(), R.string.noconnection, Toast.LENGTH_SHORT).show();
 				}
 			} else {
 				Log.d(MainActivity.TAG, "Meal cache hit");
@@ -258,7 +267,6 @@ public class MainActivity extends FragmentActivity implements
 		// the fragment might have been deleted while we were fetching something
 		sectionsPagerAdapter.setToFetching(false, false);
 		task.canteen.updateDays(task.getDays());
-		task.canteen.justUpdated(task.dateString);
 		sectionsPagerAdapter.notifyDataSetChanged();
 		
 		if (task.noPending()) {

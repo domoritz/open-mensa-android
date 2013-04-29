@@ -14,7 +14,7 @@ import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment;
  * A fragment representing a section of the app, that displays the Meals for
  * one Day.
  */
-public class DaySectionFragment extends ExpandableListFragment implements RefreshableFragment {
+public class DayFragment extends ExpandableListFragment implements RefreshableFragment {
 	private ArrayList<Meal> listItems = new ArrayList<Meal>();
 	private String date = null;
 	private Boolean fetching = false;
@@ -55,7 +55,7 @@ public class DaySectionFragment extends ExpandableListFragment implements Refres
 				if (MainActivity.isOnline(MainActivity.getAppContext())) {
 					setToNoInformation();
 				} else {
-					setNotOnline();
+					setToNotOnline();
 				}
 				
 			}
@@ -75,6 +75,7 @@ public class DaySectionFragment extends ExpandableListFragment implements Refres
         	Log.w(MainActivity.TAG, "List not yet created.");
         	return;
         }
+		Log.d(MainActivity.TAG, String.format("Set text %s day %s", text, date));
 		super.setEmptyText(text);
 	}
 
@@ -99,8 +100,7 @@ public class DaySectionFragment extends ExpandableListFragment implements Refres
 	/**
 	 * tell the fragment that there we are currently not online
 	 */
-	public void setNotOnline() {
-		Log.d(MainActivity.TAG, "not online");
+	public void setToNotOnline() {
 		setEmptyText(getResources().getString(R.string.noconnection));
 		setToFetching(false, true);
 		listVisible = false;
@@ -131,8 +131,15 @@ public class DaySectionFragment extends ExpandableListFragment implements Refres
 	protected void setMealList(Day day) {
 		if (listItems == null || adapter == null)
 			return;
+		
+		if (day.isNullObject()) {
+			setToNoInformation();
+			Log.d(MainActivity.TAG, String.format("Null object for day %s", day.date));
+			return;
+		}
 
 		listVisible = true;
+		date = day.date;
 		setToFetching(false, false);
 		listItems.addAll(day.getMeals());
 		adapter.notifyDataSetChanged();
