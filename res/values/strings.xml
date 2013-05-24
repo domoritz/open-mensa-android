@@ -49,7 +49,7 @@
     
     <string name="about_title">About</string>
     <string name="version_title">Version</string>
-    <string name="version_desc">0.5</string>
+    <string name="version_desc">0.6</string>
     <string name="license_title">License</string>
     <string name="license">GNU General Public License, Version 3</string>
     <string name="powered_by_title">Powered by</string>
