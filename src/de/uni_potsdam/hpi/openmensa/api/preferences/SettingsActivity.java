@@ -11,7 +11,7 @@ import android.view.MenuItem;
  *
  */
 public class SettingsActivity extends PreferenceActivity {
-	
+
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,7 +20,7 @@ public class SettingsActivity extends PreferenceActivity {
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
-        
+
         getActionBar().setDisplayHomeAsUpEnabled(true);
     }
     

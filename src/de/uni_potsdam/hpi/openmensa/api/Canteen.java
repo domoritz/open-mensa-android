@@ -8,7 +8,7 @@ import android.util.Log;
 import com.google.gson.annotations.SerializedName;
 
 import de.uni_potsdam.hpi.openmensa.MainActivity;
-import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsProvider;
+import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils;
 import de.uni_potsdam.hpi.openmensa.helpers.SpinnerItem;
 
 /**
@@ -108,7 +108,7 @@ public class Canteen implements SpinnerItem {
 	
 	@Override
 	public boolean execute(MainActivity mainActivity, int itemPosition) {
-		Canteen c = SettingsProvider.getStorage(mainActivity).getFavouriteCanteens().get(itemPosition);
+		Canteen c = SettingsUtils.getStorage(mainActivity).getFavouriteCanteens().get(itemPosition);
 		Log.d(MainActivity.TAG, String.format("Chose canteen %s", c.key));
 		mainActivity.changeCanteenTo(c);
 		return true;

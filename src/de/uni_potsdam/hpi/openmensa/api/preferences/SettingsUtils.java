@@ -19,7 +19,7 @@ import de.uni_potsdam.hpi.openmensa.R;
  * @author dominik
  *
  */
-public class SettingsProvider {
+public class SettingsUtils {
 
 	public static final String KEY_SOURCE_URL = "pref_source_url";
 	public static final String KEY_STORAGE = "om_storage";
@@ -50,7 +50,7 @@ public class SettingsProvider {
     	String json = gson.toJson(storage);
     	//Log.d("json", json);
     	SharedPreferences.Editor editor = getSharedPrefs(context).edit();
-    	editor.putString(SettingsProvider.KEY_STORAGE, json);
+    	editor.putString(SettingsUtils.KEY_STORAGE, json);
     	editor.commit();
     }
 

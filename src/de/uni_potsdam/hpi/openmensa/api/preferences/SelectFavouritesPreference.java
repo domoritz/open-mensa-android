@@ -31,7 +31,7 @@ import de.uni_potsdam.hpi.openmensa.api.Canteen;
  * 		separate preference where entries and entyValues has a concrete implementation
  * TODO: use ListPreferenceMultiSelect as it is compatible with older versions
  */
-public class DynamicPreference extends MultiSelectListPreference {
+public class SelectFavouritesPreference extends MultiSelectListPreference {
 
 	protected Context context;
 	protected CharSequence[] entries = {};
@@ -39,12 +39,12 @@ public class DynamicPreference extends MultiSelectListPreference {
 	
 	private Location location = null;
 
-    public DynamicPreference(Context context, AttributeSet attrs) {
+    public SelectFavouritesPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
     }
 
-    public DynamicPreference(Context context) {
+    public SelectFavouritesPreference(Context context) {
         super(context);
         this.context = context;
     }
@@ -69,7 +69,7 @@ public class DynamicPreference extends MultiSelectListPreference {
     }
     
 	private void initializeValues() {
-		HashMap<String, Canteen> canteens = SettingsProvider.getStorage(context).getCanteens();
+		HashMap<String, Canteen> canteens = SettingsUtils.getStorage(context).getCanteens();
     	ArrayList<CharSequence> entriesList = new ArrayList<CharSequence>();
     	ArrayList<CharSequence> entryValuesList = new ArrayList<CharSequence>();
     	
@@ -115,7 +115,7 @@ public class DynamicPreference extends MultiSelectListPreference {
         return new ArrayAdapter<String>(getContext(), android.R.layout.select_dialog_multichoice);
     }
 
-    // TODO: adjust available entries by SettingsProvider.getAvailableCanteens()!
+    // TODO: adjust available entries with SettingsUtils.getAvailableCanteens()!
     private CharSequence[] entries() {
         return entries;
     }

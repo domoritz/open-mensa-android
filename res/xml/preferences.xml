@@ -3,15 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:threefiftyprefs="http://schemas.android.com/apk/res/de.uni_potsdam.hpi.openmensa">
     <PreferenceCategory android:title="@string/source_title">
-        <de.uni_potsdam.hpi.openmensa.api.preferences.DynamicPreference
+        <de.uni_potsdam.hpi.openmensa.api.preferences.SelectFavouritesPreference
  			android:title="@string/canteen_title" 
- 			android:summary="@string/canteen_desc" 
+ 			android:summary="@string/canteen_desc"
  			android:key="pref_favourites"
- 			android:dialogMessage="@string/canteen_choose_desc" 
+            android:persistent="true"
+ 			android:dialogMessage="@string/canteen_choose_desc"
  			android:dialogTitle="@string/canteen_choose_title"/>
     	<EditTextPreference 
-    	    android:title="@string/source_url_title" 
-    	    android:summary="@string/source_url_desc" 
+    	    android:title="@string/source_url_title"
+            android:persistent="true"
+            android:dialogMessage="@string/source_url_desc"
     	    android:defaultValue="@string/source_url_default" 
     	    android:key="pref_source_url"/>
     </PreferenceCategory>
@@ -19,11 +21,11 @@
     	<Preference android:summary="@string/version_desc" android:title="@string/version_title"></Preference>
     	<Preference android:title="@string/powered_by_title" android:summary="@string/powered_by_desc">
     		<intent android:action="android.intent.action.VIEW"
-            android:data="http://www.openmensa.org/" />
+            android:data="http://openmensa.org/" />
     	</Preference>
     	<Preference android:title="@string/author_title" android:selectable="true" android:summary="@string/author_desc">
         	<intent android:action="android.intent.action.VIEW"
-            android:data="http://www.domoritz.de/" />
+            android:data="http://domoritz.de/" />
     	</Preference>
     	<Preference android:title="@string/license_title" android:summary="@string/license">
     		<intent android:action="android.intent.action.VIEW"

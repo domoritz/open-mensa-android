@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils;
 import org.osmdroid.tileprovider.util.CloudmadeUtil;
 
 import android.annotation.SuppressLint;
@@ -32,13 +33,10 @@ import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.Day;
 import de.uni_potsdam.hpi.openmensa.api.Days;
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsActivity;
-import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsProvider;
 import de.uni_potsdam.hpi.openmensa.api.preferences.Storage;
 import de.uni_potsdam.hpi.openmensa.helpers.CustomViewPager;
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener;
@@ -52,7 +50,6 @@ public class MainActivity extends FragmentActivity implements
 
 	public static final String TAG = "Canteendroid";
 	public static final Boolean LOGV = true;
-	public static final String PREFS_NAME = "CanteendroidPrefs";
 
 	static Storage storage;
 	private SpinnerAdapter spinnerAdapter;
@@ -61,8 +58,6 @@ public class MainActivity extends FragmentActivity implements
 	private static LocationManager locationManager;
 	
 	private static Context context;
-	
-	Gson gson = new Gson();
 	
 	OnSharedPreferenceChangeListener listener;
 
@@ -92,7 +87,7 @@ public class MainActivity extends FragmentActivity implements
 		
 		locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		
-		storage = SettingsProvider.getStorage(context);
+		storage = SettingsUtils.getStorage(context);
 		
 		createSectionsPageAdapter();
 
@@ -101,9 +96,9 @@ public class MainActivity extends FragmentActivity implements
 		listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 			@Override
 			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {	
-				if (key.equals(SettingsProvider.KEY_FAVOURITES)) {
+				if (key.equals(SettingsUtils.KEY_FAVOURITES)) {
 					refreshFavouriteCanteens();
-				} else if (key.equals(SettingsProvider.KEY_SOURCE_URL)) {
+				} else if (key.equals(SettingsUtils.KEY_SOURCE_URL)) {
 					reload();
 				}
 			}
@@ -246,7 +241,7 @@ public class MainActivity extends FragmentActivity implements
 						canteen.updateDays(newDay);
 					}
 					fragment.setToFetching(true, !fragment.isListShown());
-					String baseUrl = SettingsProvider.getSourceUrl(MainActivity.context);
+					String baseUrl = SettingsUtils.getSourceUrl(MainActivity.context);
 					String url = baseUrl + "canteens/" + canteen.key + "/meals/?start=" + dateString;
 					RetrieveFeedTask task = new RetrieveDaysFeedTask(MainActivity.context, this, canteen, dateString);
 					task.execute(new String[] { url });
@@ -282,7 +277,7 @@ public class MainActivity extends FragmentActivity implements
 	private void refreshFavouriteCanteens() {
 		Log.d(TAG, "Refreshing favourite canteen list");
 		
-		SettingsProvider.updateFavouriteCanteensFromPreferences(context);
+		SettingsUtils.updateFavouriteCanteensFromPreferences(context);
 
 		storage.loadFromPreferences(context);
 		spinnerItems.clear();
@@ -331,7 +326,7 @@ public class MainActivity extends FragmentActivity implements
 	 * Fetches the available canteens list form the server
 	 */
 	private void refreshAvailableCanteens() {
-		String baseUrl = SettingsProvider.getSourceUrl(this);
+		String baseUrl = SettingsUtils.getSourceUrl(this);
 		String url = baseUrl + "canteens" + "?limit=50";
 
 		RetrieveFeedTask task = new RetrieveCanteenFeedTask(this, this, url);
@@ -423,7 +418,6 @@ public class MainActivity extends FragmentActivity implements
 			// fetch meal feed and maybe canteens
 			if (storage.areCanteensOutOfDate() || storage.isEmpty() || force) {
 				Log.d(TAG, "Fetch canteens because storage is out of date or empty");
-				// async
 				refreshAvailableCanteens();
 			}
 			updateMealStorage(force);

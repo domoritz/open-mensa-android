@@ -38,12 +38,12 @@
     <string name="title_activity_preferences">Einstellungen</string>
     
     <string name="source_title">Datenquelle</string>
-    <string name="source_url_title">URL</string>
-    <string name="source_url_desc">URL eines OpenMensa Servers.</string>
+    <string name="source_url_title">OpenMensa Server</string>
+    <string name="source_url_desc">URL zum API Endpunkt eines OpenMensa Servers.</string>
     <string name="canteen_title">Bevorzugte Mensa</string>
     <string name="canteen_desc">Wähle Mensen, die in der App verfügbar sein sollen.</string>
     <string name="canteen_choose_title">Bevorzugte Mensen</string>
-    <string name="canteen_choose_desc">Wähle Deine bervorzugten mensen aus der Liste.</string>
+    <string name="canteen_choose_desc">Wähle Deine bervorzugten mensen aus der Liste, welche nach der Entfernung zur derzeitigen Position sortiert ist.</string>
     
     <string name="about_title">Über</string>
     <string name="version_title">Version</string>

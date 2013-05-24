@@ -109,13 +109,13 @@ public class Storage extends Observable {
 	 * @param context
 	 */
 	public void loadFromPreferences(Context context) {
-		Storage storage = SettingsProvider.getStorage(context);
+		Storage storage = SettingsUtils.getStorage(context);
 		canteens = storage.canteens;
 		lastCanteensUpdate = storage.lastCanteensUpdate;
 		currentCanteen = storage.currentCanteen;
 		favouriteCanteensKeys = storage.favouriteCanteensKeys;
 
-		SettingsProvider.updateFavouriteCanteensFromPreferences(context);
+		SettingsUtils.updateFavouriteCanteensFromPreferences(context);
 		setChanged();
 	}
 	
@@ -126,7 +126,7 @@ public class Storage extends Observable {
 	 * @param context
 	 */
 	public void saveToPreferences(Context context) {
-		SettingsProvider.setStorage(context, this);
+		SettingsUtils.setStorage(context, this);
 	}
 
 	public void setCurrentCanteen(Canteen canteen) {
