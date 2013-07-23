@@ -1,14 +1,14 @@
 package de.uni_potsdam.hpi.openmensa.api.preferences;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import de.uni_potsdam.hpi.openmensa.MainActivity;
 import de.uni_potsdam.hpi.openmensa.R;
@@ -26,7 +26,10 @@ public class SettingsUtils {
 	
 	// Make sure to update xml/preferences.xml as well
 	public static final String KEY_FAVOURITES = "pref_favourites";
-	
+
+    public static final String KEY_STYLE = "pref_style";
+    public static final String DEFAULT_THEME = "dark";
+
 	private static Gson gson = new Gson();
 	
     
@@ -52,6 +55,13 @@ public class SettingsUtils {
     	SharedPreferences.Editor editor = getSharedPrefs(context).edit();
     	editor.putString(SettingsUtils.KEY_STORAGE, json);
     	editor.commit();
+    }
+    public static int getThemeByString (String theme) {
+        if (theme.equalsIgnoreCase("dark")){
+            return R.style.AppTheme;
+        }else{
+            return R.style.AppThemeLight;
+        }
     }
 
     /**

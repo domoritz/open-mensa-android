@@ -58,5 +58,9 @@
     <string name="author_desc">Dominik Moritz, Christian Nicolai, Jan Graichen</string>
     <string name="feedback_title">Feedback</string>
     <string name="feedback_desc">Write me a short email and ask a question, thank me or complain.</string>
+    <string name="settings_design_title">Design</string>
+    <string name="pref_theme">Theme</string>
+    <string name="pref_themeDialogTitle">Choose your preferred theme</string>
+    <string name="pref_theme_default">Dark Theme</string>
 
 </resources>
