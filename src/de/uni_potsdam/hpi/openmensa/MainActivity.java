@@ -1,13 +1,5 @@
 package de.uni_potsdam.hpi.openmensa;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-
-import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils;
-import org.osmdroid.tileprovider.util.CloudmadeUtil;
-
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
@@ -33,10 +25,16 @@ import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.Day;
 import de.uni_potsdam.hpi.openmensa.api.Days;
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsActivity;
+import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils;
 import de.uni_potsdam.hpi.openmensa.api.preferences.Storage;
 import de.uni_potsdam.hpi.openmensa.helpers.CustomViewPager;
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener;
@@ -49,6 +47,7 @@ public class MainActivity extends FragmentActivity implements
 		OnNavigationListener, OnFinishedFetchingCanteensListener, OnFinishedFetchingDaysListener {
 
 	public static final String TAG = "Canteendroid";
+    public static final String defaultTheme = "dark";
 	public static final Boolean LOGV = true;
 
 	static Storage storage;
@@ -78,29 +77,39 @@ public class MainActivity extends FragmentActivity implements
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String prefStyle = prefs.getString(SettingsUtils.KEY_STYLE, defaultTheme);
+        if ( prefStyle !=  defaultTheme ) {
+            setTheme (SettingsUtils.getThemeByString(prefStyle));
+            Log.e("STYLE",prefStyle );
+        }
+        super.onCreate(savedInstanceState);
+
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
 		setContentView(R.layout.activity_main);
-		
+
 		context = this;
-		
+
 		locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		
+
 		storage = SettingsUtils.getStorage(context);
-		
+
 		createSectionsPageAdapter();
 
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
+
 		listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 			@Override
-			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {	
+			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 				if (key.equals(SettingsUtils.KEY_FAVOURITES)) {
 					refreshFavouriteCanteens();
 				} else if (key.equals(SettingsUtils.KEY_SOURCE_URL)) {
 					reload();
-				}
+				} else if (key.equals(SettingsUtils.KEY_STYLE)) {
+                    //recreate the activity
+                    recreate();
+                }
 			}
 		};
 
@@ -114,13 +123,14 @@ public class MainActivity extends FragmentActivity implements
 		} catch (NoSuchMethodError e) {
 			// ignore this error which happens on Android 3
 		}
-		
+
 		View spinner = getLayoutInflater().inflate(R.layout.spinner_layout, null);
 		actionBar.setCustomView(spinner);
 		actionBar.setDisplayShowCustomEnabled(true);
-		
-		CloudmadeUtil.retrieveCloudmadeKey(MainActivity.context);
-		
+
+		//CloudmadeUtil.retrieveCloudmadeKey(MainActivity.context);
+
+        //we must do this after setting the style
 		reload();
 		refreshFavouriteCanteens();
 	}

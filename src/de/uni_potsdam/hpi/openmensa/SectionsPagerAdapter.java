@@ -1,12 +1,13 @@
 package de.uni_potsdam.hpi.openmensa;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
+
+import java.util.ArrayList;
+
 import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment;
 
 /**

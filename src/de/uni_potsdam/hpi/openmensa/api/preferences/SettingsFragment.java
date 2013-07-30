@@ -1,11 +1,13 @@
 package de.uni_potsdam.hpi.openmensa.api.preferences;
 
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
-import android.preference.PreferenceFragment;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.SharedPreferences;
+import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceFragment;
+
 import de.uni_potsdam.hpi.openmensa.R;
 
 /**
@@ -23,6 +25,9 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
         SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
         EditTextPreference editTextPref = (EditTextPreference) findPreference(SettingsUtils.KEY_SOURCE_URL);
         editTextPref.setSummary(sp.getString(SettingsUtils.KEY_SOURCE_URL, editTextPref.getText()));
+
+        ListPreference themePref = (ListPreference) findPreference(SettingsUtils.KEY_STYLE);
+        themePref.setSummary(sp.getString(SettingsUtils.KEY_STYLE, themePref.getValue()));
     }
 
     public void onResume() {

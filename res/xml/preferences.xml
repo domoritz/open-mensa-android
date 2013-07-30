@@ -17,6 +17,15 @@
     	    android:defaultValue="@string/source_url_default" 
     	    android:key="pref_source_url"/>
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_design_title">
+        <ListPreference
+            android:key="pref_style"
+            android:title="@string/pref_theme"
+            android:dialogTitle="@string/pref_themeDialogTitle"
+            android:entries="@array/pref_theme_entries"
+            android:entryValues="@array/pref_theme_entry_values"
+            android:defaultValue="@string/pref_theme_default" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/about_title">
     	<Preference android:summary="@string/version_desc" android:title="@string/version_title"></Preference>
     	<Preference android:title="@string/powered_by_title" android:summary="@string/powered_by_desc">
