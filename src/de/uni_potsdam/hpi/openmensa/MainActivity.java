@@ -107,7 +107,6 @@ public class MainActivity extends FragmentActivity implements
 				} else if (key.equals(SettingsUtils.KEY_SOURCE_URL)) {
 					reload();
 				} else if (key.equals(SettingsUtils.KEY_STYLE)) {
-                    //recreate the activity
                     recreate();
                 }
 			}
@@ -128,7 +127,7 @@ public class MainActivity extends FragmentActivity implements
 		actionBar.setCustomView(spinner);
 		actionBar.setDisplayShowCustomEnabled(true);
 
-		//CloudmadeUtil.retrieveCloudmadeKey(MainActivity.context);
+		CloudmadeUtil.retrieveCloudmadeKey(MainActivity.context);
 
         //we must do this after setting the style
 		reload();

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.MenuItem;
 
 /**
@@ -20,7 +19,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String prefStyle = prefs.getString(SettingsUtils.KEY_STYLE, SettingsUtils.DEFAULT_THEME);
         setTheme (SettingsUtils.getThemeByString(prefStyle));
-            Log.e("STYLE", prefStyle);
 
         super.onCreate(savedInstanceState);
 
@@ -37,7 +35,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @Override
     public void onResume() {
         super.onResume();
-        // Set up a listener whenever a key changes
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         preferences.registerOnSharedPreferenceChangeListener(this);
     }
@@ -47,7 +44,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         super.onPause();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         preferences.unregisterOnSharedPreferenceChangeListener(this);
-        // Set up a listener whenever a key changes
     }
 
     @Override
