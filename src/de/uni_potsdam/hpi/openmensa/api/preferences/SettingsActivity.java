@@ -59,7 +59,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         if (s.equals(SettingsUtils.KEY_STYLE)) {
-            //recreate the activity
             recreate();
         }
     }
