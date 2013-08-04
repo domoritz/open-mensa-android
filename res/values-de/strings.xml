@@ -43,7 +43,10 @@
     <string name="canteen_title">Bevorzugte Mensa</string>
     <string name="canteen_desc">Wähle Mensen, die in der App verfügbar sein sollen.</string>
     <string name="canteen_choose_title">Bevorzugte Mensen</string>
-    <string name="canteen_choose_desc">Wähle Deine bervorzugten mensen aus der Liste, welche nach der Entfernung zur derzeitigen Position sortiert ist.</string>
+    <string name="canteen_choose_desc">Wähle Deine bervorzugten Mensen aus der Liste, welche nach der Entfernung zur derzeitigen Position sortiert ist.</string>
+
+    <string name="pref_theme">Theme</string>
+    <string name="pref_theme_dialog_title">Wähle dein bevorzugtes Theme aus</string>
     
     <string name="about_title">Über</string>
     <string name="version_title">Version</string>

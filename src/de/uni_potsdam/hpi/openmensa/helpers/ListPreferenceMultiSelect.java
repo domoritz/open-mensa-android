@@ -66,7 +66,7 @@ public class ListPreferenceMultiSelect extends ListPreference {
     	CharSequence[] entryValues = getEntryValues();
         if (entries == null || entryValues == null || entries.length != entryValues.length ) {
             throw new IllegalStateException(
-                    "ListPreference requires an entries array and an entryValues array which are both the same length");
+                    "MyListPreference requires an entries array and an entryValues array which are both the same length");
         }
 
         restoreCheckedEntries();

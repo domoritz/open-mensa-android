@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
+import de.uni_potsdam.hpi.openmensa.R;
+
 /**
  * 
  * @author dominik
@@ -17,8 +19,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String prefStyle = prefs.getString(SettingsUtils.KEY_STYLE, SettingsUtils.DEFAULT_THEME);
-        setTheme (SettingsUtils.getThemeByString(prefStyle));
+        String prefStyle = prefs.getString(SettingsUtils.KEY_STYLE, getString(R.string.pref_theme_default));
+        setTheme(SettingsUtils.getThemeByString(prefStyle));
 
         super.onCreate(savedInstanceState);
 
@@ -28,7 +30,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 .commit();
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
-
 
     }
 

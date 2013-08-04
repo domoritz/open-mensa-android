@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.osmdroid.tileprovider.util.CloudmadeUtil;
+
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.Day;
 import de.uni_potsdam.hpi.openmensa.api.Days;
@@ -47,7 +49,6 @@ public class MainActivity extends FragmentActivity implements
 		OnNavigationListener, OnFinishedFetchingCanteensListener, OnFinishedFetchingDaysListener {
 
 	public static final String TAG = "Canteendroid";
-    public static final String defaultTheme = "dark";
 	public static final Boolean LOGV = true;
 
 	static Storage storage;
@@ -79,11 +80,8 @@ public class MainActivity extends FragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        String prefStyle = prefs.getString(SettingsUtils.KEY_STYLE, defaultTheme);
-        if ( prefStyle !=  defaultTheme ) {
-            setTheme (SettingsUtils.getThemeByString(prefStyle));
-            Log.e("STYLE",prefStyle );
-        }
+        String prefStyle = prefs.getString(SettingsUtils.KEY_STYLE, getString(R.string.pref_theme_default));
+        setTheme(SettingsUtils.getThemeByString(prefStyle));
         super.onCreate(savedInstanceState);
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -182,7 +180,7 @@ public class MainActivity extends FragmentActivity implements
 	/**
 	 * Change the current canteen
 	 * 
-	 * @param canteen
+	 * @param canteen which canteen to switch to
 	 */
 	public void changeCanteenTo(Canteen canteen) {
 		if (storage.getCurrentCanteen().key.compareTo(canteen.key) == 0)
@@ -390,7 +388,7 @@ public class MainActivity extends FragmentActivity implements
 	/**
 	 * Checks if we have a valid Internet Connection on the device.
 	 * 
-	 * @param context
+	 * @param context app context
 	 * @return True if device has Internet
 	 * 
 	 *  Code from: http://www.androidsnippets.org/snippets/131/

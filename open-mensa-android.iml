@@ -24,6 +24,10 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="gson-2.2.2-jar" level="project" />
+    <orderEntry type="library" name="support-v4-r7-jar" level="project" />
+    <orderEntry type="library" name="osmdroid-android-3.0.8-jar" level="project" />
+    <orderEntry type="library" name="slf4j-android-1.6.1-RC1-jar" level="project" />
   </component>
 </module>
 
