@@ -60,7 +60,7 @@ public class SettingsUtils {
         } else if (theme.equalsIgnoreCase("light")) {
             return R.style.AppThemeLight;
         } else {
-            Log.e(MainActivity.TAG, "Theme not found");
+            Log.w(MainActivity.TAG, "Theme not found");
             return R.style.AppTheme;
         }
     }
