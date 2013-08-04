@@ -18,4 +18,8 @@ libs/
 # Local configuration file (sdk path, etc)
 local.properties
 
-.idea/*
+# IntelliJ project files
+*.iml
+*.ipr
+*.iws
+.idea/

@@ -5,5 +5,5 @@
     <dimen name="indention">10dip</dimen>
     <dimen name="titlePadding">20dip</dimen>
     <dimen name="mapPadding">20dip</dimen>
-    <dimen name="detailsPadding">5dip</dimen>
+    <dimen name="detailsPadding">2dip</dimen>
 </resources>
