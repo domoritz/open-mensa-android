@@ -1,8 +1,11 @@
 package de.uni_potsdam.hpi.openmensa;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.ActionBar.OnNavigationListener;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,11 +17,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
@@ -45,7 +45,7 @@ import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
 import de.uni_potsdam.hpi.openmensa.helpers.SpinnerItem;
 
 @SuppressLint("NewApi")
-public class MainActivity extends FragmentActivity implements
+public class MainActivity extends SherlockFragmentActivity implements
 		OnNavigationListener, OnFinishedFetchingCanteensListener, OnFinishedFetchingDaysListener {
 
 	public static final String TAG = "Canteendroid";
@@ -113,7 +113,7 @@ public class MainActivity extends FragmentActivity implements
 		prefs.registerOnSharedPreferenceChangeListener(listener);
 
 		spinnerItems = new ArrayList<SpinnerItem>();
-		ActionBar actionBar = getActionBar();
+		ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		try {
 			actionBar.setHomeButtonEnabled(true);
@@ -317,7 +317,7 @@ public class MainActivity extends FragmentActivity implements
 		
 		Log.d(TAG, String.format("Spinner items: %s", spinnerItems));
 		
-		ActionBar actionBar = getActionBar();
+		ActionBar actionBar = getSupportActionBar();
 		spinnerAdapter = new ArrayAdapter<SpinnerItem>(this, android.R.layout.simple_spinner_dropdown_item, spinnerItems);
 		actionBar.setListNavigationCallbacks(spinnerAdapter, this);
 		
@@ -359,7 +359,7 @@ public class MainActivity extends FragmentActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_main, menu);
+		getSupportMenuInflater().inflate(R.menu.menu_main, menu);
 		return true;
 	}
 

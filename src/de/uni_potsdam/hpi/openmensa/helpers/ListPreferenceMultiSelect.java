@@ -73,8 +73,8 @@ public class ListPreferenceMultiSelect extends ListPreference {
         builder.setMultiChoiceItems(entries, mClickedDialogEntryIndices, 
                 new DialogInterface.OnMultiChoiceClickListener() {
 					public void onClick(DialogInterface dialog, int which, boolean val) {
-						if( isCheckAllValue( which ) == true ) {
-							checkAll( dialog, val );
+						if(isCheckAllValue(which)) {
+							checkAll(dialog, val);
 						}
 						mClickedDialogEntryIndices[which] = val;
 					}
@@ -136,10 +136,10 @@ public class ListPreferenceMultiSelect extends ListPreference {
     	CharSequence[] entryValues = getEntryValues();
         if (positiveResult && entryValues != null) {
         	for ( int i=0; i<entryValues.length; i++ ) {
-        		if ( mClickedDialogEntryIndices[i] == true ) {
+        		if ( mClickedDialogEntryIndices[i] ) {
         			// Don't save the state of check all option - if any
         			String val = (String) entryValues[i];
-        			if( checkAllKey == null || (val.equals(checkAllKey) == false) ) {
+        			if( checkAllKey == null || (!val.equals(checkAllKey)) ) {
         				values.add(val);
         			}
         		}

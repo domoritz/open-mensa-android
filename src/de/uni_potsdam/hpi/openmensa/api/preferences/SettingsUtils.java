@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.openmensa.api.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -9,6 +10,9 @@ import com.google.gson.Gson;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import de.uni_potsdam.hpi.openmensa.MainActivity;
 import de.uni_potsdam.hpi.openmensa.R;
@@ -56,25 +60,48 @@ public class SettingsUtils {
     }
     public static int getThemeByString (String theme) {
         if (theme.equalsIgnoreCase("dark")) {
-            return R.style.AppTheme;
+            return com.actionbarsherlock.R.style.Theme_Sherlock;
         } else if (theme.equalsIgnoreCase("light")) {
-            return R.style.AppThemeLight;
+            return com.actionbarsherlock.R.style.Theme_Sherlock_Light;
         } else {
             Log.w(MainActivity.TAG, "Theme not found");
-            return R.style.AppTheme;
+            return com.actionbarsherlock.R.style.Theme_Sherlock;
         }
     }
 
     /**
      * saves the active canteens from the preferences in the storage object
-     * @param context
+     * @param context Application Context
      */
 	public static void updateFavouriteCanteensFromPreferences(Context context) {
-		// TODO: getStringSet requires API Level 11
-		Set<String> favouriteCanteenKeys = getSharedPrefs(context).getStringSet(KEY_FAVOURITES, new HashSet<String>());
+        Set<String> favouriteCanteenKeys;
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            favouriteCanteenKeys = getSharedPrefs(context).getStringSet(KEY_FAVOURITES, new HashSet<String>());
+        } else {
+            favouriteCanteenKeys = new HashSet(getStringArrayPref(context, KEY_FAVOURITES));
+        }
 		Log.d(MainActivity.TAG, String.format("Got favourites %s", favouriteCanteenKeys));
 		Storage storage = getStorage(context);
 		storage.setFavouriteCanteens(favouriteCanteenKeys);
 		storage.saveToPreferences(context);
 	}
+
+    // http://stackoverflow.com/a/7361989/214950
+    public static ArrayList<String> getStringArrayPref(Context context, String key) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String json = prefs.getString(key, null);
+        ArrayList<String> urls = new ArrayList<String>();
+        if (json != null) {
+            try {
+                JSONArray a = new JSONArray(json);
+                for (int i = 0; i < a.length(); i++) {
+                    String url = a.optString(i);
+                    urls.add(url);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return urls;
+    }
 }

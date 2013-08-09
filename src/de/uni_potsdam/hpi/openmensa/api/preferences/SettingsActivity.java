@@ -2,10 +2,11 @@ package de.uni_potsdam.hpi.openmensa.api.preferences;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
-import android.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
 
 import de.uni_potsdam.hpi.openmensa.R;
 
@@ -14,22 +15,26 @@ import de.uni_potsdam.hpi.openmensa.R;
  * @author dominik
  *
  */
-public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends SherlockPreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String prefStyle = prefs.getString(SettingsUtils.KEY_STYLE, getString(R.string.pref_theme_default));
         setTheme(SettingsUtils.getThemeByString(prefStyle));
 
-        super.onCreate(savedInstanceState);
+        // http://gmariotti.blogspot.de/2013/01/preferenceactivity-preferencefragment.html
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            addPreferencesFromResource(R.xml.preferences);
+        } else {
+            getFragmentManager().beginTransaction()
+                  .replace(android.R.id.content, new SettingsFragment())
+                  .commit();
+        }
 
-        // Display the fragment as the main content.
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new SettingsFragment())
-                .commit();
-
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
