@@ -21,6 +21,11 @@ dependencies {
     compile 'org.slf4j:slf4j-android:1.6.1-RC1'
 }
 
+tasks.whenTaskAdded { task ->
+    if (task.name == 'validateReleaseSigning')
+        task.dependsOn keystoreInfo
+}
+
 android {
     compileSdkVersion 19
     buildToolsVersion "19.0.0"
@@ -48,4 +53,32 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
+
+    signingConfigs {
+        release {
+            storeFile file('android.keystore')
+            storePassword ''
+            keyAlias 'openmensa'
+            keyPassword ''
+        }
+
+        buildTypes {
+            release {
+                debuggable false
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+}
+
+task keystoreInfo << {
+    def console = System.console()
+    if (console == null)
+        throw new IllegalStateException('no console available, use --no-daemon flag')
+
+    def storePassword = console.readPassword('Keystore password: ')
+    def keyPassword = console.readPassword('Key password: ')
+
+    android.signingConfigs.release.storePassword = new String(storePassword)
+    android.signingConfigs.release.keyPassword = new String(keyPassword)
 }

@@ -11,6 +11,9 @@ Import the project as a gradle project in Android Studio and start hacking. Join
 
 Make sure you installed the `Android Support Repository` from the SDK Manager.
 
+Create a release with `./gradlew --no-daemon assembleRelease`.
+
+
 ## Screenshots
 
 ![Meals view with different meals](https://raw.github.com/domoritz/open-mensa-android/master/screenshots/screenshot_meal.jpg "Meals view")
