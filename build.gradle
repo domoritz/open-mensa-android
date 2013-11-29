@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.5.+'
+        classpath 'com.android.tools.build:gradle:0.6.+'
     }
 }
 apply plugin: 'android'
@@ -17,13 +17,13 @@ dependencies {
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.+@aar'
     compile 'com.android.support:support-v4:13.0.+'
     compile 'com.google.code.gson:gson:2.2.+'
-    compile 'org.osmdroid:osmdroid-android:3.0.+'
+    compile 'org.osmdroid:osmdroid-android:4.+'
     compile 'org.slf4j:slf4j-android:1.6.1-RC1'
 }
 
 android {
-    compileSdkVersion 18
-    buildToolsVersion "17.0.0"
+    compileSdkVersion 19
+    buildToolsVersion "19.0.0"
 
     sourceSets {
         main {

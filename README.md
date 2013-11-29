@@ -9,6 +9,7 @@ Available in the [Play Store](https://play.google.com/store/apps/details?id=de.u
 
 Import the project as a gradle project in Android Studio and start hacking. Join the development in #openmensa on [freenode.net](http://freenode.net/).
 
+Make sure you installed the `Android Support Repository` from the SDK Manager.
 
 ## Screenshots
 

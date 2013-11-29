@@ -19,11 +19,13 @@ public class SettingsActivity extends SherlockPreferenceActivity implements Shar
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String prefStyle = prefs.getString(SettingsUtils.KEY_STYLE, getString(R.string.pref_theme_default));
         setTheme(SettingsUtils.getThemeByString(prefStyle));
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        super.onCreate(savedInstanceState);
 
         // http://gmariotti.blogspot.de/2013/01/preferenceactivity-preferencefragment.html
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
@@ -33,9 +35,6 @@ public class SettingsActivity extends SherlockPreferenceActivity implements Shar
                   .replace(android.R.id.content, new SettingsFragment())
                   .commit();
         }
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
     }
 
     @Override

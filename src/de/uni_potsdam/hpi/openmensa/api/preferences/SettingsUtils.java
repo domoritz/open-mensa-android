@@ -58,7 +58,7 @@ public class SettingsUtils {
     	editor.putString(SettingsUtils.KEY_STORAGE, json);
     	editor.commit();
     }
-    public static int getThemeByString (String theme) {
+    public static int getThemeByString(String theme) {
         if (theme.equalsIgnoreCase("dark")) {
             return com.actionbarsherlock.R.style.Theme_Sherlock;
         } else if (theme.equalsIgnoreCase("light")) {

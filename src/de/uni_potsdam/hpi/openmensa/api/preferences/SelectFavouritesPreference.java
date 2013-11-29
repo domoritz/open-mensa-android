@@ -41,11 +41,15 @@ public class SelectFavouritesPreference extends MultiSelectListPreference {
 
     public SelectFavouritesPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
+        init(context);
     }
 
     public SelectFavouritesPreference(Context context) {
         super(context);
+        init(context);
+    }
+
+    private void init(Context context) {
         this.context = context;
     }
 

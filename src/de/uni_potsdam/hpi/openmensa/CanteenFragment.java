@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
@@ -28,7 +27,6 @@ import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment;
 public class CanteenFragment extends Fragment implements RefreshableFragment, OnClickListener {
 
 	private MapView mapView;
-	private MapController mapController;
 	private OverlayItem canteenLocation;
 	private ItemizedIconOverlay<OverlayItem> overlay;
 	private DefaultResourceProxyImpl resourceProxy;
@@ -48,16 +46,14 @@ public class CanteenFragment extends Fragment implements RefreshableFragment, On
         mapView.setMultiTouchControls(true);
         
         mapView.setVisibility(MapView.INVISIBLE);
-
-		mapController = mapView.getController();
 		
 		TextView address = (TextView) view.findViewById(R.id.txtAddress);
 		address.setOnClickListener(this);
 		
 		TextView title = (TextView) view.findViewById(R.id.txtName);
 		title.setOnClickListener(this);
-		
-		return view;
+
+        return view;
 	}
 	
 	@Override
@@ -82,13 +78,13 @@ public class CanteenFragment extends Fragment implements RefreshableFragment, On
 		
 		TextView name = (TextView) getView().findViewById(R.id.txtName);
 		name.setText(canteen.name);
-		
-		mapController.setZoom(zoom);
+
+        mapView.getController().setZoom(zoom);
 		int lat = (int) (canteen.coordinates[0]*1E6);
 		int lon = (int) (canteen.coordinates[1]*1E6);
 		
 		center = new GeoPoint(lat, lon);
-		mapController.setCenter(center);
+        mapView.getController().setCenter(center);
 		
 		canteenLocation = new OverlayItem(canteen.name,canteen.address, center);
         Drawable canteenMarker = this.getResources().getDrawable(R.drawable.marker_blue);
