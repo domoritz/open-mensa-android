@@ -85,7 +85,7 @@ public class SelectFavouritesPreference extends MultiSelectListPreference {
         // remove canteens that have not set their coordinates properly
         List<Canteen> canteensToRemove = new ArrayList<Canteen>();
         for (Canteen canteen : orderedCanteens) {
-            if (canteen.coordinates == null || canteen.coordinates.length < 2
+            if (canteen.coordinates == null || canteen.coordinates.length != 2
                 || canteen.coordinates[0] == null || canteen.coordinates[1] == null) {
 
                 canteensToRemove.add(canteen);
