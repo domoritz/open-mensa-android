@@ -56,7 +56,7 @@
     
     <string name="about_title">About</string>
     <string name="version_title">Version</string>
-    <string name="version_desc">0.8</string>
+    <string name="version_desc">0.9</string>
     <string name="license_title">License</string>
     <string name="license">GNU General Public License, Version 3</string>
     <string name="powered_by_title">Powered by</string>
@@ -66,5 +66,4 @@
     <string name="feedback_title">Feedback</string>
     <string name="feedback_desc">Write me a short email and ask a question, thank me or complain.</string>
     <string name="settings_design_title">Design</string>
-
 </resources>
