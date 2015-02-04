@@ -41,7 +41,7 @@ public class RetrieveCanteenFeedTask extends RetrieveFeedTask {
 
 		if (canteens_arr.length > 0 && (totalPages == null || currentPage < totalPages)) {
 			currentPage++;
-			doInBackground(url + "&page=" + currentPage);
+			doInBackground(url + "&hasCoordinates=true&page=" + currentPage);
 		}
 	}
 	
