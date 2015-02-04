@@ -30,8 +30,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.osmdroid.tileprovider.util.CloudmadeUtil;
-
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.Day;
 import de.uni_potsdam.hpi.openmensa.api.Days;
@@ -124,8 +122,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 		View spinner = getLayoutInflater().inflate(R.layout.spinner_layout, null);
 		actionBar.setCustomView(spinner);
 		actionBar.setDisplayShowCustomEnabled(true);
-
-		CloudmadeUtil.retrieveCloudmadeKey(MainActivity.context);
 
         //we must do this after setting the style
 		reload();

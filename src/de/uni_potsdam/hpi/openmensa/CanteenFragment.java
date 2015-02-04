@@ -41,7 +41,7 @@ public class CanteenFragment extends Fragment implements RefreshableFragment, On
 		View view = inflater.inflate(R.layout.canteen_fragment, container, false);
 		
 		mapView = (MapView) view.findViewById(R.id.mapview);
-		mapView.setTileSource(TileSourceFactory.CLOUDMADESTANDARDTILES);
+		mapView.setTileSource(TileSourceFactory.MAPNIK);
 		mapView.setBuiltInZoomControls(false);
         mapView.setMultiTouchControls(true);
         

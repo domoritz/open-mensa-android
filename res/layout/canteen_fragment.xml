@@ -46,6 +46,7 @@
              android:id="@+id/mapview"
              android:layout_width="fill_parent"
              android:layout_height="fill_parent"
+             tilesource="Mapnik"
              android:clickable="false" >
          </org.osmdroid.views.MapView>
 
