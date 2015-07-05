@@ -54,6 +54,10 @@ android {
         release.setRoot('build-types/release')
     }
 
+    lintOptions {
+        abortOnError false
+    }
+
     signingConfigs {
         release {
             storeFile file('android.keystore')
