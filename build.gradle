@@ -71,6 +71,9 @@ android {
                 debuggable false
                 signingConfig signingConfigs.release
             }
+            debug {
+                applicationIdSuffix ".debug"
+            }
         }
     }
 }
