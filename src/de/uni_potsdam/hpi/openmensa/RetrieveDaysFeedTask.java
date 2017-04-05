@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.openmensa;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
@@ -20,8 +21,8 @@ public class RetrieveDaysFeedTask extends RetrieveFeedTask {
 	protected Canteen canteen;
 	public String dateString = "";
 
-	public RetrieveDaysFeedTask(Context context, OnFinishedFetchingDaysListener fetchListener, Canteen canteen, String dateString) {
-		super(context);
+	public RetrieveDaysFeedTask(Context context, Activity activity, OnFinishedFetchingDaysListener fetchListener, Canteen canteen, String dateString) {
+		super(context, activity);
 		this.dateString = dateString;
 		this.canteen = canteen;
 		this.fetchListener = fetchListener;
