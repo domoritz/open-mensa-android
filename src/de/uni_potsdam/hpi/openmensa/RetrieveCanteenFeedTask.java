@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.openmensa;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
@@ -20,8 +21,8 @@ public class RetrieveCanteenFeedTask extends RetrieveFeedTask {
 	private int currentPage = 1;
 	private String url;
 	
-	public RetrieveCanteenFeedTask(Context context, OnFinishedFetchingCanteensListener fetchListener, String url) {
-		super(context);
+	public RetrieveCanteenFeedTask(Context context, Activity activity, OnFinishedFetchingCanteensListener fetchListener, String url) {
+		super(context, activity);
 		
 		this.url = url;
 		this.canteens = new Canteens();
