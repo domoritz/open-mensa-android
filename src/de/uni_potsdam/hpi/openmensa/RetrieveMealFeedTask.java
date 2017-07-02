@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.openmensa;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
@@ -21,8 +22,8 @@ public class RetrieveMealFeedTask extends RetrieveFeedTask {
 	protected Canteen canteen;
 	private String date;
 
-	public RetrieveMealFeedTask(Context context, OnFinishedFetchingMealsListener fetchListener, Canteen canteen, String date) {
-		super(context);
+	public RetrieveMealFeedTask(Context context, Activity activity, OnFinishedFetchingMealsListener fetchListener, Canteen canteen, String date) {
+		super(context, activity);
 		this.mealList = new ArrayList<Meal>();
 		this.canteen = canteen;
 		this.date = date;

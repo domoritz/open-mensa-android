@@ -246,7 +246,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 					fragment.setToFetching(true, !fragment.isListShown());
 					String baseUrl = SettingsUtils.getSourceUrl(MainActivity.context);
 					String url = baseUrl + "canteens/" + canteen.key + "/meals/?start=" + dateString;
-					RetrieveFeedTask task = new RetrieveDaysFeedTask(MainActivity.context, this, canteen, dateString);
+					RetrieveFeedTask task = new RetrieveDaysFeedTask(MainActivity.context, this, this, canteen, dateString);
 					task.execute(new String[] { url });
 					startedFetching = true;
 					setProgressBarIndeterminateVisibility(Boolean.TRUE);
@@ -332,7 +332,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		String baseUrl = SettingsUtils.getSourceUrl(this);
 		String url = baseUrl + "canteens" + "?limit=50";
 
-		RetrieveFeedTask task = new RetrieveCanteenFeedTask(this, this, url);
+		RetrieveFeedTask task = new RetrieveCanteenFeedTask(this, this, this, url);
 		task.execute(url);
 	}
 
