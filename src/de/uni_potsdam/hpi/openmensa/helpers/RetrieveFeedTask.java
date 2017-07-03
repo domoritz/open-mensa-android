@@ -47,7 +47,10 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Void> 
 
 	private final int DEFAULT_BUFFER_SIZE = 1024;
 
-	public RetrieveFeedTask(Context context) {
+	private Activity mActivity;
+
+	public RetrieveFeedTask(Context context, Activity activity) {
+		mActivity = activity;
 		// progress dialog
 		dialog = new ProgressDialog(context);
 		dialog.setTitle("Fetching ...");
@@ -107,9 +110,20 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Void> 
 			// content length is sometimes not sent
 			if (visible) {
 				if (fileLength < 0) {
-					dialog.setIndeterminate(true);
+					mActivity.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							dialog.setIndeterminate(true);
+						}
+					});
 				} else {
-					dialog.setMax((int) fileLength);
+					final int finalFileLength = (int) fileLength;
+					mActivity.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							dialog.setMax(finalFileLength);
+						}
+					});
 				}
 			}
 			
