@@ -11,6 +11,7 @@
 # generated files
 bin/
 gen/
+build/
 
 # automatically loaded dependencies
 libs/
@@ -26,4 +27,5 @@ local.properties
 
 # Gradle
 
+.gradlebuild
 .gradle
