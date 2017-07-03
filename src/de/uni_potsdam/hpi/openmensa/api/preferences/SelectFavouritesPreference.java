@@ -157,8 +157,7 @@ public class SelectFavouritesPreference extends MultiSelectListPreference {
 
         if ( 0 < GPSLocationTime - NetLocationTime ) {
             return locationGPS;
-        }
-        else{
+        } else{
             return locationNet;
         }
 
