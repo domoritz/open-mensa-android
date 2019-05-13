@@ -44,6 +44,12 @@ import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener
 import de.uni_potsdam.hpi.openmensa.ui.day.DayFragment
 
+// TODO: update canteens if not yet done
+// TODO: update canteens if not done during the last 14 days
+// TODO: add refresh indicator at meal list
+// TODO: refresh meals if older than 1 hour
+// TODO: fix wrong headers for days (data always starting at today -> remove yesterday)
+// TODO: first time setup
 @SuppressLint("NewApi")
 class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFinishedFetchingCanteensListener, OnFinishedFetchingDaysListener {
     private var spinnerAdapter: SpinnerAdapter? = null
