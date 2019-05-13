@@ -48,6 +48,7 @@
     <string name="canteen_choose_title">Favourite Canteens</string>
     <string name="canteen_choose_desc">Choose your preferred canteens from the list that is sorted by the distance to your current location.</string>
     <string name="canteen_choose_sort_by_loc">Sort by distance</string>
+    <string name="canteen_choose_sort_by_loc_no_location">No known location</string>
     <string name="canteen_choose_sort_by_loc_rejected_toast">For sorting by distance, you have to enable location access</string>
 
     <string name="pref_theme">Theme</string>

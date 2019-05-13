@@ -55,7 +55,7 @@ class SelectCanteenDialogFragment : DialogFragment() {
         fun updateList() {
             val term = binding.filter.text.toString().trim()
             val sortByDistance = binding.sortByLocationCheckbox.isChecked
-            val location = LocationUtil.getLastBestLocation(context!!)
+            val location = if (sortByDistance) LocationUtil.getLastBestLocation(context!!) else UnknownLocationStatus
 
             if (location == MissingPermissionLocationStatus && sortByDistance) {
                 binding.sortByLocationCheckbox.isChecked = false
@@ -88,6 +88,7 @@ class SelectCanteenDialogFragment : DialogFragment() {
                 listContent.sortedBy { it.name }
             }
 
+            binding.missingLocation = sortByDistance && location == UnknownLocationStatus
             adapter.content = sortedList
         }
 

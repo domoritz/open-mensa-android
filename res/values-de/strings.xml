@@ -46,6 +46,7 @@
     <string name="canteen_choose_title">Bevorzugte Mensen</string>
     <string name="canteen_choose_desc">Wähle Deine bervorzugten Mensen aus der Liste, welche nach der Entfernung zur derzeitigen Position sortiert ist.</string>
     <string name="canteen_choose_sort_by_loc">Nach Entfernung sortieren</string>
+    <string name="canteen_choose_sort_by_loc_no_location">Kein Standort bekannt</string>
     <string name="canteen_choose_sort_by_loc_rejected_toast">Zum Sortieren nach Entfernung wird der Standortzugriff benötigt</string>
 
     <string name="pref_theme">Theme</string>
