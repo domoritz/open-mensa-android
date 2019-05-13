@@ -4,7 +4,6 @@ package de.uni_potsdam.hpi.openmensa.ui.canteenlist
 import android.Manifest
 import android.app.Dialog
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.WindowManager
@@ -12,18 +11,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.uni_potsdam.hpi.openmensa.R
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
-import de.uni_potsdam.hpi.openmensa.data.AppDatabase
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.databinding.SelectCanteenDialogFragmentBinding
 import de.uni_potsdam.hpi.openmensa.extension.addTextChangeListener
-import de.uni_potsdam.hpi.openmensa.extension.map
-import de.uni_potsdam.hpi.openmensa.extension.switchMap
 import de.uni_potsdam.hpi.openmensa.extension.toggle
 
 class SelectCanteenDialogFragment : DialogFragment() {
@@ -57,78 +52,36 @@ class SelectCanteenDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = SelectCanteenDialogFragmentBinding.inflate(LayoutInflater.from(context!!), null, false)
-        val allCanteensLive = AppDatabase.with(context!!).canteen().getAll()
-        val termLive = MutableLiveData<String>().apply { value = binding.filter.text.toString() }
-        val sortByDistanceLive = MutableLiveData<Boolean>().apply { value = binding.sortByLocationCheckbox.isChecked }
         val model = ViewModelProviders.of(this).get(SelectCanteenDialogModel::class.java)
 
-        val locationToUse = sortByDistanceLive.switchMap { sort ->
-            if (sort)
-                model.locationLive
-            else
-                MutableLiveData<LocationStatus>().apply { value = UnknownLocationStatus }
-        }
-
-        val canteensFilteredBySearchTerm = allCanteensLive.switchMap { canteens ->
-            termLive.map { term ->
-                if (term.isEmpty()) {
-                    canteens
-                } else {
-                    canteens.filter { it.name.contains(term, ignoreCase = true) || it.city.contains(term, ignoreCase = true) }
-                }
-            }
-        }
-
-        val missingLocation = locationToUse.switchMap { location ->
-            sortByDistanceLive.map { sortByDistance ->
-                location is UnknownLocationStatus && sortByDistance
-            }
-        }
-
-        val canteensSorted = canteensFilteredBySearchTerm.switchMap { canteens ->
-            locationToUse.map { location ->
-                if (location is KnownLocationStatus) {
-                    canteens
-                            .filter { it.hasLocation }
-                            .sortedBy { canteen ->
-                                val canteenLocation = Location("").apply {
-                                    latitude = canteen.latitude
-                                    longitude = canteen.longitude
-                                }
-
-                                canteenLocation.distanceTo(location.location)
-                            }
-                } else {
-                    canteens.sortedBy { it.name }
-                }
-            }
-        }
-
-        canteensSorted.observe(this, Observer {
+        model.canteensSorted.observe(this, Observer {
             adapter.content = it
         })
 
-        missingLocation.observe(this, Observer {
+        model.missingLocation.observe(this, Observer {
             binding.missingLocation = it
         })
 
         binding.list.layoutManager = LinearLayoutManager(context!!)
         binding.list.adapter = adapter
 
-        binding.filter.addTextChangeListener { termLive.value = binding.filter.text.toString() }
+        binding.filter.addTextChangeListener { model.termLive.value = binding.filter.text.toString() }
+        model.termLive.value = binding.filter.text.toString()
+
         binding.sortByLocationCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 if (LocationUtil.hasLocationAccessPermission(context!!)) {
-                    sortByDistanceLive.value = true
+                    model.sortByDistanceLive.value = true
                 } else {
                     buttonView.isChecked = false
 
                     requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_ACCESS)
                 }
             } else {
-                sortByDistanceLive.value = false
+                model.sortByDistanceLive.value = false
             }
         }
+        model.sortByDistanceLive.value = binding.sortByLocationCheckbox.isChecked
 
         adapter.listener = object: AdapterListener {
             override fun onCanteenClicked(canteen: Canteen) {
