@@ -37,6 +37,7 @@ import java.util.*
 
 // TODO: open tab for today after launch
 // FIXME: sometimes crash during setup due to action bar mode change
+// TODO: hide menu items when not usable
 @SuppressLint("NewApi")
 class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
     private var spinnerAdapter: SpinnerAdapter? = null
