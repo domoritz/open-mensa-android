@@ -12,7 +12,6 @@ import org.osmdroid.views.overlay.OverlayItem
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -22,7 +21,7 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import de.uni_potsdam.hpi.openmensa.api.Canteen
+import androidx.lifecycle.Observer
 import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment
 
 class CanteenFragment : Fragment(), RefreshableFragment, OnClickListener {
@@ -32,7 +31,9 @@ class CanteenFragment : Fragment(), RefreshableFragment, OnClickListener {
 
     private val zoom = 18
     private var center: GeoPoint? = null
-    private var canteen: Canteen? = null
+
+    private val mainActivity: MainActivity by lazy { activity as MainActivity }
+    private val mainActivityModel: MainModel by lazy { mainActivity.model }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +63,10 @@ class CanteenFragment : Fragment(), RefreshableFragment, OnClickListener {
         val title = view.findViewById<View>(R.id.txtName) as TextView
         title.setOnClickListener(this)
 
+        mainActivityModel.currentlySelectedCanteen.observe(this, Observer {
+            refresh()
+        })
+
         return view
     }
 
@@ -71,29 +76,31 @@ class CanteenFragment : Fragment(), RefreshableFragment, OnClickListener {
     }
 
     override fun refresh() {
+        // TODO: refactor this
+        val canteen = mainActivityModel.currentlySelectedCanteen.value?.canteen
+
         if (isDetached || !isAdded)
             return
 
-        canteen = MainActivity.storage.getCurrentCanteen()
         if (canteen == null)
             return
 
         mapView!!.visibility = MapView.VISIBLE
 
         val address = view!!.findViewById<View>(R.id.txtAddress) as TextView
-        address.text = canteen!!.address
+        address.text = canteen.address
 
         val name = view!!.findViewById<View>(R.id.txtName) as TextView
-        name.text = canteen!!.name
+        name.text = canteen.name
 
         mapView!!.controller.setZoom(zoom)
-        val lat = (canteen!!.coordinates[0] * 1E6).toInt()
-        val lon = (canteen!!.coordinates[1] * 1E6).toInt()
+        val lat = (canteen.latitude * 1E6).toInt()
+        val lon = (canteen.longitude * 1E6).toInt()
 
         center = GeoPoint(lat, lon)
         mapView!!.controller.setCenter(center)
 
-        val canteenLocation = OverlayItem(canteen!!.name, canteen!!.address, center)
+        val canteenLocation = OverlayItem(canteen.name, canteen.address, center)
         val canteenMarker = this.resources.getDrawable(R.drawable.marker_blue)
         canteenLocation.setMarker(canteenMarker)
 
@@ -119,6 +126,8 @@ class CanteenFragment : Fragment(), RefreshableFragment, OnClickListener {
     }
 
     private fun openMapIntent() {
+        val canteen = mainActivityModel.currentlySelectedCanteen.value?.canteen
+
         if (center == null || canteen == null)
             return
 
@@ -127,7 +136,7 @@ class CanteenFragment : Fragment(), RefreshableFragment, OnClickListener {
         val latlon = "$lat,$lon"
         val uri = "geo:" + latlon +
                 "?z=" + zoom +
-                "&q=" + latlon + "(" + canteen!!.name + ")"
+                "&q=" + latlon + "(" + canteen.name + ")"
         try {
             startActivity(Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)))
         } catch (e: ActivityNotFoundException) {

@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
      */
     internal lateinit var sectionsPagerAdapter: SectionsPagerAdapter
 
-    private val model: MainModel by lazy {
+    val model: MainModel by lazy {
         ViewModelProviders.of(this).get(MainModel::class.java)
     }
 
