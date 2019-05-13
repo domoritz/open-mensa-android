@@ -92,6 +92,7 @@
                     android:clickable="false" />
 
                 <TextView
+                    android:textColor="#000000"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:text="@{mapCopyright}"
                     android:layout_alignParentBottom="true"
