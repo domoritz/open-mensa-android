@@ -64,7 +64,7 @@
     <string name="powered_by_title">Powered by</string>
     <string name="powered_by_desc">OpenMensa</string>
     <string name="author_title">Author</string>
-    <string name="author_desc">Dominik Moritz, Christian Nicolai, Jan Graichen, Jan Renz, Matthias Jacob</string>
+    <string name="author_desc" translatable="false">Dominik Moritz, Christian Nicolai, Jan Graichen, Jan Renz, Matthias Jacob, Jonas Lochmann</string>
     <string name="feedback_title">Feedback</string>
     <string name="feedback_desc">Write me a short email and ask a question, thank me, or complain.</string>
     <string name="settings_design_title">Design</string>
