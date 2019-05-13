@@ -139,6 +139,13 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
                         .execute()
             }
         })
+
+        model.currentlySelectedCanteen.observe(this, Observer { canteen ->
+            val days = canteen?.days ?: emptyList()
+
+            // FIXME: the section labels are horrible wrong with that
+            sectionsPagerAdapter.dates = days.map { it.date }
+        })
     }
 
     public override fun onPause() {

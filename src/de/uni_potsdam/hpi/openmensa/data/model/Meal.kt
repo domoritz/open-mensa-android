@@ -28,8 +28,9 @@ data class Meal(
         val date: String,
         val name: String,
         val category: String,
+        // room does not create object if all values are null -> make it optional
         @Embedded
-        val prices: Prices,
+        val prices: Prices?,
         val notes: List<String>
 ) {
         companion object {

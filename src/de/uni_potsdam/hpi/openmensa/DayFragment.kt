@@ -16,6 +16,16 @@ import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment
  * one Day.
  */
 class DayFragment : ExpandableListFragment(), RefreshableFragment {
+    companion object {
+        private const val EXTRA_DATE = "date"
+
+        fun newInstance(date: String) = DayFragment().apply {
+            arguments = Bundle().apply {
+                putString(EXTRA_DATE, date)
+            }
+        }
+    }
+
     private val model: DayModel by lazy {
         ViewModelProviders.of(this).get(DayModel::class.java)
     }
@@ -39,6 +49,7 @@ class DayFragment : ExpandableListFragment(), RefreshableFragment {
         super.onCreate(savedInstanceState)
 
         model.init((activity as MainActivity).model)
+        model.dateLive.value = arguments!!.getString(EXTRA_DATE)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
