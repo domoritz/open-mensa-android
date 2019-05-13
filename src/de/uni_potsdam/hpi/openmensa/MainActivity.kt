@@ -27,6 +27,10 @@ import android.view.Window
 import android.widget.ArrayAdapter
 import android.widget.SpinnerAdapter
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelStore
 
 import java.text.SimpleDateFormat
 import java.util.ArrayList
@@ -49,7 +53,7 @@ import de.uni_potsdam.hpi.openmensa.helpers.SpinnerItem
 @SuppressLint("NewApi")
 class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFinishedFetchingCanteensListener, OnFinishedFetchingDaysListener {
     private var spinnerAdapter: SpinnerAdapter? = null
-    private var spinnerItems: ArrayList<SpinnerItem>? = null
+    private var spinnerItems: ArrayList<de.uni_potsdam.hpi.openmensa.data.model.Canteen>? = null
 
     internal lateinit var listener: OnSharedPreferenceChangeListener
 
@@ -62,6 +66,10 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
      * [FragmentStatePagerAdapter].
      */
     internal lateinit var sectionsPagerAdapter: SectionsPagerAdapter
+
+    private val model: MainModel by lazy {
+        ViewModelProviders.of(this).get(MainModel::class.java)
+    }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
@@ -110,6 +118,24 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
         //we must do this after setting the style
         reload()
         refreshFavouriteCanteens()
+
+        // init canteen selection
+        model.favoriteCanteens.observe(this, Observer { favoriteCanteens ->
+            spinnerItems!!.clear()
+            spinnerItems!!.addAll(favoriteCanteens)
+
+            // TODO: handling if nothing selected -> e.g. dialog
+
+            spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, spinnerItems!!)
+            actionBar.setListNavigationCallbacks(spinnerAdapter, this)
+
+            val curr = model.currentlySelectedCanteenId.value
+            if (curr != null) {
+                Log.d(TAG, curr.toString())
+                val displayedCanteenPosition = spinnerItems!!.indexOfFirst { it.id == curr }
+                actionBar.setSelectedNavigationItem(displayedCanteenPosition)
+            }
+        })
     }
 
     public override fun onPause() {
@@ -244,43 +270,7 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
      * TODO: should wait for completion of refreshAvailableCanteens()
      */
     private fun refreshFavouriteCanteens() {
-        Log.d(TAG, "Refreshing favourite canteen list")
-
-        SettingsUtils.updateFavouriteCanteensFromPreferences(appContext!!)
-
-        storage.loadFromPreferences(appContext)
-        spinnerItems!!.clear()
-        spinnerItems!!.addAll(storage.favouriteCanteens)
-
-        if (spinnerItems!!.size == 0 && !storage.getCanteens(this).isEmpty()) {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(R.string.noactivecanteens)
-                    .setMessage(R.string.chooseone)
-                    .setCancelable(true)
-                    .setNegativeButton(android.R.string.cancel) { dialog, which -> dialog.dismiss() }
-                    .setNeutralButton(android.R.string.ok
-                    ) { dialog, which ->
-                        val settings = Intent(
-                                MainActivity.appContext,
-                                SettingsActivity::class.java)
-                        startActivity(settings)
-                    }
-            val alert = builder.create()
-            alert.show()
-        }
-
-        Log.d(TAG, String.format("Spinner items: %s", spinnerItems))
-
-        val actionBar = supportActionBar
-        spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, spinnerItems!!)
-        actionBar!!.setListNavigationCallbacks(spinnerAdapter, this)
-
-        val curr = storage.getCurrentCanteen()
-        if (curr != null) {
-            Log.d(TAG, curr.toString())
-            val displayedCanteenPosition = spinnerItems!!.indexOf(curr)
-            actionBar.setSelectedNavigationItem(displayedCanteenPosition)
-        }
+        // TODO: remove this
     }
 
     /**
@@ -306,7 +296,10 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
      */
     override fun onNavigationItemSelected(itemPosition: Int, itemId: Long): Boolean {
         val item = spinnerItems!![itemPosition]
-        return item.execute(this, itemPosition)
+
+        model.currentlySelectedCanteenId.postValue(item.id)
+
+        return true
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
