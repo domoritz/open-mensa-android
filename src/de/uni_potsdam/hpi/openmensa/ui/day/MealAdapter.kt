@@ -50,7 +50,7 @@ class MealAdapter: RecyclerView.Adapter<MealViewHolder>() {
             details.otherPrice = item.prices?.others
             details.noKnownPrice = item.prices.isEmpty()
 
-            root.setOnClickListener {
+            linearLayout.setOnClickListener {
                 listener?.onItemClicked(item)
             }
 

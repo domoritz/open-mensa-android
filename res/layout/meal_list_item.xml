@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
-    <LinearLayout
-        android:background="?selectableItemBackground"
-        android:orientation="vertical"
+
+    <FrameLayout
+        android:background="?android:windowBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linear_layout"
+            android:background="?selectableItemBackground"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <include layout="@layout/list_item" android:id="@+id/header" />
-        <include layout="@layout/details" android:id="@+id/details" />
+            <include layout="@layout/list_item" android:id="@+id/header" />
+            <include layout="@layout/details" android:id="@+id/details" />
 
-    </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </FrameLayout>
+
 </layout>
