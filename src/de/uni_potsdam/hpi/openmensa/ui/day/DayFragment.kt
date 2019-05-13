@@ -21,11 +21,11 @@ import de.uni_potsdam.hpi.openmensa.extension.toggle
  */
 class DayFragment : Fragment() {
     companion object {
-        private const val EXTRA_DATE = "date"
+        private const val EXTRA_INDEX = "index"
 
-        fun newInstance(date: String) = DayFragment().apply {
+        fun newInstance(index: Int) = DayFragment().apply {
             arguments = Bundle().apply {
-                putString(EXTRA_DATE, date)
+                putInt(EXTRA_INDEX, index)
             }
         }
     }
@@ -41,7 +41,7 @@ class DayFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         model.init((activity as MainActivity).model)
-        model.dateLive.value = arguments!!.getString(EXTRA_DATE)
+        model.indexLive.value = arguments!!.getInt(EXTRA_INDEX)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

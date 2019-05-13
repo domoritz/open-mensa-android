@@ -31,7 +31,7 @@ class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         return if (position == 0) {
             CanteenFragment()
         } else {
-            DayFragment.newInstance(dates!![position - 1])
+            DayFragment.newInstance(position - 1)
         }
     }
 

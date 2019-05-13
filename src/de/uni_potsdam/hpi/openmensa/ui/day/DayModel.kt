@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import de.uni_potsdam.hpi.openmensa.MainModel
 import de.uni_potsdam.hpi.openmensa.data.AppDatabase
 import de.uni_potsdam.hpi.openmensa.data.model.Meal
+import de.uni_potsdam.hpi.openmensa.extension.map
 import de.uni_potsdam.hpi.openmensa.extension.switchMap
 
 class DayModel(application: Application): AndroidViewModel(application) {
@@ -14,13 +15,27 @@ class DayModel(application: Application): AndroidViewModel(application) {
     private val canteenIdLive = activityViewModelLive.switchMap {
         it?.currentlySelectedCanteenId ?: MutableLiveData<Int?>().apply { value = null }
     }
-    val dateLive = MutableLiveData<String>()
+    val indexLive = MutableLiveData<Int>()
+    private val dateLive = activityViewModelLive.switchMap { model ->
+        model.datesToShow.switchMap { dates ->
+            indexLive.map { index ->
+                if (dates.size > index)
+                    dates[index]
+                else
+                    null
+            }
+        }
+    }
     val meals = canteenIdLive.switchMap { canteenId ->
         if (canteenId == null) {
             MutableLiveData<List<Meal>>().apply { value = emptyList() }
         } else {
             dateLive.switchMap { date ->
-                database.meal().getByCanteenAndDate(canteenId = canteenId, date = date)
+                if (date != null) {
+                    database.meal().getByCanteenAndDate(canteenId = canteenId, date = date)
+                } else {
+                    MutableLiveData<List<Meal>>().apply { value = emptyList() }
+                }
             }
         }
     }
