@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.openmensa.sync
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import de.uni_potsdam.hpi.openmensa.BuildConfig
 import de.uni_potsdam.hpi.openmensa.Threads
@@ -13,6 +14,7 @@ object CanteenSyncing {
     private const val LOG_TAG = "CanteenSyncing"
     private val lock = Object()
     private val isWorkingInternal = MutableLiveData<Boolean>().apply { value = false }
+    val isWorking: LiveData<Boolean> = isWorkingInternal
 
     fun runBackgroundSync(context: Context) {
         Threads.network.execute {

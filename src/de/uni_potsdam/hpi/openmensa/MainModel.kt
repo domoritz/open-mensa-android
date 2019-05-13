@@ -22,6 +22,8 @@ class MainModel(application: Application): AndroidViewModel(application) {
         database.canteen().getByIds(ids.toList())
     }
 
+    val noFavoriteCanteens = favoriteCanteens.map { it.isEmpty() }
+
     // TODO: save selected canteen across app restarts
     val currentlySelectedCanteenId = MutableLiveData<Int?>().apply { value = null }
     val currentlySelectedCanteen = currentlySelectedCanteenId.switchMap { id ->
