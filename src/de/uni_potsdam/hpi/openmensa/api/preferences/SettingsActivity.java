@@ -2,9 +2,11 @@ package de.uni_potsdam.hpi.openmensa.api.preferences;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Build;
-import android.preference.PreferenceActivity;
+
 import android.preference.PreferenceManager;
+import android.view.MenuItem;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
 import de.uni_potsdam.hpi.openmensa.R;
@@ -14,7 +16,7 @@ import de.uni_potsdam.hpi.openmensa.R;
  * @author dominik
  *
  */
-public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,18 +24,14 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         String prefStyle = prefs.getString(SettingsUtils.KEY_STYLE, getString(R.string.pref_theme_default));
         setTheme(SettingsUtils.getThemeByString(prefStyle));
 
-        // FIXME: getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.settings_activity);
 
-        // http://gmariotti.blogspot.de/2013/01/preferenceactivity-preferencefragment.html
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            addPreferencesFromResource(R.xml.preferences);
-        } else {
-            getFragmentManager().beginTransaction()
-                  .replace(android.R.id.content, new SettingsFragment())
-                  .commit();
-        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new SettingsFragment())
+                .commit();
     }
 
     @Override
@@ -50,7 +48,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         preferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    /* FIXME
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -60,7 +57,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         }
         return super.onOptionsItemSelected(item);
     }
-    */
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {

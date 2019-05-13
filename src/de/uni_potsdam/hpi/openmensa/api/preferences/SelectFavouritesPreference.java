@@ -31,6 +31,7 @@ import de.uni_potsdam.hpi.openmensa.api.Canteen;
  * 		separate preference where entries and entyValues has a concrete implementation
  * TODO: use ListPreferenceMultiSelect as it is compatible with older versions
  */
+// TODO: Remove this
 public class SelectFavouritesPreference extends MultiSelectListPreference {
 
 	protected Context context;

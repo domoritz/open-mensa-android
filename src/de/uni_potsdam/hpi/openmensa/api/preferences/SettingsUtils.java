@@ -86,6 +86,16 @@ public class SettingsUtils {
 		storage.saveToPreferences(context);
 	}
 
+	public static Set<String> getFavouriteCanteensFromPreferences(Context context) {
+	    return new HashSet<>(getSharedPrefs(context).getStringSet(KEY_FAVOURITES, new HashSet<String>()));
+    }
+
+    public static void setFavouriteCanteensAtPreferences(Context context, Set<String> canteenIds) {
+        getSharedPrefs(context).edit()
+                .putStringSet(KEY_FAVOURITES, canteenIds)
+                .apply();
+    }
+
     // http://stackoverflow.com/a/7361989/214950
     public static ArrayList<String> getStringArrayPref(Context context, String key) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

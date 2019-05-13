@@ -3,10 +3,11 @@ package de.uni_potsdam.hpi.openmensa.api.preferences;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
+
+import androidx.preference.EditTextPreference;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
 
 import java.util.ArrayList;
 
@@ -14,17 +15,16 @@ import de.uni_potsdam.hpi.openmensa.MainActivity;
 import de.uni_potsdam.hpi.openmensa.R;
 
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
+import de.uni_potsdam.hpi.openmensa.ui.canteenlist.SelectCanteenDialogFragment;
 
 /**
  * The fragment that displays the preferences.
  * 
  * @author dominik
  */
-public class SettingsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragmentCompat implements OnSharedPreferenceChangeListener {
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preferences);
 
         SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
@@ -33,6 +33,16 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 
         ListPreference themePref = (ListPreference) findPreference(SettingsUtils.KEY_STYLE);
         themePref.setSummary(themePref.getEntry());
+
+        Preference favouritePreference = findPreference(SettingsUtils.KEY_FAVOURITES);
+        favouritePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                new SelectCanteenDialogFragment().show(getFragmentManager());
+
+                return false;
+            }
+        });
 
         updateFavouriteCanteensSummary();
     }

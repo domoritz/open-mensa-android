@@ -3,13 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:threefiftyprefs="http://schemas.android.com/apk/res/de.uni_potsdam.hpi.openmensa">
     <PreferenceCategory android:title="@string/source_title">
-        <de.uni_potsdam.hpi.openmensa.api.preferences.SelectFavouritesPreference
+        <Preference
  			android:title="@string/canteen_title" 
  			android:summary="@string/canteen_desc"
- 			android:key="pref_favourites"
-            android:persistent="true"
- 			android:dialogMessage="@string/canteen_choose_desc"
- 			android:dialogTitle="@string/canteen_choose_title"/>
+ 			android:key="pref_favourites" />
     	<EditTextPreference 
     	    android:title="@string/source_url_title"
             android:persistent="true"
