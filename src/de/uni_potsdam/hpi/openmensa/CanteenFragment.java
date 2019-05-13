@@ -2,7 +2,7 @@ package de.uni_potsdam.hpi.openmensa;
 
 import java.util.ArrayList;
 
-import org.osmdroid.DefaultResourceProxyImpl;
+import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -26,11 +26,14 @@ import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment;
 
 public class CanteenFragment extends Fragment implements RefreshableFragment, OnClickListener {
 
+	static {
+		Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
+	}
+
 	private MapView mapView;
 	private OverlayItem canteenLocation;
 	private ItemizedIconOverlay<OverlayItem> overlay;
-	private DefaultResourceProxyImpl resourceProxy;
-	
+
 	private int zoom = 18;
 	private GeoPoint center;
 	private Canteen canteen;
@@ -93,8 +96,6 @@ public class CanteenFragment extends Fragment implements RefreshableFragment, On
         final ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
         items.add(canteenLocation);
         
-        resourceProxy = new DefaultResourceProxyImpl(MainActivity.getAppContext());
-
         overlay = new ItemizedIconOverlay<OverlayItem>(items,
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                     public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
@@ -103,7 +104,7 @@ public class CanteenFragment extends Fragment implements RefreshableFragment, On
                     public boolean onItemLongPress(final int index, final OverlayItem item) {
                         return true;
                     }
-                }, resourceProxy);
+                }, getContext());
         this.mapView.getOverlays().clear();
         this.mapView.getOverlays().add(this.overlay);
 	}
