@@ -45,6 +45,7 @@ import de.uni_potsdam.hpi.openmensa.ui.day.DayFragment
 // TODO: refresh meals if older than 1 hour
 // TODO: fix wrong headers for days (data always starting at today -> remove yesterday)
 // TODO: first time setup
+// TODO: open tab for today after launch
 @SuppressLint("NewApi")
 class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFinishedFetchingCanteensListener, OnFinishedFetchingDaysListener {
     private var spinnerAdapter: SpinnerAdapter? = null
