@@ -91,10 +91,12 @@ class MainActivity : FragmentActivity() {
         prefs.registerOnSharedPreferenceChangeListener(listener)
 
         // setup pager
-        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
+        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager).apply {
+            dates = listOf("dummy") // this allows to open the second tab even when the content is not yet loaded
+        }
 
         pager.adapter = sectionsPagerAdapter
-        pager.currentItem = 2   // TODO: "2 is today"?
+        pager.currentItem = 1   // first page with content, "today" if everything works as intended
 
         tabs.setupWithViewPager(pager)
 
