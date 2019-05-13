@@ -161,10 +161,10 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
     }
 
     private fun createSectionsPageAdapter() {
-        // Create the adapter that will return a fragment for each day fragment views
+        // Create the adapterOld that will return a fragment for each day fragment views
         sectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
-        // Set up the ViewPager with the sections adapter.
+        // Set up the ViewPager with the sections adapterOld.
         viewPager = findViewById<View>(R.id.pager) as CustomViewPager
         viewPager.adapter = sectionsPagerAdapter
         // 2 is today

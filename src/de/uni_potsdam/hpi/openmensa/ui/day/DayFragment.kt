@@ -45,7 +45,7 @@ class DayFragment : ExpandableListFragment(), RefreshableFragment {
     var isListVisible = false
         private set
 
-    internal var adapter: MealAdapter? = null
+    internal var adapterOld: OldMealAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,14 +57,14 @@ class DayFragment : ExpandableListFragment(), RefreshableFragment {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = MealAdapter(activity!!, R.layout.list_item, listItems)
+        adapterOld = OldMealAdapter(activity!!, R.layout.list_item, listItems)
 
-        // Assign adapter to ListView
-        listAdapter = adapter
+        // Assign adapterOld to ListView
+        listAdapter = adapterOld
 
         model.meals.observe(this, Observer {
             listItems.addAll(it)
-            adapter!!.notifyDataSetChanged()
+            adapterOld!!.notifyDataSetChanged()
             setListShownNoAnimation(true)
         })
     }
@@ -147,10 +147,10 @@ class DayFragment : ExpandableListFragment(), RefreshableFragment {
      * clear the list of items
      */
     fun clear() {
-        if (listItems == null || adapter == null)
+        if (listItems == null || adapterOld == null)
             return
         listItems.clear()
-        adapter!!.notifyDataSetChanged()
+        adapterOld!!.notifyDataSetChanged()
     }
 
     fun setToFetching(on: Boolean, animated: Boolean) {
@@ -166,7 +166,7 @@ class DayFragment : ExpandableListFragment(), RefreshableFragment {
     }
 
     protected fun setMealList(day: Day) {
-        if (listItems == null || adapter == null)
+        if (listItems == null || adapterOld == null)
             return
 
         if (day.isNullObject) {
@@ -179,6 +179,6 @@ class DayFragment : ExpandableListFragment(), RefreshableFragment {
         date = day.date
         setToFetching(false, false)
         // listItems.addAll(day.getMeals())
-        adapter!!.notifyDataSetChanged()
+        adapterOld!!.notifyDataSetChanged()
     }
 }

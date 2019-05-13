@@ -19,13 +19,13 @@ import de.uni_potsdam.hpi.openmensa.data.model.Meal;
  * @author dominik
  *
  */
-public class MealAdapter extends BaseExpandableListAdapter {
+public class OldMealAdapter extends BaseExpandableListAdapter {
 	Context context;
     int layoutResourceId;   
     ArrayList<Meal> data = null;
     LayoutInflater inflater;
     
-    public MealAdapter(Context context, int layoutResourceId, ArrayList<Meal> listItems) {
+    public OldMealAdapter(Context context, int layoutResourceId, ArrayList<Meal> listItems) {
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.data = listItems;
