@@ -181,6 +181,7 @@ class MainActivity : FragmentActivity() {
         model.noFavoriteCanteens.observe(this, Observer {
             flipper.displayedChild = if (it) 1 else 0
             spinner.visibility = if (it) View.GONE else View.VISIBLE
+            tabs.visibility = if (it) View.GONE else View.VISIBLE
             toolbar.menu.findItem(R.id.reload).isVisible = !it
             toolbar.menu.findItem(R.id.canteen_info).isVisible = !it
         })
@@ -201,6 +202,8 @@ class MainActivity : FragmentActivity() {
         pager.adapter = sectionsPagerAdapter
         // 2 is today
         pager.currentItem = 2
+
+        tabs.setupWithViewPager(pager)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
