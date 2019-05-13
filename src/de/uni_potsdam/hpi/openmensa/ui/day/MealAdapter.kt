@@ -53,6 +53,8 @@ class MealAdapter: RecyclerView.Adapter<MealViewHolder>() {
             root.setOnClickListener {
                 listener?.onItemClicked(item)
             }
+
+            executePendingBindings()
         }
     }
 }

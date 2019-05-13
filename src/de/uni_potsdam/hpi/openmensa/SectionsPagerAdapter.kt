@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
 import de.uni_potsdam.hpi.openmensa.ui.day.DayFragment
+import java.text.ParseException
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -42,20 +43,24 @@ class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     override fun getPageTitle(position: Int): CharSequence? {
         val context = MainActivity.appContext
 
-        if (position == 0) {
-            return context!!.getString(R.string.section_canteen).toUpperCase()
+        return if (position == 0) {
+            context!!.getString(R.string.section_canteen)
         } else {
-            val itemDate = dates!![position - 1]
+            val itemDate = if ((dates?.size ?: 0) >= position - 1) dates!![position - 1] else ""
 
-            de.uni_potsdam.hpi.openmensa.helpers.DateUtils.loadDateIntoCalendar(currentDate, today)
-            de.uni_potsdam.hpi.openmensa.helpers.DateUtils.loadDateIntoCalendar(itemDate, help)
+            try {
+                de.uni_potsdam.hpi.openmensa.helpers.DateUtils.loadDateIntoCalendar(currentDate, today)
+                de.uni_potsdam.hpi.openmensa.helpers.DateUtils.loadDateIntoCalendar(itemDate, help)
 
-            return DateUtils.getRelativeTimeSpanString(
-                    de.uni_potsdam.hpi.openmensa.helpers.DateUtils.parseToLocalTimezone(itemDate),
-                    System.currentTimeMillis(),
-                    DateUtils.DAY_IN_MILLIS,
-                    0
-            )
-        }
+                DateUtils.getRelativeTimeSpanString(
+                        de.uni_potsdam.hpi.openmensa.helpers.DateUtils.parseToLocalTimezone(itemDate),
+                        System.currentTimeMillis(),
+                        DateUtils.DAY_IN_MILLIS,
+                        0
+                ).toString()
+            } catch (ex: ParseException) {
+                ""
+            }
+        }.toUpperCase()
     }
 }
