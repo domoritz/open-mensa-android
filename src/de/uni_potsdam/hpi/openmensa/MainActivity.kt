@@ -5,16 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.location.LocationManager
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.os.Bundle
 import android.preference.PreferenceManager
 
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.PagerAdapter
-import androidx.viewpager.widget.ViewPager
-import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -28,7 +24,6 @@ import com.google.android.material.snackbar.Snackbar
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsActivity
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
-import de.uni_potsdam.hpi.openmensa.helpers.MapViewPager
 import de.uni_potsdam.hpi.openmensa.sync.*
 import de.uni_potsdam.hpi.openmensa.ui.main.PrivacyDialogFragment
 import de.uni_potsdam.hpi.openmensa.ui.nocanteen.NoCanteenFragment
@@ -72,7 +67,8 @@ class MainActivity : FragmentActivity() {
         toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 android.R.id.home -> {
-                    viewPager.currentItem = 2
+                    // TODO: should this be page 1? or dynamic?
+                    pager.currentItem = 2
 
                     true
                 }
@@ -87,7 +83,7 @@ class MainActivity : FragmentActivity() {
                     true
                 }
                 R.id.canteen_info -> {
-                    viewPager.currentItem = 0
+                    pager.currentItem = 0
 
                     true
                 }
@@ -148,8 +144,8 @@ class MainActivity : FragmentActivity() {
             }
 
             val curr = model.currentlySelectedCanteenId.value
+
             if (curr != null) {
-                Log.d(TAG, curr.toString())
                 val displayedCanteenPosition = spinnerItems!!.indexOfFirst { it.id == curr }
 
                 if (spinner.selectedItemPosition != displayedCanteenPosition) {
@@ -204,57 +200,22 @@ class MainActivity : FragmentActivity() {
         // Create the adapterOld that will return a fragment for each day fragment views
         sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
 
-        // Set up the ViewPager with the sections adapterOld.
-        viewPager = findViewById<View>(R.id.pager) as MapViewPager
-        viewPager.adapter = sectionsPagerAdapter
+        pager.adapter = sectionsPagerAdapter
         // 2 is today
-        viewPager.currentItem = 2
+        pager.currentItem = 2
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt("page", viewPager.currentItem)
+        outState.putInt("page", pager.currentItem)
     }
 
     override fun onRestoreInstanceState(savedState: Bundle) {
-        Log.d(TAG, "Restore state")
-        viewPager.currentItem = savedState.getInt("page")
+        pager.currentItem = savedState.getInt("page")
     }
 
     companion object {
-
-        const val TAG = "Canteendroid"
-
         var locationManager: LocationManager? = null
             private set
-
-        /**
-         * The [ViewPager] that will host the section contents.
-         */
-        internal lateinit var viewPager: MapViewPager
-
-        /**
-         * Checks if we have a valid Internet Connection on the device.
-         *
-         * @param context app context
-         * @return True if device has Internet
-         *
-         * Code from: http://www.androidsnippets.org/snippets/131/
-         */
-        fun isOnline(context: Context): Boolean {
-
-            val info = (context
-                    .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
-                    .activeNetworkInfo as NetworkInfo
-
-            if (info == null || !info.isConnected) {
-                return false
-            }
-            return if (info.isRoaming) {
-                // here is the roaming option you can change it if you want to
-                // disable Internet while roaming, just return false
-                false
-            } else true
-        }
     }
 }
