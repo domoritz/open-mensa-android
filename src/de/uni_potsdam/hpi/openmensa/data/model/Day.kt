@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.openmensa.data.model
 
+import android.util.JsonReader
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -21,4 +22,27 @@ data class Day (
         val canteenId: Int,
         val date: String,
         val closed: Boolean
-)
+) {
+    companion object {
+        fun parse(reader: JsonReader, canteenId: Int): Day {
+            var date: String? = null
+            var closed: Boolean? = null
+
+            reader.beginObject()
+            while (reader.hasNext()) {
+                when (reader.nextName()) {
+                    "date" -> date = reader.nextString()
+                    "closed" -> closed = reader.nextBoolean()
+                    else -> reader.skipValue()
+                }
+            }
+            reader.endObject()
+
+            return Day(
+                    canteenId = canteenId,
+                    date = date!!,
+                    closed = closed!!
+            )
+        }
+    }
+}
