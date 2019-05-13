@@ -8,3 +8,19 @@ interface PagedApi<T> {
 
     fun query(limit: Int, page: Int): PagedResponse<T>
 }
+
+fun <T> PagedApi<T>.queryAllItems(): List<T> {
+    val limit = PagedApi.MAX_PAGE_LENGTH
+    val result = mutableListOf<T>()
+    var currentPage = PagedApi.FIRST_PAGE_INDEX
+    var maxPages = currentPage
+
+    while (currentPage <= maxPages) {
+        query(limit = limit, page = currentPage++).let { response ->
+            maxPages = response.totalPages
+            result.addAll(response.items)
+        }
+    }
+
+    return result
+}
