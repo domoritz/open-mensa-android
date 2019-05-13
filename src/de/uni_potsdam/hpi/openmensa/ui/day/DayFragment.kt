@@ -23,6 +23,9 @@ class DayFragment : Fragment() {
     companion object {
         private const val EXTRA_INDEX = "index"
         private const val STATE_EXPANDED_ITEMS = "expanded_items"
+        private const val PAGE_LIST = 0
+        private const val PAGE_NO_DATA = 1
+        private const val PAGE_CLOSED = 2
 
         fun newInstance(index: Int) = DayFragment().apply {
             arguments = Bundle().apply {
@@ -70,132 +73,17 @@ class DayFragment : Fragment() {
             adapter.meals = it
         })
 
+        model.dayMode.observe(this, Observer {
+            binding.flipper.displayedChild = when (it!!) {
+                DayMode.ShowList -> PAGE_LIST
+                DayMode.NoInformation -> PAGE_NO_DATA
+                DayMode.Closed -> PAGE_CLOSED
+            }
+        })
+
         binding.recycler.layoutManager = LinearLayoutManager(context!!)
         binding.recycler.adapter = adapter
 
         return binding.root
     }
-
-    // TODO: reimplement all of these again
-    /*
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        adapterOld = OldMealAdapter(activity!!, R.layout.list_item, listItems)
-
-        // Assign adapterOld to ListView
-        listAdapter = adapterOld
-
-        model.meals.observe(this, Observer {
-            listItems.addAll(it)
-            adapterOld!!.notifyDataSetChanged()
-            setListShownNoAnimation(true)
-        })
-    }
-
-override fun refresh() {
-    if (isDetached || !isAdded || date == null)
-        return
-
-    val canteen = MainActivity.storage.getCurrentCanteen() ?: return
-
-    val day = canteen.getDay(date)
-
-    if (day == null) {
-        if (fetching!!) {
-            setToFetching(true, false)
-        } else {
-            if (MainActivity.isOnline(MainActivity.appContext!!)) {
-                setToNoInformation()
-            } else {
-                setToNotOnline()
-            }
-
-        }
-        return
-    }
-
-    if (day.closed) {
-        setToClosed()
-        return
-    }
-
-    setMealList(day)
-    }
-
-    fun setEmptyText(text: String) {
-        if (view == null) {
-            Log.w(MainActivity.TAG, "List not yet created.")
-            return
-        }
-        Log.d(MainActivity.TAG, String.format("Set text %s day %s", text, date))
-        super.setEmptyText(text)
-    }
-
-    /**
-     * tell the fragment that the canteen is closed today
-     */
-    fun setToClosed() {
-        setEmptyText(resources.getString(R.string.canteenclosed))
-        setToFetching(false, true)
-        isListVisible = false
-    }
-
-    /**
-     * tell the fragment that there is no information available for today
-     */
-    fun setToNoInformation() {
-        setEmptyText(resources.getString(R.string.noinfo))
-        setToFetching(false, true)
-        isListVisible = false
-    }
-
-    /**
-     * tell the fragment that there we are currently not online
-     */
-    fun setToNotOnline() {
-        setEmptyText(resources.getString(R.string.noconnection))
-        setToFetching(false, true)
-        isListVisible = false
-    }
-
-    /**
-     * clear the list of items
-     */
-    fun clear() {
-        if (listItems == null || adapterOld == null)
-            return
-        listItems.clear()
-        adapterOld!!.notifyDataSetChanged()
-    }
-
-    fun setToFetching(on: Boolean, animated: Boolean) {
-        fetching = on
-        if (isDetached || !isAdded)
-            return
-        clear()
-        if (animated) {
-            setListShown(!on)
-        } else {
-            setListShownNoAnimation(!on)
-        }
-    }
-
-    protected fun setMealList(day: Day) {
-        if (listItems == null || adapterOld == null)
-            return
-
-        if (day.isNullObject) {
-            setToNoInformation()
-            Log.d(MainActivity.TAG, String.format("Null object for day %s", day.date))
-            return
-        }
-
-        isListVisible = true
-        date = day.date
-        setToFetching(false, false)
-        // listItems.addAll(day.getMeals())
-        adapterOld!!.notifyDataSetChanged()
-    }
-    */
 }

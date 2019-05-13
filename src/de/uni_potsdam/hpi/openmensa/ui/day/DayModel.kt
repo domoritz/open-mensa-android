@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.openmensa.ui.day
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import de.uni_potsdam.hpi.openmensa.MainModel
 import de.uni_potsdam.hpi.openmensa.data.AppDatabase
@@ -26,6 +27,13 @@ class DayModel(application: Application): AndroidViewModel(application) {
             }
         }
     }
+    private val dayEntryLive = activityViewModelLive.switchMap { model ->
+        dateLive.switchMap { date ->
+            model.currentlySelectedCanteen.map { canteen ->
+                canteen?.days?.find { it.date == date }
+            }
+        }
+    }
     val meals = canteenIdLive.switchMap { canteenId ->
         if (canteenId == null) {
             MutableLiveData<List<Meal>>().apply { value = emptyList() }
@@ -39,10 +47,31 @@ class DayModel(application: Application): AndroidViewModel(application) {
             }
         }
     }
+    val dayMode: LiveData<DayMode> = dayEntryLive.switchMap { dayEntry ->
+        if (dayEntry == null) {
+            MutableLiveData<DayMode>().apply { value = DayMode.NoInformation }
+        } else if (dayEntry.closed) {
+            MutableLiveData<DayMode>().apply { value = DayMode.Closed }
+        } else {
+            meals.map { meals ->
+                if (meals.isEmpty()) {
+                    DayMode.NoInformation
+                } else {
+                    DayMode.ShowList
+                }
+            }
+        }
+    }
 
     fun init(activityViewModel: MainModel) {
         if (activityViewModelLive.value != activityViewModel) {
             activityViewModelLive.value = activityViewModel
         }
     }
+}
+
+enum class DayMode {
+    ShowList,
+    NoInformation,
+    Closed
 }
