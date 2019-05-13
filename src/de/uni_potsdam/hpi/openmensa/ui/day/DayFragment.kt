@@ -14,13 +14,12 @@ import de.uni_potsdam.hpi.openmensa.MainActivity
 import de.uni_potsdam.hpi.openmensa.data.model.Meal
 import de.uni_potsdam.hpi.openmensa.databinding.DayFragmentBinding
 import de.uni_potsdam.hpi.openmensa.extension.toggle
-import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment
 
 /**
  * A fragment representing a section of the app, that displays the Meals for
  * one Day.
  */
-class DayFragment : Fragment(), RefreshableFragment {
+class DayFragment : Fragment() {
     companion object {
         private const val EXTRA_DATE = "date"
 
@@ -81,16 +80,6 @@ class DayFragment : Fragment(), RefreshableFragment {
         binding.recycler.adapter = adapter
 
         return binding.root
-    }
-
-    override fun onResume() {
-        refresh()
-        super.onResume()
-    }
-
-    // TODO: remove these refresh functions
-    override fun refresh() {
-        // do nothing
     }
 
     // TODO: reimplement all of these again

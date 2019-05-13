@@ -22,9 +22,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment
 
-class CanteenFragment : Fragment(), RefreshableFragment, OnClickListener {
+class CanteenFragment : Fragment(), OnClickListener {
 
     private var mapView: MapView? = null
     private var overlay: ItemizedIconOverlay<OverlayItem>? = null
@@ -75,7 +74,7 @@ class CanteenFragment : Fragment(), RefreshableFragment, OnClickListener {
         super.onResume()
     }
 
-    override fun refresh() {
+    fun refresh() {
         // TODO: refactor this
         val canteen = mainActivityModel.currentlySelectedCanteen.value?.canteen
 
