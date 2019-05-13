@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.openmensa.data.model
 import android.util.JsonReader
 import androidx.room.*
 import de.uni_potsdam.hpi.openmensa.data.converter.StringListJsonConverter
+import de.uni_potsdam.hpi.openmensa.extension.nextNullableDouble
 
 @Entity(
         foreignKeys = [
@@ -93,10 +94,10 @@ data class Prices(
                         reader.beginObject()
                         while (reader.hasNext()) {
                                 when (reader.nextName()) {
-                                        "students" -> students = reader.nextDouble()
-                                        "employees" -> employees = reader.nextDouble()
-                                        "pupils" -> pupils = reader.nextDouble()
-                                        "others" -> others = reader.nextDouble()
+                                        "students" -> students = reader.nextNullableDouble()
+                                        "employees" -> employees = reader.nextNullableDouble()
+                                        "pupils" -> pupils = reader.nextNullableDouble()
+                                        "others" -> others = reader.nextNullableDouble()
                                         else -> reader.skipValue()
                                 }
                         }

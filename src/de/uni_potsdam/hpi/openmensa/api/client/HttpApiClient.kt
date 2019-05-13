@@ -19,7 +19,7 @@ class HttpApiClient(val serverUrl: String): ApiClient {
                     throw IOException("request was not successfully; code ${response.code()}")
                 }
 
-                val totalPages = response.headers().get("X-Total-Pages")?.toIntOrNull() ?: throw IOException("missing total pages")
+                val totalPages = response.headers().get("X-Total-Pages")?.toIntOrNull() ?: 1
 
                 response.body()!!.charStream().use { stream ->
                     JsonReader(stream).use { reader ->

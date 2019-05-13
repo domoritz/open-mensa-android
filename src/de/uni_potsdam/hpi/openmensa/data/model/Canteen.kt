@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.openmensa.data.model
 
 import android.util.JsonReader
+import android.util.JsonToken
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -32,10 +33,14 @@ data class Canteen(
                                         "city" -> city = reader.nextString()
                                         "address" -> address = reader.nextString()
                                         "coordinates" -> {
-                                                reader.beginArray()
-                                                latitude = reader.nextDouble()
-                                                longitude = reader.nextDouble()
-                                                reader.endArray()
+                                                if (reader.peek() == JsonToken.NULL) {
+                                                        reader.nextNull()
+                                                } else {
+                                                        reader.beginArray()
+                                                        latitude = reader.nextDouble()
+                                                        longitude = reader.nextDouble()
+                                                        reader.endArray()
+                                                }
                                         }
                                         else -> reader.skipValue()
                                 }
