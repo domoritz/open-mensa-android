@@ -22,7 +22,6 @@ import de.uni_potsdam.hpi.openmensa.ui.privacy.PrivacyDialogFragment
 import de.uni_potsdam.hpi.openmensa.ui.nocanteen.NoCanteenFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-// TODO: open tab for today after launch
 class MainActivity : FragmentActivity() {
     // TODO: remove this
     internal lateinit var listener: OnSharedPreferenceChangeListener
