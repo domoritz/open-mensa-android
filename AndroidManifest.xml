@@ -1,7 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.uni_potsdam.hpi.openmensa"
-    android:versionCode="12"
-    android:versionName="0.12"
     android:configChanges="keyboardHidden|orientation" >
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>

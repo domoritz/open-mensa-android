@@ -38,6 +38,11 @@ tasks.whenTaskAdded { task ->
 }
 
 android {
+    defaultConfig {
+        versionCode 13
+        versionName "0.13"
+    }
+
     compileSdkVersion 28
 
     dataBinding {
