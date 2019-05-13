@@ -17,6 +17,7 @@
     <string name="employees">Employees:</string>
     <string name="pupils">Pupils:</string>
     <string name="other">Other:</string>
+    <string name="no_known_price">No price available</string>
     
     <string name="address">Address:</string>
     

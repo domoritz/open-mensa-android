@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.openmensa.data.model
 import android.util.JsonReader
 import androidx.room.*
 import de.uni_potsdam.hpi.openmensa.data.converter.StringListJsonConverter
+import de.uni_potsdam.hpi.openmensa.data.model.Prices.Companion.isValueEmpty
 import de.uni_potsdam.hpi.openmensa.extension.nextNullableDouble
 
 @Entity(
@@ -111,5 +112,14 @@ data class Prices(
                                 others = others
                         )
                 }
+
+                fun isValueEmpty(item: Double?) = (item ?: 0.0) <= 0.0
         }
 }
+
+fun Prices?.isEmpty(): Boolean = (this == null) || (
+        isValueEmpty(this.students) &&
+                isValueEmpty(this.employees) &&
+                isValueEmpty(this.pupils) &&
+                isValueEmpty(this.others)
+        )

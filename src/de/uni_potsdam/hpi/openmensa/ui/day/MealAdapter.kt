@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import de.uni_potsdam.hpi.openmensa.data.model.Meal
+import de.uni_potsdam.hpi.openmensa.data.model.isEmpty
 import de.uni_potsdam.hpi.openmensa.databinding.MealListItemBinding
 import java.util.*
 import kotlin.properties.Delegates
@@ -47,6 +48,7 @@ class MealAdapter: RecyclerView.Adapter<MealViewHolder>() {
             details.employeesPrice = item.prices?.employees
             details.pupilsPrice = item.prices?.pupils
             details.otherPrice = item.prices?.others
+            details.noKnownPrice = item.prices.isEmpty()
 
             root.setOnClickListener {
                 listener?.onItemClicked(item)

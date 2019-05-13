@@ -16,7 +16,8 @@
     <string name="employees">Mitarbeiter:</string>
     <string name="pupils">Schüler:</string>
     <string name="other">Andere:</string>
-    
+    <string name="no_known_price">Kein Preis verfügbar</string>
+
     <string name="address">Adresse:</string>
     
     <string name="noconnection">Keine Internetverbindung.</string>

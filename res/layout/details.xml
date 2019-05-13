@@ -21,6 +21,10 @@
 			name="otherPrice"
 			type="Double" />
 
+		<variable
+			name="noKnownPrice"
+			type="boolean" />
+
 		<import type="android.view.View" />
 		<import type="de.uni_potsdam.hpi.openmensa.ui.day.MealAdapter" />
 	</data>
@@ -123,6 +127,18 @@
 
 		</RelativeLayout>
 
-		<!-- TODO: fallback view no known price -->
+		<RelativeLayout
+			android:visibility="@{noKnownPrice ? View.VISIBLE : View.GONE}"
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/no_known_price" />
+
+		</RelativeLayout>
+
 	</LinearLayout>
 </layout>
