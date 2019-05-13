@@ -42,6 +42,7 @@ import de.uni_potsdam.hpi.openmensa.api.preferences.Storage;
 import de.uni_potsdam.hpi.openmensa.helpers.CustomViewPager;
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener;
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener;
+import de.uni_potsdam.hpi.openmensa.helpers.RetrieveAsyncTask;
 import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
 import de.uni_potsdam.hpi.openmensa.helpers.SpinnerItem;
 
@@ -164,6 +165,8 @@ public class MainActivity extends AppCompatActivity implements
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
 		Log.d(TAG, "Save state, flushed cache storage");
 		outState.putInt("page",	viewPager.getCurrentItem());
 		storage.saveToPreferences(this);
@@ -248,8 +251,8 @@ public class MainActivity extends AppCompatActivity implements
 					fragment.setToFetching(true, !fragment.isListShown());
 					String baseUrl = SettingsUtils.INSTANCE.getSourceUrl(MainActivity.context);
 					String url = baseUrl + "canteens/" + canteen.key + "/meals/?start=" + dateString;
-					RetrieveFeedTask task = new RetrieveDaysFeedTask(MainActivity.context, this, this, canteen, dateString);
-					task.execute(new String[] { url });
+					new RetrieveDaysFeedTask(MainActivity.context, this, this, Integer.parseInt(canteen.key))
+							.execute();
 					startedFetching = true;
 					setProgressBarIndeterminateVisibility(Boolean.TRUE);
 				} else {
@@ -266,12 +269,11 @@ public class MainActivity extends AppCompatActivity implements
 	public void onDaysFetchFinished(RetrieveDaysFeedTask task) {
 		// the fragment might have been deleted while we were fetching something
 		sectionsPagerAdapter.setToFetching(false, false);
-		task.canteen.updateDays(task.getDays());
 		sectionsPagerAdapter.notifyDataSetChanged();
 		
-		if (task.noPending()) {
+		//if (task.noPending()) {
 			setProgressBarIndeterminateVisibility(Boolean.FALSE);
-		}
+		//}
 	}
 
 	/**
@@ -334,13 +336,13 @@ public class MainActivity extends AppCompatActivity implements
 		String baseUrl = SettingsUtils.INSTANCE.getSourceUrl(this);
 		String url = baseUrl + "canteens" + "?limit=50";
 
-		RetrieveFeedTask task = new RetrieveCanteenFeedTask(this, this, this, url);
+		RetrieveAsyncTask task = new RetrieveCanteenFeedTask(this, this, this);
 		task.execute(url);
 	}
 
 	@Override
 	public void onCanteenFetchFinished(RetrieveCanteenFeedTask task) {
-		storage.saveCanteens(this, task.getCanteens());
+		// storage.saveCanteens(this, task.getCanteens());
 		
 		refreshFavouriteCanteens();
 		updateMealStorage();
