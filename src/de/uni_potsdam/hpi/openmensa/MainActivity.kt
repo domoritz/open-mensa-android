@@ -66,12 +66,34 @@ class MainActivity : FragmentActivity() {
         setTheme(SettingsUtils.getSelectedTheme(this))
         super.onCreate(savedInstanceState)
 
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
-
         setContentView(R.layout.activity_main)
         toolbar.title = title
         toolbar.inflateMenu(R.menu.menu_main)
-        toolbar.setOnMenuItemClickListener { onOptionsItemSelected(it) }
+        toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                android.R.id.home -> {
+                    viewPager.currentItem = 2
+
+                    true
+                }
+                R.id.menu_settings -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+
+                    true
+                }
+                R.id.reload -> {
+                    model.refresh(force = true)
+
+                    true
+                }
+                R.id.canteen_info -> {
+                    viewPager.currentItem = 0
+
+                    true
+                }
+                else -> false
+            }
+        }
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -199,35 +221,6 @@ class MainActivity : FragmentActivity() {
     override fun onRestoreInstanceState(savedState: Bundle) {
         Log.d(TAG, "Restore state")
         viewPager.currentItem = savedState.getInt("page")
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle item selection
-        when (item.itemId) {
-            android.R.id.home -> {
-                viewPager.currentItem = 2
-                return true
-            }
-            R.id.menu_settings -> {
-                val settings = Intent(this, SettingsActivity::class.java)
-                startActivity(settings)
-                return true
-            }
-            R.id.reload -> {
-                model.refresh(force = true)
-                return true
-            }
-            R.id.canteen_info -> {
-                viewPager.currentItem = 0
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
     }
 
     companion object {
