@@ -10,17 +10,17 @@ import android.net.NetworkInfo
 import android.os.Bundle
 import android.preference.PreferenceManager
 
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import android.util.Log
 import android.view.*
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.SpinnerAdapter
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
@@ -39,7 +39,7 @@ import java.util.*
 // FIXME: sometimes crash during setup due to action bar mode change
 // TODO: hide menu items when not usable
 @SuppressLint("NewApi")
-class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
+class MainActivity : FragmentActivity() {
     private var spinnerAdapter: SpinnerAdapter? = null
     private var spinnerItems: ArrayList<Canteen>? = null
     private var lastSnackbar: Snackbar? = null
@@ -69,6 +69,9 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
 
         setContentView(R.layout.activity_main)
+        toolbar.title = title
+        toolbar.inflateMenu(R.menu.menu_main)
+        toolbar.setOnMenuItemClickListener { onOptionsItemSelected(it) }
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -94,17 +97,6 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
         prefs.registerOnSharedPreferenceChangeListener(listener)
 
         spinnerItems = ArrayList()
-        val actionBar = supportActionBar!!
-        actionBar.navigationMode = ActionBar.NAVIGATION_MODE_LIST
-        try {
-            actionBar.setHomeButtonEnabled(true)
-        } catch (e: NoSuchMethodError) {
-            // ignore this error which happens on Android 3
-        }
-
-        val spinner = layoutInflater.inflate(R.layout.spinner_layout, null)
-        actionBar.customView = spinner
-        actionBar.setDisplayShowCustomEnabled(true)
 
         // init canteen selection
         model.favoriteCanteens.observe(this, Observer { favoriteCanteens ->
@@ -124,13 +116,25 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
                     view
                 }
             }
-            actionBar.setListNavigationCallbacks(spinnerAdapter, this)
+            spinner.adapter = spinnerAdapter
+            spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    model.currentlySelectedCanteenId.postValue(spinnerItems!![position].id)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    // ignore
+                }
+            }
 
             val curr = model.currentlySelectedCanteenId.value
             if (curr != null) {
                 Log.d(TAG, curr.toString())
                 val displayedCanteenPosition = spinnerItems!!.indexOfFirst { it.id == curr }
-                actionBar.setSelectedNavigationItem(displayedCanteenPosition)
+
+                if (spinner.selectedItemPosition != displayedCanteenPosition) {
+                    spinner.setSelection(displayedCanteenPosition)
+                }
             }
         })
 
@@ -164,8 +168,7 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
 
         model.noFavoriteCanteens.observe(this, Observer {
             flipper.displayedChild = if (it) 1 else 0
-            actionBar.setDisplayShowCustomEnabled(!it)
-            actionBar.navigationMode = if (it) ActionBar.NAVIGATION_MODE_STANDARD else ActionBar.NAVIGATION_MODE_LIST
+            spinner.visibility = if (it) View.GONE else View.VISIBLE
         })
 
         PrivacyDialogFragment.showIfRequired(this)
@@ -196,17 +199,6 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
     override fun onRestoreInstanceState(savedState: Bundle) {
         Log.d(TAG, "Restore state")
         viewPager.currentItem = savedState.getInt("page")
-    }
-
-    /**
-     * Is called when an item from the spinner in the action bar is selected.
-     */
-    override fun onNavigationItemSelected(itemPosition: Int, itemId: Long): Boolean {
-        val item = spinnerItems!![itemPosition]
-
-        model.currentlySelectedCanteenId.postValue(item.id)
-
-        return true
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -240,8 +232,7 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
 
     companion object {
 
-        val TAG = "Canteendroid"
-        val LOGV = true
+        const val TAG = "Canteendroid"
 
         var locationManager: LocationManager? = null
             private set
