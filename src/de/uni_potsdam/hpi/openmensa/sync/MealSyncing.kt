@@ -13,14 +13,14 @@ import de.uni_potsdam.hpi.openmensa.data.AppDatabase
 object MealSyncing {
     private const val LOG_TAG = "MealSyncing"
     private val lock = Object()
-    private val refreshedCanteenIdsInternal = mutableSetOf<Int>()
-    private val refreshedCanteenIdsInternalLive = MutableLiveData<Set<Int>>().apply { postValue(refreshedCanteenIdsInternal.toSet()) }
-    val refreshedCanteenIds: LiveData<Set<Int>> = refreshedCanteenIdsInternalLive
+    private val statusInternal = mutableMapOf<Int, MealSyncingStatus>()
+    private val statusInternalLive = MutableLiveData<Map<Int, MealSyncingStatus>>().apply { postValue(statusInternal.toMap()) }
+    val status: LiveData<Map<Int, MealSyncingStatus>> = statusInternalLive
 
     fun syncInBackground(canteenId: Int, force: Boolean, context: Context) {
         Threads.network.execute {
             try {
-                syncCanteenSynchronousThrowEventually(canteenId, false, context)
+                syncCanteenSynchronousThrowEventually(canteenId, force, context)
             } catch (ex: Exception) {
                 if (BuildConfig.DEBUG) {
                     Log.w(LOG_TAG, "meal syncing failed", ex)
@@ -29,7 +29,7 @@ object MealSyncing {
         }
     }
 
-    fun syncCanteenSynchronousThrowEventually(canteenId: Int, force: Boolean, context: Context) {
+    private fun syncCanteenSynchronousThrowEventually(canteenId: Int, force: Boolean, context: Context) {
         val database = AppDatabase.with(context)
 
         fun shouldSync() = force || database.lastCanteenSync().getByCanteenIdSync(canteenId)?.let {
@@ -46,7 +46,7 @@ object MealSyncing {
             return
         }
 
-        if (addCanteenToLiveData(canteenId)) {
+        if (reportCanteenSyncing(canteenId)) {
             try {
                 if (!shouldSync()) {
                     if (BuildConfig.DEBUG) {
@@ -65,27 +65,53 @@ object MealSyncing {
                         database = database,
                         canteenId = canteenId
                 )
-            } finally {
-                removeCanteenFromLiveData(canteenId)
+
+                setCanteenStatus(canteenId, MealSyncingDone)
+            } catch (ex: Exception) {
+                setCanteenStatus(canteenId, MealSyncingFailed)
+
+                throw ex
             }
         }
     }
 
-    private fun addCanteenToLiveData(canteenId: Int): Boolean {
+    private fun reportCanteenSyncing(canteenId: Int): Boolean {
         synchronized(lock) {
-            return if (refreshedCanteenIdsInternal.add(canteenId)) {
-                refreshedCanteenIdsInternalLive.postValue(refreshedCanteenIdsInternal.toSet())
+            return if (statusInternal[canteenId] == MealSyncingRunning) {
+                false
+            } else {
+                statusInternal[canteenId] = MealSyncingRunning
+                updateLiveData()
+
                 true
-            } else false
+            }
         }
     }
 
-    private fun removeCanteenFromLiveData(canteenId: Int): Boolean {
+    private fun setCanteenStatus(canteenId: Int, status: MealSyncingStatus) {
         synchronized(lock) {
-            return if (refreshedCanteenIdsInternal.remove(canteenId)) {
-                refreshedCanteenIdsInternalLive.postValue(refreshedCanteenIdsInternal.toSet())
-                true
-            } else false
+            statusInternal[canteenId] = status
+            updateLiveData()
         }
     }
+
+    fun removeDoneStatus(canteenId: Int) {
+        synchronized(lock) {
+            val currentStatus = statusInternal[canteenId]
+
+            if (currentStatus == MealSyncingFailed || currentStatus == MealSyncingDone) {
+                statusInternal.remove(canteenId)
+                updateLiveData()
+            }
+        }
+    }
+
+    private fun updateLiveData() {
+        statusInternalLive.postValue(statusInternal.toMap())
+    }
 }
+
+sealed class MealSyncingStatus
+object MealSyncingRunning: MealSyncingStatus()
+object MealSyncingFailed: MealSyncingStatus()
+object MealSyncingDone: MealSyncingStatus()
