@@ -24,8 +24,7 @@ class MainModel(application: Application): AndroidViewModel(application) {
 
     val noFavoriteCanteens = favoriteCanteens.map { it.isEmpty() }
 
-    // TODO: save selected canteen across app restarts
-    val currentlySelectedCanteenId = MutableLiveData<Int?>().apply { value = null }
+    val currentlySelectedCanteenId = MutableLiveData<Int?>().apply { value = SettingsUtils.getLastSelectedCanteenId(application) }
     val currentlySelectedCanteen = currentlySelectedCanteenId.switchMap { id ->
         if (id != null)
             CanteenWithDays.with(database, id)
@@ -101,6 +100,10 @@ class MainModel(application: Application): AndroidViewModel(application) {
         currentlySelectedCanteenId.value?.let { id ->
             MealSyncing.removeDoneStatus(id)
         }
+    }
+
+    fun saveSelectedCanteenId() {
+        SettingsUtils.setLastSelectedCanteenId(getApplication(), currentlySelectedCanteenId.value)
     }
 }
 

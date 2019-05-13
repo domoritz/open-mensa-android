@@ -24,6 +24,7 @@ object SettingsUtils {
 
     const val KEY_ENABLE_MAP = "pref_map"
 
+    const val KEY_LAST_SELECTED_CANTEEN_ID = "last_canteen_id"
     const val KEY_LAST_CANTEEN_LIST_UPDATE = "last_canteen_list_update"
 
     private fun getSharedPrefs(context: Context): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -125,4 +126,21 @@ object SettingsUtils {
             prefs.unregisterOnSharedPreferenceChangeListener(listener)
         }
     }
+
+    fun getLastSelectedCanteenId(context: Context): Int? = getSharedPrefs(context).let { prefs ->
+        if (prefs.contains(KEY_LAST_SELECTED_CANTEEN_ID))
+            prefs.getInt(KEY_LAST_SELECTED_CANTEEN_ID, -1)
+        else
+            null
+    }
+    fun setLastSelectedCanteenId(context: Context, canteenId: Int?) = getSharedPrefs(context).edit()
+            .let { editor ->
+                if (canteenId != null) {
+                    editor.putInt(KEY_LAST_SELECTED_CANTEEN_ID, canteenId)
+                } else {
+                    editor.remove(KEY_LAST_SELECTED_CANTEEN_ID)
+                }
+
+                editor.apply()
+            }
 }

@@ -8,13 +8,9 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.viewpager.widget.PagerAdapter
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.SpinnerAdapter
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
@@ -28,7 +24,6 @@ import de.uni_potsdam.hpi.openmensa.sync.*
 import de.uni_potsdam.hpi.openmensa.ui.privacy.PrivacyDialogFragment
 import de.uni_potsdam.hpi.openmensa.ui.nocanteen.NoCanteenFragment
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 
 // TODO: open tab for today after launch
 @SuppressLint("NewApi")
@@ -186,6 +181,12 @@ class MainActivity : FragmentActivity() {
         super.onResume()
 
         CanteenSyncing.runBackgroundSync(context = applicationContext)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        model.saveSelectedCanteenId()
     }
 
     companion object {
