@@ -81,8 +81,7 @@ public class MainActivity extends AppCompatActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        String prefStyle = prefs.getString(SettingsUtils.KEY_STYLE, getString(R.string.pref_theme_default));
-        setTheme(SettingsUtils.getThemeByString(prefStyle));
+        setTheme(SettingsUtils.INSTANCE.getSelectedTheme(this));
         super.onCreate(savedInstanceState);
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -93,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements
 
 		locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
-		storage = SettingsUtils.getStorage(context);
+		storage = SettingsUtils.INSTANCE.getStorage(context);
 
 		createSectionsPageAdapter();
 
@@ -247,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements
 						canteen.updateDays(newDay);
 					}
 					fragment.setToFetching(true, !fragment.isListShown());
-					String baseUrl = SettingsUtils.getSourceUrl(MainActivity.context);
+					String baseUrl = SettingsUtils.INSTANCE.getSourceUrl(MainActivity.context);
 					String url = baseUrl + "canteens/" + canteen.key + "/meals/?start=" + dateString;
 					RetrieveFeedTask task = new RetrieveDaysFeedTask(MainActivity.context, this, this, canteen, dateString);
 					task.execute(new String[] { url });
@@ -283,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements
 	private void refreshFavouriteCanteens() {
 		Log.d(TAG, "Refreshing favourite canteen list");
 		
-		SettingsUtils.updateFavouriteCanteensFromPreferences(context);
+		SettingsUtils.INSTANCE.updateFavouriteCanteensFromPreferences(context);
 
 		storage.loadFromPreferences(context);
 		spinnerItems.clear();
@@ -332,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements
 	 * Fetches the available canteens list form the server
 	 */
 	private void refreshAvailableCanteens() {
-		String baseUrl = SettingsUtils.getSourceUrl(this);
+		String baseUrl = SettingsUtils.INSTANCE.getSourceUrl(this);
 		String url = baseUrl + "canteens" + "?limit=50";
 
 		RetrieveFeedTask task = new RetrieveCanteenFeedTask(this, this, this, url);

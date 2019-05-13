@@ -74,7 +74,7 @@ public class SelectFavouritesPreference extends MultiSelectListPreference {
     }
     
 	private void initializeValues() {
-		HashMap<String, Canteen> canteens = SettingsUtils.getStorage(context).getCanteens();
+		HashMap<String, Canteen> canteens = SettingsUtils.INSTANCE.getStorage(context).getCanteens();
     	ArrayList<CharSequence> entriesList = new ArrayList<CharSequence>();
     	ArrayList<CharSequence> entryValuesList = new ArrayList<CharSequence>();
     	

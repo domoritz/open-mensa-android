@@ -29,7 +29,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements OnShar
 
         SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
         EditTextPreference editTextPref = (EditTextPreference) findPreference(SettingsUtils.KEY_SOURCE_URL);
-        editTextPref.setSummary(sp.getString(SettingsUtils.KEY_SOURCE_URL, editTextPref.getText()));
+        editTextPref.setSummary(SettingsUtils.INSTANCE.getSourceUrl(getContext()));
 
         ListPreference themePref = (ListPreference) findPreference(SettingsUtils.KEY_STYLE);
         themePref.setSummary(themePref.getEntry());
@@ -73,8 +73,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements OnShar
     }
 
     private void updateFavouriteCanteensSummary() {
-        SettingsUtils.updateFavouriteCanteensFromPreferences(MainActivity.getAppContext());
-        ArrayList<Canteen> favouriteCanteens = SettingsUtils.getStorage(MainActivity.getAppContext()).getFavouriteCanteens();
+        SettingsUtils.INSTANCE.updateFavouriteCanteensFromPreferences(MainActivity.getAppContext());
+        ArrayList<Canteen> favouriteCanteens = SettingsUtils.INSTANCE.getStorage(MainActivity.getAppContext()).getFavouriteCanteens();
         Preference pref = findPreference(SettingsUtils.KEY_FAVOURITES);
         int size = favouriteCanteens.size();
         if (size == 0) {

@@ -28,7 +28,7 @@ class SelectCanteenDialogFragment : DialogFragment() {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
-            selectedItems = SettingsUtils.getFavouriteCanteensFromPreferences(context!!)
+            selectedItems = SettingsUtils.getFavouriteCanteensFromPreferences(context!!).toMutableSet()
         } else {
             selectedItems = savedInstanceState.getStringArray(STATE_SELECTED_CANTEENS)!!.toMutableSet()
         }
@@ -44,7 +44,7 @@ class SelectCanteenDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val binding = SelectCanteenDialogFragmentBinding.inflate(LayoutInflater.from(context!!), null, false)
-        val allCanteens = SettingsUtils.getStorage(context).canteens.values.toList()
+        val allCanteens = SettingsUtils.getStorage(context!!).canteens.values.toList()
 
         fun updateList() {
             val term = binding.filter.text.toString().trim()

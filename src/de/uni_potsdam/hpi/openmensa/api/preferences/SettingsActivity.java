@@ -21,8 +21,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String prefStyle = prefs.getString(SettingsUtils.KEY_STYLE, getString(R.string.pref_theme_default));
-        setTheme(SettingsUtils.getThemeByString(prefStyle));
+        setTheme(SettingsUtils.INSTANCE.getSelectedTheme(this));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
