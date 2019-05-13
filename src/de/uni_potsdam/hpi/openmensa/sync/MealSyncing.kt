@@ -30,11 +30,35 @@ object MealSyncing {
     }
 
     fun syncCanteenSynchronousThrowEventually(canteenId: Int, force: Boolean, context: Context) {
+        val database = AppDatabase.with(context)
+
+        fun shouldSync() = force || database.lastCanteenSync().getByCanteenIdSync(canteenId)?.let {
+            val now = System.currentTimeMillis()
+
+            it.timestamp > now || it.timestamp + 1000 * 60 * 60 /* 1 hour */ < now
+        } ?: true
+
+        if (!shouldSync()) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "should not sync now")
+            }
+
+            return
+        }
+
         if (addCanteenToLiveData(canteenId)) {
             try {
-                val database = AppDatabase.with(context)
+                if (!shouldSync()) {
+                    if (BuildConfig.DEBUG) {
+                        Log.d(LOG_TAG, "should not sync now")
+                    }
 
-                // TODO: save last sync time + non-force sync only after 1 hour
+                    return
+                }
+
+                if (BuildConfig.DEBUG) {
+                    Log.d(LOG_TAG, "sync $canteenId now")
+                }
 
                 SyncUtil.syncDaysAndMeals(
                         api = HttpApiClient.getInstance(context),
