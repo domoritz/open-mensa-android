@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.util.Log
+import androidx.lifecycle.LiveData
 
 import com.google.gson.Gson
 import de.uni_potsdam.hpi.openmensa.BuildConfig
@@ -83,5 +84,37 @@ object SettingsUtils {
         getSharedPrefs(context).edit()
                 .putStringSet(KEY_FAVOURITES, canteenIds.map { it.toString() }.toSet())
                 .apply()
+    }
+
+    fun getFavoriteCanteenIdsLive(context: Context) = object: LiveData<Set<Int>>() {
+        val prefs = getSharedPrefs(context)
+        val listener = object: SharedPreferences.OnSharedPreferenceChangeListener {
+            override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+                if (key == KEY_FAVOURITES) {
+                    refresh()
+                }
+            }
+        }
+
+        fun refresh() {
+            val newValue = getFavouriteCanteensFromPreferences(context)
+
+            if (newValue != value) {
+                value = newValue
+            }
+        }
+
+        override fun onActive() {
+            super.onActive()
+
+            prefs.registerOnSharedPreferenceChangeListener(listener)
+            refresh()
+        }
+
+        override fun onInactive() {
+            super.onInactive()
+
+            prefs.unregisterOnSharedPreferenceChangeListener(listener)
+        }
     }
 }

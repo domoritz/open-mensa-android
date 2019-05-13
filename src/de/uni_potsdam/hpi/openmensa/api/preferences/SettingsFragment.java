@@ -73,8 +73,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements OnShar
     }
 
     private void updateFavouriteCanteensSummary() {
-        SettingsUtils.INSTANCE.updateFavouriteCanteensFromPreferences(MainActivity.getAppContext());
-        ArrayList<Canteen> favouriteCanteens = SettingsUtils.INSTANCE.getStorage(MainActivity.getAppContext()).getFavouriteCanteens();
+        SettingsUtils.INSTANCE.updateFavouriteCanteensFromPreferences(MainActivity.Companion.getAppContext());
+        ArrayList<Canteen> favouriteCanteens = SettingsUtils.INSTANCE.getStorage(MainActivity.Companion.getAppContext()).getFavouriteCanteens();
         Preference pref = findPreference(SettingsUtils.KEY_FAVOURITES);
         int size = favouriteCanteens.size();
         if (size == 0) {

@@ -20,8 +20,8 @@ object LocationUtil {
         }
 
         try {
-            val locationGPS: Location? = MainActivity.getLocationManager().getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            val locationNet: Location? = MainActivity.getLocationManager().getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            val locationGPS: Location? = MainActivity.locationManager!!.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            val locationNet: Location? = MainActivity.locationManager!!.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
 
             val gpsLocationTime = locationGPS?.time ?: 0
             val networkLocationTime = locationNet?.time ?: 0

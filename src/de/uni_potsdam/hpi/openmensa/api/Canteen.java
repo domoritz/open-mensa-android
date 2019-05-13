@@ -109,7 +109,7 @@ public class Canteen implements SpinnerItem {
 	@Override
 	public boolean execute(MainActivity mainActivity, int itemPosition) {
 		Canteen c = SettingsUtils.INSTANCE.getStorage(mainActivity).getFavouriteCanteens().get(itemPosition);
-		Log.d(MainActivity.TAG, String.format("Chose canteen %s", c.key));
+		Log.d(MainActivity.Companion.getTAG(), String.format("Chose canteen %s", c.key));
 		mainActivity.changeCanteenTo(c);
 		return true;
 	}

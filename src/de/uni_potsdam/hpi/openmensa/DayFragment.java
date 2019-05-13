@@ -52,7 +52,7 @@ public class DayFragment extends ExpandableListFragment implements RefreshableFr
 			if (fetching) {
 				setToFetching(true, false);
 			} else {
-				if (MainActivity.isOnline(MainActivity.getAppContext())) {
+				if (MainActivity.Companion.isOnline(MainActivity.Companion.getAppContext())) {
 					setToNoInformation();
 				} else {
 					setToNotOnline();
@@ -72,10 +72,10 @@ public class DayFragment extends ExpandableListFragment implements RefreshableFr
 	
 	public void setEmptyText(String text) {
 		if (getView() == null) {
-        	Log.w(MainActivity.TAG, "List not yet created.");
+        	Log.w(MainActivity.Companion.getTAG(), "List not yet created.");
         	return;
         }
-		Log.d(MainActivity.TAG, String.format("Set text %s day %s", text, date));
+		Log.d(MainActivity.Companion.getTAG(), String.format("Set text %s day %s", text, date));
 		super.setEmptyText(text);
 	}
 
@@ -134,7 +134,7 @@ public class DayFragment extends ExpandableListFragment implements RefreshableFr
 		
 		if (day.isNullObject()) {
 			setToNoInformation();
-			Log.d(MainActivity.TAG, String.format("Null object for day %s", day.date));
+			Log.d(MainActivity.Companion.getTAG(), String.format("Null object for day %s", day.date));
 			return;
 		}
 

@@ -145,7 +145,7 @@ public class MealAdapter extends BaseExpandableListAdapter {
 		private String stringOrNone(float price) {
 	    	if (price > 0)
 	    		return String.format(Locale.getDefault(), "%.2f", price);
-	    	return MainActivity.getAppContext().getResources().getString(R.string.noprice);
+	    	return MainActivity.Companion.getAppContext().getResources().getString(R.string.noprice);
 	    }
 		
 		TextView category;

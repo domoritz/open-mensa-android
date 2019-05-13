@@ -48,7 +48,7 @@ public class Storage extends Observable {
 
 	public Boolean areCanteensOutOfDate() {
 		if (lastCanteensUpdate == null) {
-			Log.d(MainActivity.TAG, "Out of date because no last fetch date is set.");
+			Log.d(MainActivity.Companion.getTAG(), "Out of date because no last fetch date is set.");
 			return true;
 		}
 		
@@ -97,7 +97,7 @@ public class Storage extends Observable {
 			if (canteen != null)
 				favouriteCanteens.add(canteen);
 			else
-				Log.w(MainActivity.TAG, String.format("A favourite canteen was requested that is not in the storage. Key: %s", key));
+				Log.w(MainActivity.Companion.getTAG(), String.format("A favourite canteen was requested that is not in the storage. Key: %s", key));
 		}
 		return favouriteCanteens;
 	}
@@ -153,7 +153,7 @@ public class Storage extends Observable {
 	}
 
 	public void setFavouriteCanteens(Set<String> favourites) {
-		Log.d(MainActivity.TAG, String.format("Update favourites: %s", favourites));
+		Log.d(MainActivity.Companion.getTAG(), String.format("Update favourites: %s", favourites));
 		favouriteCanteensKeys = favourites;
 		setChanged();
 	}

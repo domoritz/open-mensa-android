@@ -39,7 +39,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	 */	
 	@Override
 	public Fragment getItem(int position) {
-		Log.d(MainActivity.TAG, String.format("New Fragment requested %d", position));
+		Log.d(MainActivity.Companion.getTAG(), String.format("New Fragment requested %d", position));
 		if (fragments[position] == null) {
 			if (position == 0) {
 				CanteenFragment fragment = new CanteenFragment();
@@ -61,7 +61,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public CharSequence getPageTitle(int position) {
-		Context context = MainActivity.getAppContext();
+		Context context = MainActivity.Companion.getAppContext();
 		switch (position) {
 			case 0:
 				return context.getString(R.string.section_canteen).toUpperCase();

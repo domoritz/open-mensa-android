@@ -42,8 +42,8 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Void> 
 	protected Boolean visible = false;
 	protected String name = "";
 	
-	public static final String TAG = MainActivity.TAG;
-	public static final Boolean LOGV = MainActivity.LOGV;
+	public static final String TAG = MainActivity.Companion.getTAG();
+	public static final Boolean LOGV = MainActivity.Companion.getLOGV();
 
 	private final int DEFAULT_BUFFER_SIZE = 1024;
 
@@ -175,7 +175,7 @@ public abstract class RetrieveFeedTask extends AsyncTask<String, Integer, Void> 
 	protected void showErrorMessage(Exception ex) {
 		builder.setTitle(ex.getClass().getName());
 		builder.setMessage(ex.toString());
-		if(!((Activity)MainActivity.getAppContext()).isFinishing()) {
+		if(!((Activity)MainActivity.Companion.getAppContext()).isFinishing()) {
 			builder.show();
 		}
 	}

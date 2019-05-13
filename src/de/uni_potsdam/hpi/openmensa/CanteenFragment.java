@@ -138,7 +138,7 @@ public class CanteenFragment extends Fragment implements RefreshableFragment, On
 		try {
 			startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
 		} catch (ActivityNotFoundException e) {
-			Toast.makeText(MainActivity.getAppContext(), getResources().getString(R.string.nomapapp), Toast.LENGTH_LONG).show();
+			Toast.makeText(MainActivity.Companion.getAppContext(), getResources().getString(R.string.nomapapp), Toast.LENGTH_LONG).show();
 		}
 		
 	}
