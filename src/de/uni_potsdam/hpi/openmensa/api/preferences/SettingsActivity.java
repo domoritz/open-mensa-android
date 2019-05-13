@@ -3,10 +3,9 @@ package de.uni_potsdam.hpi.openmensa.api.preferences;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Build;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import androidx.core.app.NavUtils;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
 
 import de.uni_potsdam.hpi.openmensa.R;
 
@@ -15,7 +14,7 @@ import de.uni_potsdam.hpi.openmensa.R;
  * @author dominik
  *
  */
-public class SettingsActivity extends SherlockPreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +22,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements Shar
         String prefStyle = prefs.getString(SettingsUtils.KEY_STYLE, getString(R.string.pref_theme_default));
         setTheme(SettingsUtils.getThemeByString(prefStyle));
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // FIXME: getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         super.onCreate(savedInstanceState);
 
@@ -51,6 +50,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements Shar
         preferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
+    /* FIXME
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -60,6 +60,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements Shar
         }
         return super.onOptionsItemSelected(item);
     }
+    */
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {

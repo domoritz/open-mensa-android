@@ -1,11 +1,6 @@
 package de.uni_potsdam.hpi.openmensa;
 
 import android.annotation.SuppressLint;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,11 +13,15 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
@@ -47,8 +46,8 @@ import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask;
 import de.uni_potsdam.hpi.openmensa.helpers.SpinnerItem;
 
 @SuppressLint("NewApi")
-public class MainActivity extends SherlockFragmentActivity implements
-		OnNavigationListener, OnFinishedFetchingCanteensListener, OnFinishedFetchingDaysListener {
+public class MainActivity extends AppCompatActivity implements
+		ActionBar.OnNavigationListener, OnFinishedFetchingCanteensListener, OnFinishedFetchingDaysListener {
 
 	public static final String TAG = "Canteendroid";
 	public static final Boolean LOGV = true;
@@ -359,7 +358,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.menu_main, menu);
+		getMenuInflater().inflate(R.menu.menu_main, menu);
 		return true;
 	}
 

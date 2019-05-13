@@ -16,8 +16,8 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile 'com.actionbarsherlock:actionbarsherlock:4.4.+@aar'
     compile 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
     compile 'com.google.code.gson:gson:2.2.+'
     compile 'org.osmdroid:osmdroid-android:4.+'
     compile 'org.slf4j:slf4j-android:1.6.1-RC1'
@@ -78,7 +78,7 @@ android {
         }
     }
     defaultConfig {
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion 21
     }
 }
