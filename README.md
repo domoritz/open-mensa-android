@@ -29,4 +29,4 @@ Create a release with `./gradlew --no-daemon assembleRelease`.
 
 ## License
 
-License [GNU General Public License](https://www.gnu.org/licenses/gpl.html)
+License [GNU General Public License, version 3](https://www.gnu.org/licenses/gpl-3.0.html)
