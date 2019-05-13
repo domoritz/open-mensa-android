@@ -44,6 +44,38 @@ object SettingsUtils {
 
     fun getSelectedTheme(context: Context) = getThemeByString(getSelectedThemeName(context))
 
+    fun getSelectedThemeLive(context: Context) = object: LiveData<Int>() {
+        val prefs = getSharedPrefs(context)
+        val listener = object: SharedPreferences.OnSharedPreferenceChangeListener {
+            override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+                if (key == KEY_STYLE) {
+                    refresh()
+                }
+            }
+        }
+
+        fun refresh() {
+            val newValue = getSelectedTheme(context)
+
+            if (newValue != value) {
+                value = newValue
+            }
+        }
+
+        override fun onActive() {
+            super.onActive()
+
+            prefs.registerOnSharedPreferenceChangeListener(listener)
+            refresh()
+        }
+
+        override fun onInactive() {
+            super.onInactive()
+
+            prefs.unregisterOnSharedPreferenceChangeListener(listener)
+        }
+    }
+
     fun getFavouriteCanteensFromPreferences(context: Context): Set<Int> {
         return getSharedPrefs(context).getStringSet(KEY_FAVOURITES, emptySet())!!.map { it.toInt() }.toSet()
     }

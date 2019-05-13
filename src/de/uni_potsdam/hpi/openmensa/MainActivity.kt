@@ -37,10 +37,15 @@ class MainActivity : FragmentActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val initialTheme = SettingsUtils.getSelectedTheme(this)
         var lastSnackbar: Snackbar? = null
 
-        setTheme(SettingsUtils.getSelectedTheme(this))
+        setTheme(initialTheme)
         super.onCreate(savedInstanceState)
+
+        SettingsUtils.getSelectedThemeLive(this).observe(this, Observer {
+            if (it != initialTheme) recreate()
+        })
 
         setContentView(R.layout.activity_main)
 
@@ -83,8 +88,6 @@ class MainActivity : FragmentActivity() {
         listener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
             if (key == SettingsUtils.KEY_SOURCE_URL) {
                 // TODO: invalidiate database when changing the URL
-            } else if (key == SettingsUtils.KEY_STYLE) {
-                recreate()
             }
         }
 
