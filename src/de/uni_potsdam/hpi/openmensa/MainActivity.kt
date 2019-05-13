@@ -129,11 +129,8 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
 
         model.currentlySelectedCanteenId.observe(this, Observer {
             if (it != null) {
-                MealSyncing.syncInBackground(
-                        canteenId = it,
-                        force = false,
-                        context = applicationContext
-                )
+                // TODO: do this from the model
+                model.refresh(force = false)
             }
         })
 
@@ -217,7 +214,7 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
                 return true
             }
             R.id.reload -> {
-                model.refresh()
+                model.refresh(force = true)
                 return true
             }
             R.id.canteen_info -> {

@@ -37,9 +37,9 @@ class MainModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun refresh() {
+    fun refresh(force: Boolean) {
         currentlySelectedCanteenId.value?.let { id ->
-            MealSyncing.syncInBackground(canteenId = id, force = false, context = getApplication())
+            MealSyncing.syncInBackground(canteenId = id, force = force, context = getApplication())
         }
     }
 
