@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.openmensa
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
@@ -26,19 +25,14 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 
-import java.text.SimpleDateFormat
 import java.util.ArrayList
-import java.util.Calendar
-import java.util.Date
 
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsActivity
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.helpers.CustomViewPager
-import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener
 import de.uni_potsdam.hpi.openmensa.sync.CanteenSyncing
-import de.uni_potsdam.hpi.openmensa.ui.day.DayFragment
 
 // TODO: add refresh indicator at meal list
 // TODO: refresh meals if older than 1 hour
@@ -46,7 +40,7 @@ import de.uni_potsdam.hpi.openmensa.ui.day.DayFragment
 // TODO: first time setup
 // TODO: open tab for today after launch
 @SuppressLint("NewApi")
-class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFinishedFetchingCanteensListener, OnFinishedFetchingDaysListener {
+class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFinishedFetchingDaysListener {
     private var spinnerAdapter: SpinnerAdapter? = null
     private var spinnerItems: ArrayList<Canteen>? = null
 
@@ -85,8 +79,7 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
 
         listener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
             if (key == SettingsUtils.KEY_SOURCE_URL) {
-                // TODO: solve this differently
-                reload()
+                // TODO: invalidiate database when changing the URL
             } else if (key == SettingsUtils.KEY_STYLE) {
                 recreate()
             }
@@ -106,9 +99,6 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
         val spinner = layoutInflater.inflate(R.layout.spinner_layout, null)
         actionBar.customView = spinner
         actionBar.setDisplayShowCustomEnabled(true)
-
-        //we must do this after setting the style
-        reload()
 
         // init canteen selection
         model.favoriteCanteens.observe(this, Observer { favoriteCanteens ->
@@ -194,21 +184,6 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
     }
 
     /**
-     * Fetches the available canteens list form the server
-     */
-    private fun refreshAvailableCanteens() {
-        val baseUrl = SettingsUtils.getSourceUrl(this)
-        val url = baseUrl + "canteens" + "?limit=50"
-
-        val task = RetrieveCanteenFeedTask(this, this, this)
-        task.execute(url)
-    }
-
-    // TODO: remove this
-    override fun onCanteenFetchFinished(task: RetrieveCanteenFeedTask) {
-    }
-
-    /**
      * Is called when an item from the spinner in the action bar is selected.
      */
     override fun onNavigationItemSelected(itemPosition: Int, itemId: Long): Boolean {
@@ -237,7 +212,8 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
                 return true
             }
             R.id.reload -> {
-                reload(true)  // force update
+                // reload(true)  // force update
+                // TODO: implement this again or remove it
                 return true
             }
             R.id.canteen_info -> {
@@ -246,29 +222,6 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
             }
             else -> return super.onOptionsItemSelected(item)
         }
-    }
-
-    /**
-     * Refreshes the meals hash by fetching the data from the API and then displays the latest data.
-     *
-     */
-    // TODO: remove this
-    private fun reload(force: Boolean = false) {
-        if (isOnline(this@MainActivity)) {
-            // fetch meal feed and maybe canteens
-            //if (storage.areCanteensOutOfDate()!! || storage.isEmpty || force) {
-                //Log.d(TAG, "Fetch canteens because storage is out of date or empty")
-                refreshAvailableCanteens()
-            //}
-            //updateMealStorage(force)
-        }/* else {
-            if (force) {
-                AlertDialog.Builder(this@MainActivity).setNegativeButton(android.R.string.ok
-                ) { dialog, id -> dialog.cancel() }.setTitle(R.string.noconnection).setMessage(R.string.pleaseconnect).create().show()
-            } else {
-                Toast.makeText(applicationContext, R.string.noconnection, Toast.LENGTH_LONG).show()
-            }
-        }*/
     }
 
     companion object {
