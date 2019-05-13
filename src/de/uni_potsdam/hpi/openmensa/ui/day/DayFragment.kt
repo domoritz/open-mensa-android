@@ -22,6 +22,7 @@ import de.uni_potsdam.hpi.openmensa.extension.toggle
 class DayFragment : Fragment() {
     companion object {
         private const val EXTRA_INDEX = "index"
+        private const val STATE_EXPANDED_ITEMS = "expanded_items"
 
         fun newInstance(index: Int) = DayFragment().apply {
             arguments = Bundle().apply {
@@ -35,13 +36,23 @@ class DayFragment : Fragment() {
     }
 
     val adapter = MealAdapter()
-    val expandedItems = mutableSetOf<Int>() // TODO: save and restore
+    val expandedItems = mutableSetOf<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         model.init((activity as MainActivity).model)
         model.indexLive.value = arguments!!.getInt(EXTRA_INDEX)
+
+        if (savedInstanceState != null) {
+            expandedItems.addAll(savedInstanceState.getIntArray(STATE_EXPANDED_ITEMS)!!.toList())
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putIntArray(STATE_EXPANDED_ITEMS, expandedItems.toIntArray())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
