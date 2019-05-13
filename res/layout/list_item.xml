@@ -1,33 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" 
-    android:paddingBottom="10dip"
-    android:paddingTop="10dip"
-    android:paddingRight="10dip"
-    android:paddingLeft="10dip">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/txtCategory"
+    <data>
+        <variable
+            name="category"
+            type="String" />
+
+        <variable
+            name="name"
+            type="String" />
+
+        <variable
+            name="notes"
+            type="String" />
+    </data>
+
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Lorem Ipsum"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:paddingBottom="10dip"
+        android:paddingTop="10dip"
+        android:paddingRight="10dip"
+        android:paddingLeft="10dip">
 
-    <TextView
-        android:id="@+id/txtName"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Lorem Ipsum"
-        android:color="?android:attr/textColorPrimary"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
-    
-    <TextView
-        android:id="@+id/txtNotes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/detailsPadding"
-        android:text="Details" />
+        <TextView
+            android:id="@+id/txtCategory"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            tools:text="Lorem Ipsum"
+            android:text="@{category}"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/txtName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            tools:text="Lorem Ipsum"
+            android:text="@{name}"
+            android:color="?android:attr/textColorPrimary"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+        <TextView
+            android:id="@+id/txtNotes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/detailsPadding"
+            tools:text="Details"
+            android:text="@{notes}" />
+
+    </LinearLayout>
+</layout>

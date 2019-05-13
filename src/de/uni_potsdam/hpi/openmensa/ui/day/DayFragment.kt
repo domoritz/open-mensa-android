@@ -5,19 +5,25 @@ import java.util.ArrayList
 import android.os.Bundle
 import androidx.core.app.ExpandableListFragment
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import de.uni_potsdam.hpi.openmensa.MainActivity
 import de.uni_potsdam.hpi.openmensa.R
 import de.uni_potsdam.hpi.openmensa.api.Day
 import de.uni_potsdam.hpi.openmensa.data.model.Meal
+import de.uni_potsdam.hpi.openmensa.databinding.DayFragmentBinding
 import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment
 
 /**
  * A fragment representing a section of the app, that displays the Meals for
  * one Day.
  */
-class DayFragment : ExpandableListFragment(), RefreshableFragment {
+class DayFragment : Fragment(), RefreshableFragment {
     companion object {
         private const val EXTRA_DATE = "date"
 
@@ -41,11 +47,15 @@ class DayFragment : ExpandableListFragment(), RefreshableFragment {
             model.dateLive.value = value
         }
 
+    /*
     private var fetching: Boolean? = false
     var isListVisible = false
         private set
 
     internal var adapterOld: OldMealAdapter? = null
+    */
+
+    val adapter = MealAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +64,31 @@ class DayFragment : ExpandableListFragment(), RefreshableFragment {
         model.dateLive.value = arguments!!.getString(EXTRA_DATE)
     }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val binding = DayFragmentBinding.inflate(inflater, container, false)
+
+        model.meals.observe(this, Observer {
+            adapter.meals = it
+        })
+
+        binding.recycler.layoutManager = LinearLayoutManager(context!!)
+        binding.recycler.adapter = adapter
+
+        return binding.root
+    }
+
+    override fun onResume() {
+        refresh()
+        super.onResume()
+    }
+
+    // TODO: remove these refresh functions
+    override fun refresh() {
+        // do nothing
+    }
+
+    // TODO: reimplement all of these again
+    /*
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -69,42 +104,34 @@ class DayFragment : ExpandableListFragment(), RefreshableFragment {
         })
     }
 
-    override fun onResume() {
-        refresh()
-        super.onResume()
+override fun refresh() {
+    if (isDetached || !isAdded || date == null)
+        return
+
+    val canteen = MainActivity.storage.getCurrentCanteen() ?: return
+
+    val day = canteen.getDay(date)
+
+    if (day == null) {
+        if (fetching!!) {
+            setToFetching(true, false)
+        } else {
+            if (MainActivity.isOnline(MainActivity.appContext!!)) {
+                setToNoInformation()
+            } else {
+                setToNotOnline()
+            }
+
+        }
+        return
     }
 
-    override fun refresh() {
-        // TODO: reimplement all special cases
-        /*
-        if (isDetached || !isAdded || date == null)
-            return
+    if (day.closed) {
+        setToClosed()
+        return
+    }
 
-        val canteen = MainActivity.storage.getCurrentCanteen() ?: return
-
-        val day = canteen.getDay(date)
-
-        if (day == null) {
-            if (fetching!!) {
-                setToFetching(true, false)
-            } else {
-                if (MainActivity.isOnline(MainActivity.appContext!!)) {
-                    setToNoInformation()
-                } else {
-                    setToNotOnline()
-                }
-
-            }
-            return
-        }
-
-        if (day.closed) {
-            setToClosed()
-            return
-        }
-
-        setMealList(day)
-        */
+    setMealList(day)
     }
 
     fun setEmptyText(text: String) {
@@ -181,4 +208,5 @@ class DayFragment : ExpandableListFragment(), RefreshableFragment {
         // listItems.addAll(day.getMeals())
         adapterOld!!.notifyDataSetChanged()
     }
+    */
 }

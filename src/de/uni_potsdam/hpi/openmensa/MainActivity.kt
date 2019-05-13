@@ -227,7 +227,7 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
             fragment.date = df.format(date)
 
             if (startedFetching!!) {
-                fragment.setToFetching(true, !fragment.isListVisible)
+                // fragment.setToFetching(true, !fragment.isListVisible)
                 canteen.justUpdated(dateString)
                 continue
             }
@@ -248,7 +248,7 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
                         newDay.add(nullDay)
                         canteen.updateDays(newDay)
                     }
-                    fragment.setToFetching(true, !fragment.isListVisible)
+                    // fragment.setToFetching(true, !fragment.isListVisible)
                     val baseUrl = SettingsUtils.getSourceUrl(MainActivity.appContext!!)
                     val url = baseUrl + "canteens/" + canteen.key + "/meals/?start=" + dateString
                     RetrieveDaysFeedTask(MainActivity.appContext!!, this, this, Integer.parseInt(canteen.key))
@@ -260,7 +260,7 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
                 }
             } else {
                 Log.d(MainActivity.TAG, "Meal cache hit")
-                fragment.setToFetching(false, !fragment.isListVisible)
+                // fragment.setToFetching(false, !fragment.isListVisible)
             }
         }
     }
