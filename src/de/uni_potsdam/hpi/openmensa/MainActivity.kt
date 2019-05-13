@@ -1,9 +1,7 @@
 package de.uni_potsdam.hpi.openmensa
 
 import android.content.Intent
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
-import android.preference.PreferenceManager
 
 import android.view.*
 import android.widget.AdapterView
@@ -25,15 +23,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : FragmentActivity() {
     private var isFirstResume = true
 
-    // TODO: remove this
-    internal lateinit var listener: OnSharedPreferenceChangeListener
-
     val model: MainModel by lazy {
         ViewModelProviders.of(this).get(MainModel::class.java)
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val initialTheme = SettingsUtils.getSelectedTheme(this)
         var lastSnackbar: Snackbar? = null
 
@@ -78,15 +72,6 @@ class MainActivity : FragmentActivity() {
         }
 
         PrivacyDialogFragment.showIfRequired(this)
-
-        // TODO: remove these things
-        listener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            if (key == SettingsUtils.KEY_SOURCE_URL) {
-                // TODO: invalidiate database when changing the URL
-            }
-        }
-
-        prefs.registerOnSharedPreferenceChangeListener(listener)
 
         // setup pager
         val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)

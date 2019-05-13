@@ -122,6 +122,9 @@ object SettingsUtils {
     fun updateLastCanteenListUpdate(context: Context) = getSharedPrefs(context).edit()
             .putLong(KEY_LAST_CANTEEN_LIST_UPDATE, System.currentTimeMillis())
             .apply()
+    fun deleteLastCanteenListUpdate(context: Context) = getSharedPrefs(context).edit()
+            .remove(KEY_LAST_CANTEEN_LIST_UPDATE)
+            .apply()
 
     fun setEnableMap(context: Context, enable: Boolean) = getSharedPrefs(context).edit()
             .putBoolean(KEY_ENABLE_MAP, enable)

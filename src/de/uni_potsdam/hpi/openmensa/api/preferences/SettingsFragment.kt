@@ -12,6 +12,9 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 
 import de.uni_potsdam.hpi.openmensa.R
+import de.uni_potsdam.hpi.openmensa.Threads
+import de.uni_potsdam.hpi.openmensa.data.AppDatabase
+import de.uni_potsdam.hpi.openmensa.sync.CanteenSyncing
 
 import de.uni_potsdam.hpi.openmensa.ui.canteenlist.SelectCanteenDialogFragment
 
@@ -66,6 +69,16 @@ class SettingsFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeLis
         val pref = findPreference(key)
         if (pref is EditTextPreference) {
             pref.setSummary(pref.text)
+        }
+
+        if (key == SettingsUtils.KEY_SOURCE_URL) {
+            val context = context!!.applicationContext
+
+            Threads.network.execute {
+                AppDatabase.with(context).canteen().deleteAllItems()
+                SettingsUtils.deleteLastCanteenListUpdate(context)
+                CanteenSyncing.runBackgroundSync(context)
+            }
         }
     }
 }

@@ -15,6 +15,9 @@ interface CanteenDao {
     @Query("DELETE FROM canteen WHERE NOT id IN (:currentItemIds)")
     fun deleteOldItems(currentItemIds: List<Int>)
 
+    @Query("DELETE FROM canteen")
+    fun deleteAllItems()
+
     @Query("SELECT * FROM canteen")
     fun getAll(): LiveData<List<Canteen>>
 
