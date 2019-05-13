@@ -31,8 +31,7 @@ import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsActivity
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.helpers.CustomViewPager
-import de.uni_potsdam.hpi.openmensa.sync.CanteenSyncing
-import de.uni_potsdam.hpi.openmensa.sync.MealSyncing
+import de.uni_potsdam.hpi.openmensa.sync.*
 
 // TODO: add refresh indicator at meal list
 // TODO: refresh meals if older than 1 hour
@@ -143,6 +142,22 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
 
             // FIXME: the section labels are horrible wrong with that
             sectionsPagerAdapter.dates = days.map { it.date }
+        })
+
+        model.syncStatus.observe(this, Observer {
+            if (it == MealSyncingDone) {
+                Toast.makeText(this, "SYNC DONE", Toast.LENGTH_SHORT).show()
+
+                model.confirmSyncStatus()
+            } else if (it == MealSyncingFailed) {
+                Toast.makeText(this, "SYNC FAILED", Toast.LENGTH_SHORT).show()
+
+                model.confirmSyncStatus()
+            } else if (it == MealSyncingRunning) {
+                Toast.makeText(this, "SYNCING", Toast.LENGTH_SHORT).show()
+            } else {
+                // TODO: hide notification
+            }
         })
     }
 

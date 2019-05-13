@@ -28,10 +28,24 @@ class MainModel(application: Application): AndroidViewModel(application) {
         else
             MutableLiveData<CanteenWithDays?>().apply { value = null }
     }
+    val syncStatus = currentlySelectedCanteenId.switchMap { id ->
+        MealSyncing.status.map { status ->
+            if (id != null)
+                status[id]
+            else
+                null
+        }
+    }
 
     fun refresh() {
         currentlySelectedCanteenId.value?.let { id ->
             MealSyncing.syncInBackground(canteenId = id, force = false, context = getApplication())
+        }
+    }
+
+    fun confirmSyncStatus() {
+        currentlySelectedCanteenId.value?.let { id ->
+            MealSyncing.removeDoneStatus(id)
         }
     }
 }
