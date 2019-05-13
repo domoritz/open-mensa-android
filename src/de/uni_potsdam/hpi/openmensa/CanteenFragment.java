@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.openmensa;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.osmdroid.config.Configuration;
@@ -14,6 +15,8 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,10 +29,6 @@ import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment;
 
 public class CanteenFragment extends Fragment implements RefreshableFragment, OnClickListener {
 
-	static {
-		Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
-	}
-
 	private MapView mapView;
 	private OverlayItem canteenLocation;
 	private ItemizedIconOverlay<OverlayItem> overlay;
@@ -37,7 +36,19 @@ public class CanteenFragment extends Fragment implements RefreshableFragment, On
 	private int zoom = 18;
 	private GeoPoint center;
 	private Canteen canteen;
-	
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
+		Configuration.getInstance().setOsmdroidTileCache(new File(
+				getContext().getCacheDir(),
+				"map tiles"
+		));
+		Configuration.getInstance().setTileFileSystemCacheMaxBytes(1024 * 1024 * 10 /* 10 MB */);
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
