@@ -43,6 +43,12 @@ class HttpApiClient(val serverUrl: String): ApiClient {
         fun getInstance(context: Context) = HttpApiClient(serverUrl = SettingsUtils.getSourceUrl(context))
     }
 
+    init {
+        if (serverUrl.isBlank()) {
+            throw IOException("no server configured")
+        }
+    }
+
     override val canteens = object: PagedApi<Canteen> {
         override fun query(limit: Int, page: Int): PagedResponse<Canteen> = requestPagedJson(
                 Request.Builder()

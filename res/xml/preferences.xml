@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen 
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:threefiftyprefs="http://schemas.android.com/apk/res/de.uni_potsdam.hpi.openmensa">
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/source_title">
         <Preference
  			android:title="@string/canteen_title" 
@@ -11,7 +10,6 @@
     	    android:title="@string/source_url_title"
             android:persistent="true"
             android:dialogMessage="@string/source_url_desc"
-    	    android:defaultValue="@string/source_url_default" 
     	    android:key="pref_source_url"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/settings_design_title">

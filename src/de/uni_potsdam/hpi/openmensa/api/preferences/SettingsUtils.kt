@@ -26,7 +26,7 @@ object SettingsUtils {
 
     private fun getSharedPrefs(context: Context): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
-    fun getSourceUrl(context: Context): String = getSharedPrefs(context).getString(KEY_SOURCE_URL, context.resources.getString(R.string.source_url_default))!!
+    fun getSourceUrl(context: Context): String = getSharedPrefs(context).getString(KEY_SOURCE_URL, "")!!
 
     private fun getSelectedThemeName(context: Context) = getSharedPrefs(context).getString(KEY_STYLE, THEME_LIGHT)
 
