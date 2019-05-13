@@ -9,15 +9,14 @@ import com.google.gson.annotations.SerializedName;
 
 import de.uni_potsdam.hpi.openmensa.MainActivity;
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils;
-import de.uni_potsdam.hpi.openmensa.helpers.SpinnerItem;
 
 /**
  * 
  * @author dominik
  *
  */
-public class Canteen implements SpinnerItem {
-	
+public class Canteen {
+
 	// 1 hour
 	private static final int DAY_OUTDATED = 1000*60*60*1;
 	
