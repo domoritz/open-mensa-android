@@ -18,12 +18,10 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.Window
+import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.SpinnerAdapter
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -35,6 +33,7 @@ import java.util.Date
 
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsActivity
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
+import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.helpers.CustomViewPager
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener
@@ -49,7 +48,7 @@ import de.uni_potsdam.hpi.openmensa.ui.day.DayFragment
 @SuppressLint("NewApi")
 class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFinishedFetchingCanteensListener, OnFinishedFetchingDaysListener {
     private var spinnerAdapter: SpinnerAdapter? = null
-    private var spinnerItems: ArrayList<de.uni_potsdam.hpi.openmensa.data.model.Canteen>? = null
+    private var spinnerItems: ArrayList<Canteen>? = null
 
     internal lateinit var listener: OnSharedPreferenceChangeListener
 
@@ -118,7 +117,17 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
 
             // TODO: handling if nothing selected -> e.g. dialog
 
-            spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, spinnerItems!!)
+            spinnerAdapter = object: ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, spinnerItems!!) {
+                override fun getView(position: Int, convertView: View?, parent: ViewGroup): View = (super.getView(position, convertView, parent) as TextView).let { view ->
+                    view.text = spinnerItems!![position].name
+                    view
+                }
+
+                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View = (super.getDropDownView(position, convertView, parent) as TextView).let { view ->
+                    view.text = spinnerItems!![position].name
+                    view
+                }
+            }
             actionBar.setListNavigationCallbacks(spinnerAdapter, this)
 
             val curr = model.currentlySelectedCanteenId.value
