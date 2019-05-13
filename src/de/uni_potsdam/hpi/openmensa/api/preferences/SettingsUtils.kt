@@ -93,4 +93,36 @@ object SettingsUtils {
     fun setEnableMap(context: Context, enable: Boolean) = getSharedPrefs(context).edit()
             .putBoolean(KEY_ENABLE_MAP, enable)
             .apply()
+
+    fun isMapEnabledLive(context: Context) = object: LiveData<Boolean>() {
+        val prefs = getSharedPrefs(context)
+        val listener = object: SharedPreferences.OnSharedPreferenceChangeListener {
+            override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+                if (key == KEY_ENABLE_MAP) {
+                    refresh()
+                }
+            }
+        }
+
+        fun refresh() {
+            val newValue = prefs.getBoolean(KEY_ENABLE_MAP, false)
+
+            if (newValue != value) {
+                value = newValue
+            }
+        }
+
+        override fun onActive() {
+            super.onActive()
+
+            prefs.registerOnSharedPreferenceChangeListener(listener)
+            refresh()
+        }
+
+        override fun onInactive() {
+            super.onInactive()
+
+            prefs.unregisterOnSharedPreferenceChangeListener(listener)
+        }
+    }
 }

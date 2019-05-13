@@ -12,6 +12,7 @@ import org.osmdroid.views.overlay.OverlayItem
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -22,11 +23,19 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.databinding.CanteenFragmentBinding
 import de.uni_potsdam.hpi.openmensa.ui.privacy.EnableMapDialogFragment
+import org.osmdroid.tileprovider.tilesource.BitmapTileSourceBase
+import java.io.InputStream
 
-// TODO: disable tile source without consent
 class CanteenFragment : Fragment(), OnClickListener {
+    companion object {
+        private val nullTileSource = object: BitmapTileSourceBase("dummy", 1, 1, 1, ".void") {
+            override fun getDrawable(aFilePath: String?): Drawable? = null
+            override fun getDrawable(aFileInputStream: InputStream?): Drawable? = null
+        }
+    }
 
     private var mapView: MapView? = null
     private var overlay: ItemizedIconOverlay<OverlayItem>? = null
@@ -51,9 +60,19 @@ class CanteenFragment : Fragment(), OnClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = CanteenFragmentBinding.inflate(inflater, container, false)
         val view = binding.root// TODO: remove
+        mapView = binding.mapview
 
-        mapView = view.findViewById<View>(R.id.mapview) as MapView
-        mapView!!.setTileSource(TileSourceFactory.MAPNIK)
+        mapView!!.setTileSource(nullTileSource)
+        SettingsUtils.isMapEnabledLive(context!!).observe(this, Observer { enableMap ->
+            binding.flipper.displayedChild = if (enableMap) 1 else 0
+
+            if (enableMap) {
+                mapView!!.setTileSource(TileSourceFactory.MAPNIK)
+            } else {
+                mapView!!.setTileSource(nullTileSource)
+            }
+        })
+
         mapView!!.setBuiltInZoomControls(false)
         mapView!!.setMultiTouchControls(true)
 
