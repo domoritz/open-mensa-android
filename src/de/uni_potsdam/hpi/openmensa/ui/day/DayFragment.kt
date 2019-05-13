@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.openmensa
+package de.uni_potsdam.hpi.openmensa.ui.day
 
 import java.util.ArrayList
 
@@ -7,6 +7,8 @@ import androidx.core.app.ExpandableListFragment
 import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import de.uni_potsdam.hpi.openmensa.MainActivity
+import de.uni_potsdam.hpi.openmensa.R
 import de.uni_potsdam.hpi.openmensa.api.Day
 import de.uni_potsdam.hpi.openmensa.data.model.Meal
 import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment

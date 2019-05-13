@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.openmensa;
+package de.uni_potsdam.hpi.openmensa.ui.day;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import de.uni_potsdam.hpi.openmensa.MainActivity;
+import de.uni_potsdam.hpi.openmensa.R;
 import de.uni_potsdam.hpi.openmensa.data.model.Meal;
 
 /**

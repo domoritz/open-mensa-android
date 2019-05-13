@@ -1,8 +1,9 @@
-package de.uni_potsdam.hpi.openmensa
+package de.uni_potsdam.hpi.openmensa.ui.day
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import de.uni_potsdam.hpi.openmensa.MainModel
 import de.uni_potsdam.hpi.openmensa.data.AppDatabase
 import de.uni_potsdam.hpi.openmensa.data.model.Meal
 import de.uni_potsdam.hpi.openmensa.extension.switchMap

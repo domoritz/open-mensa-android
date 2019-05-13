@@ -1,14 +1,12 @@
 package de.uni_potsdam.hpi.openmensa
 
-import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import android.util.Log
 
 import java.util.ArrayList
 
-import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment
+import de.uni_potsdam.hpi.openmensa.ui.day.DayFragment
 import kotlin.properties.Delegates
 
 /**

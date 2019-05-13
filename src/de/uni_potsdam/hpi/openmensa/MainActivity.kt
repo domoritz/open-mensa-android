@@ -42,6 +42,7 @@ import de.uni_potsdam.hpi.openmensa.api.preferences.Storage
 import de.uni_potsdam.hpi.openmensa.helpers.CustomViewPager
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener
+import de.uni_potsdam.hpi.openmensa.ui.day.DayFragment
 
 @SuppressLint("NewApi")
 class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFinishedFetchingCanteensListener, OnFinishedFetchingDaysListener {
