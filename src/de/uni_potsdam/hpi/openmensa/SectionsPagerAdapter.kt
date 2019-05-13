@@ -14,7 +14,9 @@ import kotlin.properties.Delegates
  * one of the primary sections of the app.
  */
 class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
-    var currentDate: String = ""
+    var currentDate: String by Delegates.observable("") {
+        _, _, _ -> notifyDataSetChanged()
+    }
     var dates: List<String>? by Delegates.observable(null as List<String>?) {
         _, _, _ -> notifyDataSetChanged()
     }

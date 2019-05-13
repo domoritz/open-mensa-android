@@ -10,7 +10,9 @@ import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.data.model.Day
 import de.uni_potsdam.hpi.openmensa.extension.map
 import de.uni_potsdam.hpi.openmensa.extension.switchMap
+import de.uni_potsdam.hpi.openmensa.helpers.DateUtils
 import de.uni_potsdam.hpi.openmensa.sync.MealSyncing
+import java.util.*
 
 class MainModel(application: Application): AndroidViewModel(application) {
     private val database = AppDatabase.with(application)
@@ -34,6 +36,56 @@ class MainModel(application: Application): AndroidViewModel(application) {
                 status[id]
             else
                 null
+        }
+    }
+    val currentDate = DateUtils.localDate
+    val datesToShow = currentDate.switchMap { currentDateString ->
+        currentlySelectedCanteen.map { canteen ->
+            val canteenDays = (canteen?.days ?: emptyList()).sortedBy { it.date }
+
+            if (canteenDays.isEmpty()) {
+                // only today as fallback
+                listOf(currentDateString)
+            } else {
+                val helpCalendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
+
+                val isTodayNearBeforeNextDay = run {
+                    DateUtils.loadDateIntoCalendar(currentDateString, helpCalendar)
+
+                    repeat(4) {
+                        if (DateUtils.format(helpCalendar) == canteenDays.first().date) {
+                            return@run true
+                        }
+
+                        helpCalendar.add(Calendar.DATE, 1)
+                    }
+
+                    return@run false
+                }
+
+                val firstDate = if (isTodayNearBeforeNextDay) {
+                    DateUtils.loadDateIntoCalendar(currentDateString, helpCalendar)
+                    DateUtils.format(helpCalendar)
+                } else
+                    canteenDays.first().date
+
+                val lastDate = canteenDays.last().date
+                val dateList = mutableListOf<String>()
+
+                DateUtils.loadDateIntoCalendar(firstDate, helpCalendar)
+
+                while (dateList.size < 14 /* to cancel in case of malformed dates */) {
+                    dateList.add(DateUtils.format(helpCalendar))
+
+                    if (dateList.last() >= lastDate) {
+                        break
+                    }
+
+                    helpCalendar.add(Calendar.DATE, 1)
+                }
+
+                dateList
+            }
         }
     }
 
