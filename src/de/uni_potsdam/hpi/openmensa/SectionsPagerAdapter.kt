@@ -4,8 +4,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
-import java.util.ArrayList
-
 import de.uni_potsdam.hpi.openmensa.ui.day.DayFragment
 import kotlin.properties.Delegates
 
@@ -17,15 +15,6 @@ class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     var dates: List<String>? by Delegates.observable(null as List<String>?) {
         _, _, _ -> notifyDataSetChanged()
     }
-
-    val daySections: ArrayList<Int>
-        get() {
-            val sections = ArrayList<Int>()
-            for (i in 1 until count) {
-                sections.add(i)
-            }
-            return sections
-        }
 
     /**
      * Creates/ returns an Item
@@ -52,14 +41,5 @@ class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
             4 -> return context!!.getString(R.string.section_da_tomorrow).toUpperCase()
         }
         return null
-    }
-
-    fun setToFetching(on: Boolean, animated: Boolean) {
-        // TODO: remove this
-    }
-
-    companion object {
-
-        internal val NUM_ITEMS = 5
     }
 }
