@@ -129,6 +129,16 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
                 actionBar.setSelectedNavigationItem(displayedCanteenPosition)
             }
         })
+
+        model.currentlySelectedCanteenId.observe(this, Observer {
+            // FIXME: use a better way to load content
+            if (it != null) {
+                Toast.makeText(appContext, "SYNC $it", Toast.LENGTH_SHORT).show()
+
+                RetrieveDaysFeedTask(MainActivity.appContext!!, this, this, it)
+                        .execute()
+            }
+        })
     }
 
     public override fun onPause() {
