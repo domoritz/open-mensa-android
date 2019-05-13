@@ -3,9 +3,7 @@ package de.uni_potsdam.hpi.openmensa
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.location.LocationManager
 import android.net.ConnectivityManager
@@ -28,9 +26,7 @@ import android.widget.ArrayAdapter
 import android.widget.SpinnerAdapter
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.ViewModelStore
 
 import java.text.SimpleDateFormat
 import java.util.ArrayList
@@ -46,9 +42,6 @@ import de.uni_potsdam.hpi.openmensa.api.preferences.Storage
 import de.uni_potsdam.hpi.openmensa.helpers.CustomViewPager
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener
-import de.uni_potsdam.hpi.openmensa.helpers.RetrieveAsyncTask
-import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask
-import de.uni_potsdam.hpi.openmensa.helpers.SpinnerItem
 
 @SuppressLint("NewApi")
 class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFinishedFetchingCanteensListener, OnFinishedFetchingDaysListener {
@@ -216,7 +209,7 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
             fragment.date = df.format(date)
 
             if (startedFetching!!) {
-                fragment.setToFetching(true, !fragment.isListShown)
+                fragment.setToFetching(true, !fragment.isListVisible)
                 canteen.justUpdated(dateString)
                 continue
             }
@@ -237,7 +230,7 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
                         newDay.add(nullDay)
                         canteen.updateDays(newDay)
                     }
-                    fragment.setToFetching(true, !fragment.isListShown)
+                    fragment.setToFetching(true, !fragment.isListVisible)
                     val baseUrl = SettingsUtils.getSourceUrl(MainActivity.appContext!!)
                     val url = baseUrl + "canteens/" + canteen.key + "/meals/?start=" + dateString
                     RetrieveDaysFeedTask(MainActivity.appContext!!, this, this, Integer.parseInt(canteen.key))
@@ -249,7 +242,7 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
                 }
             } else {
                 Log.d(MainActivity.TAG, "Meal cache hit")
-                fragment.setToFetching(false, !fragment.isListShown)
+                fragment.setToFetching(false, !fragment.isListVisible)
             }
         }
     }
