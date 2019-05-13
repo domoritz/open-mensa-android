@@ -52,7 +52,6 @@
 				android:text="@string/students" />
 
 			<TextView
-				android:id="@+id/txtPriceStudents"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:paddingLeft="@dimen/priceListFloat"
@@ -74,7 +73,6 @@
 				android:text="@string/employees" />
 
 			<TextView
-				android:id="@+id/txtPriceEmployees"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="@dimen/priceListFloat"
@@ -96,7 +94,6 @@
 				android:text="@string/pupils" />
 
 			<TextView
-				android:id="@+id/txtPricePupils"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="@dimen/priceListFloat"
@@ -118,7 +115,6 @@
 				android:text="@string/other" />
 
 			<TextView
-				android:id="@+id/txtPriceOthers"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="@dimen/priceListFloat"

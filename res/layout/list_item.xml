@@ -14,6 +14,9 @@
         <variable
             name="notes"
             type="String" />
+
+        <import type="android.view.View" />
+        <import type="android.text.TextUtils" />
     </data>
 
     <LinearLayout
@@ -26,7 +29,6 @@
         android:paddingLeft="10dip">
 
         <TextView
-            android:id="@+id/txtCategory"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             tools:text="Lorem Ipsum"
@@ -34,7 +36,6 @@
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
 
         <TextView
-            android:id="@+id/txtName"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             tools:text="Lorem Ipsum"
@@ -43,10 +44,10 @@
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
 
         <TextView
-            android:id="@+id/txtNotes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/detailsPadding"
+            android:visibility="@{TextUtils.isEmpty(notes) ? View.GONE : View.VISIBLE}"
             tools:text="Details"
             android:text="@{notes}" />
 
