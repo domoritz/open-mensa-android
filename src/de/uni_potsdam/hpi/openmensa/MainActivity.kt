@@ -31,8 +31,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 // TODO: open tab for today after launch
-// FIXME: sometimes crash during setup due to action bar mode change
-// TODO: hide menu items when not usable
 @SuppressLint("NewApi")
 class MainActivity : FragmentActivity() {
     private var spinnerAdapter: SpinnerAdapter? = null
@@ -118,8 +116,6 @@ class MainActivity : FragmentActivity() {
         model.favoriteCanteens.observe(this, Observer { favoriteCanteens ->
             spinnerItems!!.clear()
             spinnerItems!!.addAll(favoriteCanteens)
-
-            // TODO: handling if nothing selected -> e.g. dialog
 
             spinnerAdapter = object: ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, spinnerItems!!) {
                 override fun getView(position: Int, convertView: View?, parent: ViewGroup): View = (super.getView(position, convertView, parent) as TextView).let { view ->
