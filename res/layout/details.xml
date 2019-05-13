@@ -1,90 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" 
-    android:paddingBottom="10dip"
-    android:paddingLeft="@dimen/expanderPadding"
-    android:paddingTop="10dip"
-    android:paddingRight="10dip">
-	    
-    <RelativeLayout
-	    xmlns:android="http://schemas.android.com/apk/res/android" 
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content">
-	    
-	    <TextView
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:text="@string/students" />
-	
-	    <TextView
-	        android:id="@+id/txtPriceStudents"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:paddingLeft="@dimen/priceListFloat"
-	        android:text="Lorem Ipsum" />
-    
-    </RelativeLayout>
-    
-    <RelativeLayout
-	    xmlns:android="http://schemas.android.com/apk/res/android" 
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content">
-	    
-	    <TextView
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:text="@string/employees" />
-	
-	    <TextView
-	        android:id="@+id/txtPriceEmployees"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:paddingLeft="@dimen/priceListFloat"
-	        android:text="Lorem Ipsum"/>
-    
-    </RelativeLayout>
-    
-    <RelativeLayout
-	    xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content">
-	    
-	    <TextView
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:text="@string/pupils" />
-	
-	       <TextView
-		        android:id="@+id/txtPricePupils"
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:paddingLeft="@dimen/priceListFloat"
-		        android:text="Lorem Ipsum"/>
-    
-    </RelativeLayout>
-    
-    <RelativeLayout
-	    xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content">
-	    
-	    <TextView
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:text="@string/other" />
-	
-	    <TextView
-	        android:id="@+id/txtPriceOthers"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:paddingLeft="@dimen/priceListFloat"
-	        android:text="Lorem Ipsum"/>
-    
-    </RelativeLayout>
-</LinearLayout>
+<layout xmlns:tools="http://schemas.android.com/tools">
+	<data>
+		<variable
+			name="visible"
+			type="boolean" />
+
+		<variable
+			name="studentsPrice"
+			type="Double" />
+
+		<variable
+			name="employeesPrice"
+			type="Double" />
+
+		<variable
+			name="pupilsPrice"
+			type="Double" />
+
+		<variable
+			name="otherPrice"
+			type="Double" />
+
+		<import type="android.view.View" />
+		<import type="de.uni_potsdam.hpi.openmensa.ui.day.MealAdapter" />
+	</data>
+
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:visibility="@{visible ? View.VISIBLE : View.GONE}"
+		android:orientation="vertical"
+		android:paddingBottom="10dip"
+		android:paddingLeft="@dimen/expanderPadding"
+		android:paddingTop="10dip"
+		android:paddingRight="10dip">
+
+		<RelativeLayout
+			android:visibility="@{safeUnbox(studentsPrice) > 0 ? View.VISIBLE : View.GONE}"
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentLeft="true"
+				android:text="@string/students" />
+
+			<TextView
+				android:id="@+id/txtPriceStudents"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingLeft="@dimen/priceListFloat"
+				android:text="@{MealAdapter.formatPrice(studentsPrice)}"
+				tools:text="Lorem Ipsum" />
+
+		</RelativeLayout>
+
+		<RelativeLayout
+			android:visibility="@{safeUnbox(employeesPrice) > 0 ? View.VISIBLE : View.GONE}"
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentLeft="true"
+				android:text="@string/employees" />
+
+			<TextView
+				android:id="@+id/txtPriceEmployees"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="@dimen/priceListFloat"
+				android:text="@{MealAdapter.formatPrice(employeesPrice)}"
+				tools:text="Lorem Ipsum"/>
+
+		</RelativeLayout>
+
+		<RelativeLayout
+			android:visibility="@{safeUnbox(pupilsPrice) > 0 ? View.VISIBLE : View.GONE}"
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentLeft="true"
+				android:text="@string/pupils" />
+
+			<TextView
+				android:id="@+id/txtPricePupils"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="@dimen/priceListFloat"
+				android:text="@{MealAdapter.formatPrice(pupilsPrice)}"
+				tools:text="Lorem Ipsum"/>
+
+		</RelativeLayout>
+
+		<RelativeLayout
+			android:visibility="@{safeUnbox(otherPrice) > 0 ? View.VISIBLE : View.GONE}"
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentLeft="true"
+				android:text="@string/other" />
+
+			<TextView
+				android:id="@+id/txtPriceOthers"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="@dimen/priceListFloat"
+				android:text="@{MealAdapter.formatPrice(otherPrice)}"
+				tools:text="Lorem Ipsum"/>
+
+		</RelativeLayout>
+
+		<!-- TODO: fallback view no known price -->
+	</LinearLayout>
+</layout>

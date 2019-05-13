@@ -3,8 +3,6 @@ package de.uni_potsdam.hpi.openmensa.ui.day
 import java.util.ArrayList
 
 import android.os.Bundle
-import androidx.core.app.ExpandableListFragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +11,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.uni_potsdam.hpi.openmensa.MainActivity
-import de.uni_potsdam.hpi.openmensa.R
-import de.uni_potsdam.hpi.openmensa.api.Day
 import de.uni_potsdam.hpi.openmensa.data.model.Meal
 import de.uni_potsdam.hpi.openmensa.databinding.DayFragmentBinding
+import de.uni_potsdam.hpi.openmensa.extension.toggle
 import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment
 
 /**
@@ -56,6 +53,7 @@ class DayFragment : Fragment(), RefreshableFragment {
     */
 
     val adapter = MealAdapter()
+    val expandedItems = mutableSetOf<Int>() // TODO: save and restore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +64,14 @@ class DayFragment : Fragment(), RefreshableFragment {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = DayFragmentBinding.inflate(inflater, container, false)
+
+        adapter.expandedItemIds = expandedItems
+        adapter.listener = object: MealAdapterListener {
+            override fun onItemClicked(meal: Meal) {
+                expandedItems.toggle(meal.id)
+                adapter.notifyDataSetChanged()
+            }
+        }
 
         model.meals.observe(this, Observer {
             adapter.meals = it
