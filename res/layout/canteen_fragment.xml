@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="name"
+            type="String" />
+
+        <variable
+            name="address"
+            type="String" />
+    </data>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/txtName"
+            android:text="@{name}"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/titlePadding"
@@ -15,7 +25,8 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:background="?selectableItemBackground"
+            android:id="@+id/address_container"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/indention"
@@ -29,7 +40,8 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <TextView
-                android:id="@+id/txtAddress"
+                tools:text="Street and City"
+                android:text="@{address}"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/priceListFloat"
