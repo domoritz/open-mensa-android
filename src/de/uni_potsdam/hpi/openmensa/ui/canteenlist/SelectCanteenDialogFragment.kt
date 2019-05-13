@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.uni_potsdam.hpi.openmensa.R
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
@@ -59,6 +60,14 @@ class SelectCanteenDialogFragment : DialogFragment() {
         val allCanteensLive = AppDatabase.with(context!!).canteen().getAll()
         val termLive = MutableLiveData<String>().apply { value = binding.filter.text.toString() }
         val sortByDistanceLive = MutableLiveData<Boolean>().apply { value = binding.sortByLocationCheckbox.isChecked }
+        val model = ViewModelProviders.of(this).get(SelectCanteenDialogModel::class.java)
+
+        val locationToUse = sortByDistanceLive.switchMap { sort ->
+            if (sort)
+                model.locationLive
+            else
+                MutableLiveData<LocationStatus>().apply { value = UnknownLocationStatus }
+        }
 
         val canteensFilteredBySearchTerm = allCanteensLive.switchMap { canteens ->
             termLive.map { term ->
@@ -70,14 +79,15 @@ class SelectCanteenDialogFragment : DialogFragment() {
             }
         }
 
-        val canteensSorted = canteensFilteredBySearchTerm.switchMap { canteens ->
+        val missingLocation = locationToUse.switchMap { location ->
             sortByDistanceLive.map { sortByDistance ->
-                val location = if (sortByDistance) LocationUtil.getLastBestLocation(context!!) else UnknownLocationStatus
+                location is UnknownLocationStatus && sortByDistance
+            }
+        }
 
-                // FIXME: bad style + location updates should be handled
-                binding.missingLocation = sortByDistance && location == UnknownLocationStatus
-
-                if (sortByDistance && location is KnownLocationStatus) {
+        val canteensSorted = canteensFilteredBySearchTerm.switchMap { canteens ->
+            locationToUse.map { location ->
+                if (location is KnownLocationStatus) {
                     canteens
                             .filter { it.hasLocation }
                             .sortedBy { canteen ->
@@ -96,6 +106,10 @@ class SelectCanteenDialogFragment : DialogFragment() {
 
         canteensSorted.observe(this, Observer {
             adapter.content = it
+        })
+
+        missingLocation.observe(this, Observer {
+            binding.missingLocation = it
         })
 
         binding.list.layoutManager = LinearLayoutManager(context!!)

@@ -1,10 +1,7 @@
 package de.uni_potsdam.hpi.openmensa
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
-import android.location.LocationManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 
@@ -26,7 +23,6 @@ import de.uni_potsdam.hpi.openmensa.ui.nocanteen.NoCanteenFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 // TODO: open tab for today after launch
-@SuppressLint("NewApi")
 class MainActivity : FragmentActivity() {
     // TODO: remove this
     internal lateinit var listener: OnSharedPreferenceChangeListener
@@ -83,8 +79,6 @@ class MainActivity : FragmentActivity() {
         PrivacyDialogFragment.showIfRequired(this)
 
         // TODO: remove these things
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
         listener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
             if (key == SettingsUtils.KEY_SOURCE_URL) {
                 // TODO: invalidiate database when changing the URL
@@ -192,11 +186,5 @@ class MainActivity : FragmentActivity() {
         super.onPause()
 
         model.saveSelectedCanteenId()
-    }
-
-    companion object {
-        // TODO: remove this
-        var locationManager: LocationManager? = null
-            private set
     }
 }

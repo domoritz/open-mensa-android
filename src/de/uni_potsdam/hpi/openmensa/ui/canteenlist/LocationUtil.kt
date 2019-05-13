@@ -4,9 +4,12 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Bundle
 import androidx.core.content.ContextCompat
-import de.uni_potsdam.hpi.openmensa.MainActivity
+import androidx.lifecycle.LiveData
+import de.uni_potsdam.hpi.openmensa.Threads
 
 object LocationUtil {
     fun hasLocationAccessPermission(context: Context): Boolean {
@@ -19,9 +22,11 @@ object LocationUtil {
             return MissingPermissionLocationStatus
         }
 
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
         try {
-            val locationGPS: Location? = MainActivity.locationManager!!.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            val locationNet: Location? = MainActivity.locationManager!!.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            val locationGPS: Location? = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            val locationNet: Location? = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
 
             val gpsLocationTime = locationGPS?.time ?: 0
             val networkLocationTime = locationNet?.time ?: 0
@@ -39,6 +44,63 @@ object LocationUtil {
             }
         } catch (ex: SecurityException) {
             return MissingPermissionLocationStatus
+        }
+    }
+
+    fun getLocationLive(context: Context) = object: LiveData<LocationStatus>() {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationListener = object: LocationListener {
+            override fun onLocationChanged(location: Location?) {
+                update()
+            }
+
+            override fun onProviderDisabled(provider: String?) {
+                // ignore
+            }
+
+            override fun onProviderEnabled(provider: String?) {
+                // ignore
+            }
+
+            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+                // ignore
+            }
+        }
+
+        fun update() {
+            val newValue = getLastBestLocation(context)
+
+            if (newValue != value) {
+                value = newValue
+            }
+        }
+
+        lateinit var registerRunnable: Runnable
+
+        init {
+            registerRunnable = Runnable {
+                try {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10 * 1000L, 1000.0f, locationListener)
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10 * 1000L, 1000.0f, locationListener)
+                } catch (ex: SecurityException) {
+                    // retry later
+                    Threads.handler.postDelayed(registerRunnable, 1000)
+                }
+            }
+        }
+
+        override fun onActive() {
+            super.onActive()
+
+            update()
+            Threads.handler.post(registerRunnable)
+        }
+
+        override fun onInactive() {
+            super.onInactive()
+
+            Threads.handler.removeCallbacks(registerRunnable)
+            locationManager.removeUpdates(locationListener)
         }
     }
 }
