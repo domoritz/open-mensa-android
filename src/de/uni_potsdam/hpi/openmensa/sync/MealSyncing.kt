@@ -9,7 +9,6 @@ import de.uni_potsdam.hpi.openmensa.Threads
 import de.uni_potsdam.hpi.openmensa.api.client.HttpApiClient
 import de.uni_potsdam.hpi.openmensa.data.AppDatabase
 
-// TODO: report errors in the UI
 object MealSyncing {
     private const val LOG_TAG = "MealSyncing"
     private val lock = Object()

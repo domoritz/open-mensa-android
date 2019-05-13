@@ -21,9 +21,9 @@ import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.SpinnerAdapter
 import android.widget.TextView
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.snackbar.Snackbar
 
 import java.util.ArrayList
 
@@ -32,9 +32,8 @@ import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.helpers.CustomViewPager
 import de.uni_potsdam.hpi.openmensa.sync.*
+import kotlinx.android.synthetic.main.activity_main.*
 
-// TODO: add refresh indicator at meal list
-// TODO: refresh meals if older than 1 hour
 // TODO: fix wrong headers for days (data always starting at today -> remove yesterday)
 // TODO: first time setup
 // TODO: open tab for today after launch
@@ -42,6 +41,7 @@ import de.uni_potsdam.hpi.openmensa.sync.*
 class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
     private var spinnerAdapter: SpinnerAdapter? = null
     private var spinnerItems: ArrayList<Canteen>? = null
+    private var lastSnackbar: Snackbar? = null
 
     internal lateinit var listener: OnSharedPreferenceChangeListener
 
@@ -131,6 +131,8 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
             if (it != null) {
                 // TODO: do this from the model
                 model.refresh(force = false)
+
+                lastSnackbar?.dismiss()
             }
         })
 
@@ -143,17 +145,17 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
 
         model.syncStatus.observe(this, Observer {
             if (it == MealSyncingDone) {
-                Toast.makeText(this, "SYNC DONE", Toast.LENGTH_SHORT).show()
+                lastSnackbar = Snackbar.make(pager, R.string.sync_snackbar_done, Snackbar.LENGTH_SHORT).apply { show() }
 
                 model.confirmSyncStatus()
             } else if (it == MealSyncingFailed) {
-                Toast.makeText(this, "SYNC FAILED", Toast.LENGTH_SHORT).show()
+                lastSnackbar = Snackbar.make(pager, R.string.sync_snackbar_failed, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.sync_snackbar_retry) { model.refresh(true) }
+                        .apply { show() }
 
                 model.confirmSyncStatus()
             } else if (it == MealSyncingRunning) {
-                Toast.makeText(this, "SYNCING", Toast.LENGTH_SHORT).show()
-            } else {
-                // TODO: hide notification
+                lastSnackbar = Snackbar.make(pager, R.string.sync_snackbar_running, Snackbar.LENGTH_SHORT).apply { show() }
             }
         })
     }

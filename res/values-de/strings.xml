@@ -31,7 +31,12 @@
     <string name="nomapapp">Konnte keine Kartenanwendung finden</string>
     <string name="noactivecanteens">Keine bevorzugten Mensen eingestellt.</string>
     <string name="chooseone">Du hast keine bevorzugten Mensen eingestellt. Bitte wähle mindestens eine.</string>
-    
+
+    <string name="sync_snackbar_running">Synchronisiere</string>
+    <string name="sync_snackbar_done">Daten synchronisiert</string>
+    <string name="sync_snackbar_failed">Konnte Daten nicht aktualisieren</string>
+    <string name="sync_snackbar_retry">Erneut versuchen</string>
+
     <string name="reload">Mensen neu laden</string>
     <string name="canteen_info">Mensainformationen</string>
     

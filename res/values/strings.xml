@@ -32,7 +32,12 @@
     <string name="nomapapp">Could not find a map application</string>
     <string name="noactivecanteens">No favourite canteens.</string>
     <string name="chooseone">You have not yet set any active canteens. Please select at least one.</string>
-    
+
+    <string name="sync_snackbar_running">Syncing</string>
+    <string name="sync_snackbar_done">Data synced</string>
+    <string name="sync_snackbar_failed">Could not download current data</string>
+    <string name="sync_snackbar_retry">Retry</string>
+
     <string name="reload">Refresh canteens</string>
     <string name="canteen_info">Canteen information</string>
     
