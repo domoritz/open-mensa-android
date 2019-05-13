@@ -29,38 +29,27 @@ class SectionsPagerAdapter(val context: Context, fm: FragmentManager) : Fragment
     /**
      * Creates/ returns an Item
      */
-    override fun getItem(position: Int): Fragment {
-        return if (position == 0) {
-            CanteenFragment()
-        } else {
-            DayFragment.newInstance(position - 1)
-        }
-    }
+    override fun getItem(position: Int): Fragment = DayFragment.newInstance(position)
 
     override fun getCount(): Int {
-        return (dates?.size ?: 0) + 1
+        return dates?.size ?: 0
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return if (position == 0) {
-            context.getString(R.string.section_canteen)
-        } else {
-            val indexToRead = position - 1
-            val itemDate = if (indexToRead < (dates?.size ?: 0)) dates!![indexToRead] else ""
+        val itemDate = if (position < (dates?.size ?: 0)) dates!![position] else ""
 
-            try {
-                de.uni_potsdam.hpi.openmensa.helpers.DateUtils.loadDateIntoCalendar(currentDate, today)
-                de.uni_potsdam.hpi.openmensa.helpers.DateUtils.loadDateIntoCalendar(itemDate, help)
+        return try {
+            de.uni_potsdam.hpi.openmensa.helpers.DateUtils.loadDateIntoCalendar(currentDate, today)
+            de.uni_potsdam.hpi.openmensa.helpers.DateUtils.loadDateIntoCalendar(itemDate, help)
 
-                DateUtils.getRelativeTimeSpanString(
-                        de.uni_potsdam.hpi.openmensa.helpers.DateUtils.parseToLocalTimezone(itemDate),
-                        System.currentTimeMillis(),
-                        DateUtils.DAY_IN_MILLIS,
-                        0
-                ).toString()
-            } catch (ex: ParseException) {
-                ""
-            }
-        }.toUpperCase()
+            DateUtils.getRelativeTimeSpanString(
+                    de.uni_potsdam.hpi.openmensa.helpers.DateUtils.parseToLocalTimezone(itemDate),
+                    System.currentTimeMillis(),
+                    DateUtils.DAY_IN_MILLIS,
+                    0
+            ).toString().toUpperCase()
+        } catch (ex: ParseException) {
+            ""
+        }
     }
 }

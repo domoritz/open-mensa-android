@@ -61,7 +61,7 @@ class MainActivity : FragmentActivity() {
                     true
                 }
                 R.id.canteen_info -> {
-                    pager.currentItem = 0
+                    CanteenFragment().show(supportFragmentManager)
 
                     true
                 }
@@ -88,12 +88,9 @@ class MainActivity : FragmentActivity() {
         prefs.registerOnSharedPreferenceChangeListener(listener)
 
         // setup pager
-        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager).apply {
-            dates = listOf("dummy") // this allows to open the second tab even when the content is not yet loaded
-        }
+        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
 
         pager.adapter = sectionsPagerAdapter
-        pager.currentItem = 1   // first page with content, "today" if everything works as intended
 
         tabs.setupWithViewPager(pager)
 

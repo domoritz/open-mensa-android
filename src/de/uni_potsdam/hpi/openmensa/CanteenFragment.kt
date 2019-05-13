@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.openmensa
 
+import android.app.Dialog
 import java.io.File
 
 import org.osmdroid.config.Configuration
@@ -13,12 +14,16 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.databinding.CanteenFragmentBinding
 import de.uni_potsdam.hpi.openmensa.ui.privacy.EnableMapDialogFragment
@@ -26,8 +31,10 @@ import org.osmdroid.tileprovider.tilesource.BitmapTileSourceBase
 import org.osmdroid.views.CustomZoomButtonsController
 import java.io.InputStream
 
-class CanteenFragment : Fragment() {
+class CanteenFragment : BottomSheetDialogFragment() {
     companion object {
+        private const val DIALOG_TAG = "CanteenFragment"
+
         private val nullTileSource = object: BitmapTileSourceBase("dummy", 1, 1, 1, ".void") {
             override fun getDrawable(aFilePath: String?): Drawable? = null
             override fun getDrawable(aFileInputStream: InputStream?): Drawable? = null
@@ -50,6 +57,22 @@ class CanteenFragment : Fragment() {
                 "map tiles"
         )
         Configuration.getInstance().tileFileSystemCacheMaxBytes = (1024 * 1024 * 10).toLong()
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return super.onCreateDialog(savedInstanceState).let { dialog ->
+            dialog as BottomSheetDialog
+
+            dialog.setOnShowListener {
+                val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+                val behavior = BottomSheetBehavior.from(bottomSheet)
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.peekHeight = bottomSheet!!.measuredHeight
+                behavior.isHideable = false
+            }
+
+            dialog
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -133,4 +156,6 @@ class CanteenFragment : Fragment() {
             }
         }
     }
+
+    fun show(fragmentManager: FragmentManager) = show(fragmentManager, DIALOG_TAG)
 }
