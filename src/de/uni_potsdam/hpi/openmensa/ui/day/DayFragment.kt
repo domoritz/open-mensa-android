@@ -34,23 +34,6 @@ class DayFragment : Fragment() {
         ViewModelProviders.of(this).get(DayModel::class.java)
     }
 
-    private val listItems = ArrayList<Meal>()
-    // TODO: send argument using an other way
-    var date: String? = null
-        set(value) {
-            field = value
-
-            model.dateLive.value = value
-        }
-
-    /*
-    private var fetching: Boolean? = false
-    var isListVisible = false
-        private set
-
-    internal var adapterOld: OldMealAdapter? = null
-    */
-
     val adapter = MealAdapter()
     val expandedItems = mutableSetOf<Int>() // TODO: save and restore
 

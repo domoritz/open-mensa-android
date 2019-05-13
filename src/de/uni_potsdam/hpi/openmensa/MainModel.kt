@@ -10,6 +10,7 @@ import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.data.model.Day
 import de.uni_potsdam.hpi.openmensa.extension.map
 import de.uni_potsdam.hpi.openmensa.extension.switchMap
+import de.uni_potsdam.hpi.openmensa.sync.MealSyncing
 
 class MainModel(application: Application): AndroidViewModel(application) {
     private val database = AppDatabase.with(application)
@@ -26,6 +27,12 @@ class MainModel(application: Application): AndroidViewModel(application) {
             CanteenWithDays.with(database, id)
         else
             MutableLiveData<CanteenWithDays?>().apply { value = null }
+    }
+
+    fun refresh() {
+        currentlySelectedCanteenId.value?.let { id ->
+            MealSyncing.syncInBackground(canteenId = id, force = false, context = getApplication())
+        }
     }
 }
 

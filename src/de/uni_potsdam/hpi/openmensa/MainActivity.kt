@@ -31,8 +31,8 @@ import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsActivity
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.helpers.CustomViewPager
-import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener
 import de.uni_potsdam.hpi.openmensa.sync.CanteenSyncing
+import de.uni_potsdam.hpi.openmensa.sync.MealSyncing
 
 // TODO: add refresh indicator at meal list
 // TODO: refresh meals if older than 1 hour
@@ -40,7 +40,7 @@ import de.uni_potsdam.hpi.openmensa.sync.CanteenSyncing
 // TODO: first time setup
 // TODO: open tab for today after launch
 @SuppressLint("NewApi")
-class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFinishedFetchingDaysListener {
+class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
     private var spinnerAdapter: SpinnerAdapter? = null
     private var spinnerItems: ArrayList<Canteen>? = null
 
@@ -129,12 +129,12 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
         })
 
         model.currentlySelectedCanteenId.observe(this, Observer {
-            // FIXME: use a better way to load content
             if (it != null) {
-                Toast.makeText(appContext, "SYNC $it", Toast.LENGTH_SHORT).show()
-
-                RetrieveDaysFeedTask(MainActivity.appContext!!, this, this, it)
-                        .execute()
+                MealSyncing.syncInBackground(
+                        canteenId = it,
+                        force = false,
+                        context = applicationContext
+                )
             }
         })
 
@@ -173,16 +173,6 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
         viewPager.currentItem = savedState.getInt("page")
     }
 
-    override fun onDaysFetchFinished(task: RetrieveDaysFeedTask) {
-        // the fragment might have been deleted while we were fetching something
-        sectionsPagerAdapter.setToFetching(false, false)
-        sectionsPagerAdapter.notifyDataSetChanged()
-
-        //if (task.noPending()) {
-        setProgressBarIndeterminateVisibility(java.lang.Boolean.FALSE)
-        //}
-    }
-
     /**
      * Is called when an item from the spinner in the action bar is selected.
      */
@@ -212,8 +202,7 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
                 return true
             }
             R.id.reload -> {
-                // reload(true)  // force update
-                // TODO: implement this again or remove it
+                model.refresh()
                 return true
             }
             R.id.canteen_info -> {
