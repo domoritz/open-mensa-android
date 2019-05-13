@@ -9,7 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-import de.uni_potsdam.hpi.openmensa.api.Meal;
+
+import de.uni_potsdam.hpi.openmensa.data.model.Meal;
 
 /**
  * 
@@ -122,11 +123,11 @@ public class MealAdapter extends BaseExpandableListAdapter {
     	
 		public void setData(Meal meal) {
 			if (category != null) {
-				category.setText(meal.category);
-		        name.setText(meal.name);
-				int i = meal.notes.length;
+				category.setText(meal.getCategory());
+		        name.setText(meal.getName());
+				int i = meal.getNotes().size();
 				notes.setText("");
-				for (String note : meal.notes) {
+				for (String note : meal.getNotes()) {
 					notes.append(note);
 					if (--i > 0) {
 						notes.append(", ");
@@ -135,15 +136,15 @@ public class MealAdapter extends BaseExpandableListAdapter {
 			}
 			
 			if (priceStudents != null) {
-				priceStudents.setText(stringOrNone(meal.prices.students));
-				priceEmployees.setText(stringOrNone(meal.prices.employees));
-				pricePupils.setText(stringOrNone(meal.prices.pupils));
-				priceOthers.setText(stringOrNone(meal.prices.others));
+				priceStudents.setText(stringOrNone(meal.getPrices().getStudents()));
+				priceEmployees.setText(stringOrNone(meal.getPrices().getEmployees()));
+				pricePupils.setText(stringOrNone(meal.getPrices().getPupils()));
+				priceOthers.setText(stringOrNone(meal.getPrices().getOthers()));
 			}
 		}
 		
-		private String stringOrNone(float price) {
-	    	if (price > 0)
+		private String stringOrNone(Double price) {
+	    	if (price != null && price > 0)
 	    		return String.format(Locale.getDefault(), "%.2f", price);
 	    	return MainActivity.Companion.getAppContext().getResources().getString(R.string.noprice);
 	    }

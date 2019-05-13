@@ -5,9 +5,10 @@ import java.util.ArrayList
 import android.os.Bundle
 import androidx.core.app.ExpandableListFragment
 import android.util.Log
-import de.uni_potsdam.hpi.openmensa.api.Canteen
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import de.uni_potsdam.hpi.openmensa.api.Day
-import de.uni_potsdam.hpi.openmensa.api.Meal
+import de.uni_potsdam.hpi.openmensa.data.model.Meal
 import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment
 
 /**
@@ -15,13 +16,30 @@ import de.uni_potsdam.hpi.openmensa.helpers.RefreshableFragment
  * one Day.
  */
 class DayFragment : ExpandableListFragment(), RefreshableFragment {
+    private val model: DayModel by lazy {
+        ViewModelProviders.of(this).get(DayModel::class.java)
+    }
+
     private val listItems = ArrayList<Meal>()
+    // TODO: send argument using an other way
     var date: String? = null
+        set(value) {
+            field = value
+
+            model.dateLive.value = value
+        }
+
     private var fetching: Boolean? = false
     var isListVisible = false
         private set
 
     internal var adapter: MealAdapter? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        model.init((activity as MainActivity).model)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -30,6 +48,12 @@ class DayFragment : ExpandableListFragment(), RefreshableFragment {
 
         // Assign adapter to ListView
         listAdapter = adapter
+
+        model.meals.observe(this, Observer {
+            listItems.addAll(it)
+            adapter!!.notifyDataSetChanged()
+            setListShownNoAnimation(true)
+        })
     }
 
     override fun onResume() {
@@ -38,6 +62,8 @@ class DayFragment : ExpandableListFragment(), RefreshableFragment {
     }
 
     override fun refresh() {
+        // TODO: reimplement all special cases
+        /*
         if (isDetached || !isAdded || date == null)
             return
 
@@ -65,6 +91,7 @@ class DayFragment : ExpandableListFragment(), RefreshableFragment {
         }
 
         setMealList(day)
+        */
     }
 
     fun setEmptyText(text: String) {
@@ -138,7 +165,7 @@ class DayFragment : ExpandableListFragment(), RefreshableFragment {
         isListVisible = true
         date = day.date
         setToFetching(false, false)
-        listItems.addAll(day.getMeals())
+        // listItems.addAll(day.getMeals())
         adapter!!.notifyDataSetChanged()
     }
 }
