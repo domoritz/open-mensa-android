@@ -11,6 +11,6 @@ interface MealDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOrReplace(meals: List<Meal>)
 
-    @Query("DELETE FROM meal WHERE canteen_id = :canteenId AND date = :date AND NOT id IN (:currentItemIds)")
-    fun deleteOldItems(canteenId: Int, date: String, currentItemIds: List<Int>)
+    @Query("DELETE FROM meal WHERE canteen_id = :canteenId AND NOT id IN (:currentItemIds)")
+    fun deleteOldItems(canteenId: Int, currentItemIds: List<Int>)
 }

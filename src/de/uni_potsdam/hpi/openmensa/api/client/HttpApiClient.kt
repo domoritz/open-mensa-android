@@ -1,9 +1,10 @@
 package de.uni_potsdam.hpi.openmensa.api.client
 
+import android.content.Context
 import android.util.JsonReader
+import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
-import de.uni_potsdam.hpi.openmensa.data.model.Day
-import de.uni_potsdam.hpi.openmensa.data.model.Meal
+import de.uni_potsdam.hpi.openmensa.data.model.DayWithMeals
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
@@ -12,7 +13,7 @@ class HttpApiClient(val serverUrl: String): ApiClient {
     companion object {
         private val httpClient: OkHttpClient by lazy { OkHttpClient() }
 
-        fun <T> requestPagedJson(request: Request, parseItem: (JsonReader) -> T): PagedResponse<T> {
+        private fun <T> requestPagedJson(request: Request, parseItem: (JsonReader) -> T): PagedResponse<T> {
             httpClient.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) {
                     throw IOException("request was not successfully; code ${response.code()}")
@@ -38,6 +39,8 @@ class HttpApiClient(val serverUrl: String): ApiClient {
                 }
             }
         }
+
+        fun getInstance(context: Context) = HttpApiClient(serverUrl = SettingsUtils.getSourceUrl(context))
     }
 
     override val canteens = object: PagedApi<Canteen> {
@@ -48,19 +51,11 @@ class HttpApiClient(val serverUrl: String): ApiClient {
         ) { Canteen.parse(reader = it) }
     }
 
-    override fun queryDays(canteenId: Int): PagedApi<Day> = object: PagedApi<Day> {
-        override fun query(limit: Int, page: Int): PagedResponse<Day> = requestPagedJson(
+    override fun queryDaysWithMeals(canteenId: Int): PagedApi<DayWithMeals> = object: PagedApi<DayWithMeals> {
+        override fun query(limit: Int, page: Int): PagedResponse<DayWithMeals> = requestPagedJson(
                 Request.Builder()
-                        .url("$serverUrl/canteens/$canteenId/days?page=$page&limit=$limit")
+                        .url("$serverUrl/canteens/$canteenId/meals?page=$page&limit=$limit")
                         .build()
-        ) { Day.parse(reader = it, canteenId = canteenId) }
-    }
-
-    override fun queryMeals(canteenId: Int, date: String): PagedApi<Meal> = object: PagedApi<Meal> {
-        override fun query(limit: Int, page: Int): PagedResponse<Meal> = requestPagedJson(
-            Request.Builder()
-                    .url("$serverUrl/canteens/$canteenId/days/$date/meals?page=$page&limit=$limit")
-                    .build()
-        ) { Meal.parse(reader = it, canteenId = canteenId, date = date) }
+        ) { DayWithMeals.parse(reader = it, canteenId = canteenId) }
     }
 }

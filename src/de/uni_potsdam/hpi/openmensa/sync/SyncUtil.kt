@@ -14,21 +14,16 @@ object SyncUtil {
         }
     }
 
-    fun syncDays(api: ApiClient, database: AppDatabase, canteenId: Int) {
-        val days = api.queryDays(canteenId = canteenId).queryAllItems()
+    fun syncDaysAndMeals(api: ApiClient, database: AppDatabase, canteenId: Int) {
+        val days = api.queryDaysWithMeals(canteenId = canteenId).queryAllItems()
+        val meals = days.map { it.meals }.flatten()
 
         database.runInTransaction {
-            database.day().insertOrReplace(days)
+            database.day().insertOrReplace(days.map { it.toDay(canteenId) })
             database.day().deleteOldItems(canteenId = canteenId, currentDates = days.map { it.date })
-        }
-    }
 
-    fun syncMeals(api: ApiClient, database: AppDatabase, canteenId: Int, date: String) {
-        val meals = api.queryMeals(canteenId = canteenId, date = date).queryAllItems()
-
-        database.runInTransaction {
             database.meal().insertOrReplace(meals)
-            database.meal().deleteOldItems(canteenId = canteenId, date = date, currentItemIds = meals.map { it.id })
+            database.meal().deleteOldItems(canteenId = canteenId, currentItemIds = meals.map { it.id })
         }
     }
 }
