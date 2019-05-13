@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NavUtils;
+import androidx.core.app.NavUtils;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 

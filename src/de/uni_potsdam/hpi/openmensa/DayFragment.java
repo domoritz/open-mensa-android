@@ -3,7 +3,7 @@ package de.uni_potsdam.hpi.openmensa;
 import java.util.ArrayList;
 
 import android.os.Bundle;
-import android.support.v4.app.ExpandableListFragment;
+import androidx.core.app.ExpandableListFragment;
 import android.util.Log;
 import de.uni_potsdam.hpi.openmensa.api.Canteen;
 import de.uni_potsdam.hpi.openmensa.api.Day;

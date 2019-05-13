@@ -17,7 +17,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.view.ViewPager;
+
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -60,12 +64,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 	OnSharedPreferenceChangeListener listener;
 
 	/**
-	 * The {@link android.support.v4.view.PagerAdapter} that will provide
+	 * The {@link PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a
-	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
+	 * {@link FragmentPagerAdapter} derivative, which
 	 * will keep every loaded fragment in memory. If this becomes too memory
 	 * intensive, it may be best to switch to a
-	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+	 * {@link FragmentStatePagerAdapter}.
 	 */
 	SectionsPagerAdapter sectionsPagerAdapter;
 
