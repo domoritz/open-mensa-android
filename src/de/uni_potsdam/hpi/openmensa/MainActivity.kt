@@ -23,6 +23,8 @@ import de.uni_potsdam.hpi.openmensa.ui.nocanteen.NoCanteenFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : FragmentActivity() {
+    private var isFirstResume = true
+
     // TODO: remove this
     internal lateinit var listener: OnSharedPreferenceChangeListener
 
@@ -137,12 +139,7 @@ class MainActivity : FragmentActivity() {
 
         // do background query of data after canteen selection
         model.currentlySelectedCanteenId.observe(this, Observer {
-            if (it != null) {
-                // TODO: do this from the model
-                model.refresh(force = false)
-
-                lastSnackbar?.dismiss()
-            }
+            lastSnackbar?.dismiss()
         })
 
         // show sync notifications
@@ -176,6 +173,12 @@ class MainActivity : FragmentActivity() {
         super.onResume()
 
         CanteenSyncing.runBackgroundSync(context = applicationContext)
+
+        if (isFirstResume) {
+            isFirstResume = false
+        } else {
+            model.refresh(force = false)
+        }
     }
 
     override fun onPause() {

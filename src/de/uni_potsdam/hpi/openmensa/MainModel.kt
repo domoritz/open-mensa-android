@@ -24,7 +24,18 @@ class MainModel(application: Application): AndroidViewModel(application) {
 
     val noFavoriteCanteens = favoriteCanteens.map { it.isEmpty() }
 
-    val currentlySelectedCanteenId = MutableLiveData<Int?>().apply { value = SettingsUtils.getLastSelectedCanteenId(application) }
+    val currentlySelectedCanteenId = object: MutableLiveData<Int?>() {
+        override fun setValue(value: Int?) {
+            super.setValue(value)
+
+            refresh(force = false)
+        }
+    }
+
+    init {
+        currentlySelectedCanteenId.value = SettingsUtils.getLastSelectedCanteenId(application)
+    }
+
     val currentlySelectedCanteen = currentlySelectedCanteenId.switchMap { id ->
         if (id != null)
             CanteenWithDays.with(database, id)
