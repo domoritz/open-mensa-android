@@ -64,7 +64,7 @@ class SelectCanteenDialogFragment : DialogFragment() {
                 if (term.isEmpty()) {
                     canteens
                 } else {
-                    canteens.filter { it.name.contains(term, ignoreCase = true) }
+                    canteens.filter { it.name.contains(term, ignoreCase = true) || it.city.contains(term, ignoreCase = true) }
                 }
             }
         }
