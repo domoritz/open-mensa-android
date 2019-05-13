@@ -25,14 +25,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 
-import java.util.ArrayList
-
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsActivity
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.helpers.CustomViewPager
+import de.uni_potsdam.hpi.openmensa.helpers.DateUtils
 import de.uni_potsdam.hpi.openmensa.sync.*
 import kotlinx.android.synthetic.main.activity_main.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 // TODO: fix wrong headers for days (data always starting at today -> remove yesterday)
 // TODO: first time setup
@@ -136,11 +137,55 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
             }
         })
 
+        // TODO: observe current date
         model.currentlySelectedCanteen.observe(this, Observer { canteen ->
-            val days = canteen?.days ?: emptyList()
+            val canteenDays = (canteen?.days ?: emptyList()).sortedBy { it.date }
+            val currentDateString = DateUtils.formatWithLocalTimezone(System.currentTimeMillis())
 
-            // FIXME: the section labels are horrible wrong with that
-            sectionsPagerAdapter.dates = days.map { it.date }
+            sectionsPagerAdapter.currentDate = currentDateString
+            sectionsPagerAdapter.dates = if (canteenDays.isEmpty()) {
+                // only today as fallback
+                listOf(currentDateString)
+            } else {
+                val helpCalendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
+
+                val isTodayNearBeforeNextDay = run {
+                    DateUtils.loadDateIntoCalendar(currentDateString, helpCalendar)
+
+                    repeat(4) {
+                        if (DateUtils.format(helpCalendar) == canteenDays.first().date) {
+                            return@run true
+                        }
+
+                        helpCalendar.add(Calendar.DATE, 1)
+                    }
+
+                    return@run false
+                }
+
+                val firstDate = if (isTodayNearBeforeNextDay) {
+                    DateUtils.loadDateIntoCalendar(currentDateString, helpCalendar)
+                    DateUtils.format(helpCalendar)
+                } else
+                    canteenDays.first().date
+
+                val lastDate = canteenDays.last().date
+                val dateList = mutableListOf<String>()
+
+                DateUtils.loadDateIntoCalendar(firstDate, helpCalendar)
+
+                while (dateList.size < 14 /* to cancel in case of malformed dates */) {
+                    dateList.add(DateUtils.format(helpCalendar))
+
+                    if (dateList.last() >= lastDate) {
+                        break
+                    }
+
+                    helpCalendar.add(Calendar.DATE, 1)
+                }
+
+                dateList
+            }
         })
 
         model.syncStatus.observe(this, Observer {

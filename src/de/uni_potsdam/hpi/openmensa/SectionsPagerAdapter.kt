@@ -1,10 +1,12 @@
 package de.uni_potsdam.hpi.openmensa
 
+import android.text.format.DateUtils
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
 import de.uni_potsdam.hpi.openmensa.ui.day.DayFragment
+import java.util.*
 import kotlin.properties.Delegates
 
 /**
@@ -12,9 +14,13 @@ import kotlin.properties.Delegates
  * one of the primary sections of the app.
  */
 class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    var currentDate: String = ""
     var dates: List<String>? by Delegates.observable(null as List<String>?) {
         _, _, _ -> notifyDataSetChanged()
     }
+
+    private val today = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
+    private val help = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
 
     /**
      * Creates/ returns an Item
@@ -33,13 +39,21 @@ class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     override fun getPageTitle(position: Int): CharSequence? {
         val context = MainActivity.appContext
-        when (position) {
-            0 -> return context!!.getString(R.string.section_canteen).toUpperCase()
-            1 -> return context!!.getString(R.string.section_yesterday).toUpperCase()
-            2 -> return context!!.getString(R.string.section_today).toUpperCase()
-            3 -> return context!!.getString(R.string.section_tomorrow).toUpperCase()
-            4 -> return context!!.getString(R.string.section_da_tomorrow).toUpperCase()
+
+        if (position == 0) {
+            return context!!.getString(R.string.section_canteen).toUpperCase()
+        } else {
+            val itemDate = dates!![position - 1]
+
+            de.uni_potsdam.hpi.openmensa.helpers.DateUtils.loadDateIntoCalendar(currentDate, today)
+            de.uni_potsdam.hpi.openmensa.helpers.DateUtils.loadDateIntoCalendar(itemDate, help)
+
+            return DateUtils.getRelativeTimeSpanString(
+                    de.uni_potsdam.hpi.openmensa.helpers.DateUtils.parseToLocalTimezone(itemDate),
+                    System.currentTimeMillis(),
+                    DateUtils.DAY_IN_MILLIS,
+                    0
+            )
         }
-        return null
     }
 }

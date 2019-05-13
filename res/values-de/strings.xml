@@ -1,10 +1,6 @@
 <resources>
 
     <string name="app_name">OpenMensa</string>
-    <string name="section_da_tomorrow">Übermorgen</string>
-    <string name="section_tomorrow">Morgen</string>
-    <string name="section_today">Heute</string>
-    <string name="section_yesterday">Gestern</string>
     <string name="section_canteen">Mensa</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_preferences">Einstellungen</string>
