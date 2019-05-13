@@ -11,9 +11,10 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 repositories {
     google()
@@ -21,6 +22,8 @@ repositories {
 }
 
 dependencies {
+    def room_version = "2.1.0-alpha07"
+
     // compile fileTree(dir: 'libs', include: '*.jar')
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.android.support:appcompat-v7:28.0.0'
@@ -30,6 +33,9 @@ dependencies {
     implementation 'org.osmdroid:osmdroid-android:6.1.0'
     implementation 'org.slf4j:slf4j-android:1.6.1-RC1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 }
 
 tasks.whenTaskAdded { task ->
@@ -41,6 +47,15 @@ android {
     defaultConfig {
         versionCode 13
         versionName "0.13"
+
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas".toString())
+            }
+            javacOptions {
+                option("-Xmaxerrs", 500)
+            }
+        }
     }
 
     compileSdkVersion 28
