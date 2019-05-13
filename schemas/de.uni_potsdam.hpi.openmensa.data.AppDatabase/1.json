@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "29957ed538421efb973048df3dcf3f73",
+    "identityHash": "323cbc341f88982f0be0478ac48e1ff3",
     "entities": [
       {
         "tableName": "Canteen",
@@ -101,7 +101,7 @@
       },
       {
         "tableName": "Meal",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `canteen_id` INTEGER NOT NULL, `date` TEXT NOT NULL, `name` TEXT NOT NULL, `category` TEXT NOT NULL, `notes` TEXT NOT NULL, `price_student` REAL, `price_employee` REAL, `price_pupil` REAL, `price_other` REAL NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`canteen_id`, `date`) REFERENCES `Day`(`canteen_id`, `date`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `canteen_id` INTEGER NOT NULL, `date` TEXT NOT NULL, `name` TEXT NOT NULL, `category` TEXT NOT NULL, `notes` TEXT NOT NULL, `price_student` REAL, `price_employee` REAL, `price_pupil` REAL, `price_other` REAL, PRIMARY KEY(`id`), FOREIGN KEY(`canteen_id`, `date`) REFERENCES `Day`(`canteen_id`, `date`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -161,7 +161,7 @@
             "fieldPath": "prices.others",
             "columnName": "price_other",
             "affinity": "REAL",
-            "notNull": true
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -201,7 +201,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"29957ed538421efb973048df3dcf3f73\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"323cbc341f88982f0be0478ac48e1ff3\")"
     ]
   }
 }
