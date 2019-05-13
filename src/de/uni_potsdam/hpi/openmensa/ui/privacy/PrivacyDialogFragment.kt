@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.openmensa.ui.main
+package de.uni_potsdam.hpi.openmensa.ui.privacy
 
 import android.app.Dialog
 import android.content.DialogInterface

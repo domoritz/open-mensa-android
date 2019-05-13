@@ -1,55 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+<layout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/txtName"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/titlePadding"
-        android:paddingTop="@dimen/titlePadding"
-        android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    
-     <RelativeLayout
-         xmlns:android="http://schemas.android.com/apk/res/android"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:paddingLeft="@dimen/indention"
-         android:paddingRight="@dimen/indention" >
-	    
-	    <TextView
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:text="@string/address"
-	        android:textAppearance="?android:attr/textAppearanceMedium"/>
-	
-       <TextView
-	        android:id="@+id/txtAddress"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:paddingLeft="@dimen/priceListFloat"
-	        android:textAppearance="?android:attr/textAppearanceMedium"/>
-	 </RelativeLayout>
+        <TextView
+            android:id="@+id/txtName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/titlePadding"
+            android:paddingTop="@dimen/titlePadding"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
-     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:orientation="vertical"
-         android:padding="@dimen/mapPadding" >
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/indention"
+            android:paddingRight="@dimen/indention" >
 
-         <org.osmdroid.views.MapView
-             xmlns:android="http://schemas.android.com/apk/res/android"
-             android:id="@+id/mapview"
-             android:layout_width="fill_parent"
-             android:layout_height="fill_parent"
-             tilesource="Mapnik"
-             android:clickable="false" >
-         </org.osmdroid.views.MapView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="@string/address"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-     </LinearLayout>
+            <TextView
+                android:id="@+id/txtAddress"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/priceListFloat"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+        </RelativeLayout>
 
-</LinearLayout>
+        <ViewFlipper
+            android:id="@+id/flipper"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/mapPadding" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/map_placeholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <Button
+                    android:id="@+id/enable_map_button"
+                    android:layout_centerInParent="true"
+                    android:background="?selectableItemBackground"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/map_btn_enable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+
+            <org.osmdroid.views.MapView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/mapview"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                tilesource="Mapnik"
+                android:clickable="false" >
+            </org.osmdroid.views.MapView>
+
+        </ViewFlipper>
+
+    </LinearLayout>
+</layout>

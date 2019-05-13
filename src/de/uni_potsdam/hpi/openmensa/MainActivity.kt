@@ -25,7 +25,7 @@ import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsActivity
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.sync.*
-import de.uni_potsdam.hpi.openmensa.ui.main.PrivacyDialogFragment
+import de.uni_potsdam.hpi.openmensa.ui.privacy.PrivacyDialogFragment
 import de.uni_potsdam.hpi.openmensa.ui.nocanteen.NoCanteenFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*

@@ -21,6 +21,13 @@
             android:entryValues="@array/pref_theme_entry_values"
             android:defaultValue="@string/pref_theme_default" />
     </PreferenceCategory>
+	<PreferenceCategory android:title="@string/pref_map_category">
+		<SwitchPreference
+			android:key="pref_map"
+			android:title="@string/pref_map"
+			android:summary="@string/pref_map_text"
+			android:defaultValue="false" />
+	</PreferenceCategory>
     <PreferenceCategory android:title="@string/about_title">
     	<de.uni_potsdam.hpi.openmensa.api.preferences.VersionPreference android:title="@string/version_title" />
     	<Preference android:title="@string/powered_by_title" android:summary="@string/powered_by_desc">

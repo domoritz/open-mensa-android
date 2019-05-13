@@ -73,4 +73,13 @@
     <string name="setup_no_favorites_action">Mensen wählen</string>
     <string name="setup_no_data_text">Es war nicht möglich, die Mensaliste zu laden</string>
     <string name="setup_no_data_action">Erneut versuchen</string>
+
+    <string name="map_btn_enable">Karte aktivieren</string>
+    <string name="map_privacy_title">Datenschutz</string>
+    <string name="map_privacy_text">Für diese Funktion werden Kacheln von *.tile.openstreetmap.org verwendet. Dabei wird übermittelt, welcher Ort angefragt wird und welche App verwendet wird.</string>
+    <string name="map_privacy_accept">Akzeptieren</string>
+    <string name="map_privacy_reject">Ablehnen</string>
+    <string name="pref_map_category">Karte</string>
+    <string name="pref_map">@string/map_btn_enable</string>
+    <string name="pref_map_text">@string/map_privacy_text</string>
 </resources>

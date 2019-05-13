@@ -22,7 +22,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import de.uni_potsdam.hpi.openmensa.databinding.CanteenFragmentBinding
+import de.uni_potsdam.hpi.openmensa.ui.privacy.EnableMapDialogFragment
 
+// TODO: disable tile source without consent
 class CanteenFragment : Fragment(), OnClickListener {
 
     private var mapView: MapView? = null
@@ -45,9 +48,9 @@ class CanteenFragment : Fragment(), OnClickListener {
         Configuration.getInstance().tileFileSystemCacheMaxBytes = (1024 * 1024 * 10).toLong()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.canteen_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val binding = CanteenFragmentBinding.inflate(inflater, container, false)
+        val view = binding.root// TODO: remove
 
         mapView = view.findViewById<View>(R.id.mapview) as MapView
         mapView!!.setTileSource(TileSourceFactory.MAPNIK)
@@ -66,7 +69,11 @@ class CanteenFragment : Fragment(), OnClickListener {
             refresh()
         })
 
-        return view
+        binding.enableMapButton.setOnClickListener {
+            EnableMapDialogFragment().show(fragmentManager!!)
+        }
+
+        return binding.root
     }
 
     override fun onResume() {
@@ -84,7 +91,7 @@ class CanteenFragment : Fragment(), OnClickListener {
         if (canteen == null)
             return
 
-        mapView!!.visibility = MapView.VISIBLE
+        // mapView!!.visibility = MapView.VISIBLE
 
         val address = view!!.findViewById<View>(R.id.txtAddress) as TextView
         address.text = canteen.address

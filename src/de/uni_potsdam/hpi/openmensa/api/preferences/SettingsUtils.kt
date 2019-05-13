@@ -22,6 +22,8 @@ object SettingsUtils {
     private const val THEME_DARK = "dark"
     private const val THEME_LIGHT = "light"
 
+    const val KEY_ENABLE_MAP = "pref_map"
+
     const val KEY_LAST_CANTEEN_LIST_UPDATE = "last_canteen_list_update"
 
     private fun getSharedPrefs(context: Context): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -86,5 +88,9 @@ object SettingsUtils {
     fun getLastCanteenListUpdate(context: Context) = getSharedPrefs(context).getLong(KEY_LAST_CANTEEN_LIST_UPDATE, 0)
     fun updateLastCanteenListUpdate(context: Context) = getSharedPrefs(context).edit()
             .putLong(KEY_LAST_CANTEEN_LIST_UPDATE, System.currentTimeMillis())
+            .apply()
+
+    fun setEnableMap(context: Context, enable: Boolean) = getSharedPrefs(context).edit()
+            .putBoolean(KEY_ENABLE_MAP, enable)
             .apply()
 }
