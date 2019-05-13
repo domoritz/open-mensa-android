@@ -30,6 +30,7 @@ import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.helpers.MapViewPager
 import de.uni_potsdam.hpi.openmensa.sync.*
+import de.uni_potsdam.hpi.openmensa.ui.main.PrivacyDialogFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
@@ -153,6 +154,8 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
                 lastSnackbar = Snackbar.make(pager, R.string.sync_snackbar_running, Snackbar.LENGTH_SHORT).apply { show() }
             }
         })
+
+        PrivacyDialogFragment.showIfRequired(this)
     }
 
     override fun onResume() {

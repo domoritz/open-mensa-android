@@ -63,4 +63,9 @@
     <string name="feedback_desc">Schreibe mit eine kurze Email, stelle Fragen, danke mir oder beschwere dich.</string>
 
     <string name="select_canteen_dialog_search_hint">Suchen</string>
+
+    <string name="privacy_dialog_title">Datenschutz</string>
+    <string name="privacy_dialog_text">Diese App nutzt die Daten von %s. Der Betreiber dieses Servers könnte Logfiles erstellen. Sie können in den Einstellungen einen anderen Server wählen.</string>
+    <string name="privacy_dialog_accept">Akzeptieren</string>
+    <string name="privacy_dialog_settings">Einstellungen öffnen</string>
 </resources>
