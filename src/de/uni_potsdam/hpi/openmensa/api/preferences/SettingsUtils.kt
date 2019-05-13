@@ -49,12 +49,12 @@ object SettingsUtils {
                 .commit()
     }
 
-    private fun getSelectedThemeName(context: Context) = getSharedPrefs(context).getString(KEY_STYLE, THEME_DARK)
+    private fun getSelectedThemeName(context: Context) = getSharedPrefs(context).getString(KEY_STYLE, THEME_LIGHT)
 
     private fun getThemeByString(theme: String): Int = when(theme) {
         THEME_DARK -> R.style.DarkAppTheme
         THEME_LIGHT -> R.style.LightAppTheme
-        else -> R.style.DarkAppTheme
+        else -> R.style.LightAppTheme
     }
 
     fun getSelectedTheme(context: Context) = getThemeByString(getSelectedThemeName(context))
