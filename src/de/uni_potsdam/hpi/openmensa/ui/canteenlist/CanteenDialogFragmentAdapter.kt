@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.CheckedTextView
 import androidx.recyclerview.widget.RecyclerView
-import de.uni_potsdam.hpi.openmensa.api.Canteen
+import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import kotlin.properties.Delegates
 
 class CanteenDialogFragmentAdapter: RecyclerView.Adapter<ViewHolder>() {
@@ -12,7 +12,7 @@ class CanteenDialogFragmentAdapter: RecyclerView.Adapter<ViewHolder>() {
         _, _, _ -> notifyDataSetChanged()
     }
 
-    var checkedItemIds: Set<String> by Delegates.observable(emptySet()) {
+    var checkedItemIds: Set<Int> by Delegates.observable(emptySet()) {
         _, _, _ -> notifyDataSetChanged()
     }
 
@@ -24,7 +24,7 @@ class CanteenDialogFragmentAdapter: RecyclerView.Adapter<ViewHolder>() {
 
     override fun getItemCount(): Int = content?.size ?: 0
 
-    override fun getItemId(position: Int): Long = content!![position].key.hashCode().toLong()
+    override fun getItemId(position: Int): Long = content!![position].id.toLong()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
             LayoutInflater.from(parent.context)
@@ -35,7 +35,7 @@ class CanteenDialogFragmentAdapter: RecyclerView.Adapter<ViewHolder>() {
         val item = content!![position]
 
         holder.view.text = item.name
-        holder.view.isChecked = checkedItemIds.contains(item.key)
+        holder.view.isChecked = checkedItemIds.contains(item.id)
         holder.view.setOnClickListener {
             listener?.onCanteenClicked(item)
         }

@@ -71,17 +71,17 @@ object SettingsUtils {
         }
 
         val storage = getStorage(context)
-        storage.setFavouriteCanteens(favouriteCanteenKeys)
+        storage.setFavouriteCanteens(favouriteCanteenKeys.map { it.toString() }.toSet())
         storage.saveToPreferences(context)
     }
 
-    fun getFavouriteCanteensFromPreferences(context: Context): Set<String> {
-        return getSharedPrefs(context).getStringSet(KEY_FAVOURITES, emptySet())!!
+    fun getFavouriteCanteensFromPreferences(context: Context): Set<Int> {
+        return getSharedPrefs(context).getStringSet(KEY_FAVOURITES, emptySet())!!.map { it.toInt() }.toSet()
     }
 
-    fun setFavouriteCanteensAtPreferences(context: Context, canteenIds: Set<String>) {
+    fun setFavouriteCanteensAtPreferences(context: Context, canteenIds: Set<Int>) {
         getSharedPrefs(context).edit()
-                .putStringSet(KEY_FAVOURITES, canteenIds)
+                .putStringSet(KEY_FAVOURITES, canteenIds.map { it.toString() }.toSet())
                 .apply()
     }
 }

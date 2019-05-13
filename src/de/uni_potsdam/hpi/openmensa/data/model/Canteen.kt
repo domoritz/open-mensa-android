@@ -57,4 +57,7 @@ data class Canteen(
                         )
                 }
         }
+
+        @Transient
+        val hasLocation = latitude != 0.0 || longitude != 0.0
 }

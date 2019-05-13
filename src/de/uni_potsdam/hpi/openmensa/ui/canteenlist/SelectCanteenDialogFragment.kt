@@ -11,12 +11,17 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.uni_potsdam.hpi.openmensa.R
-import de.uni_potsdam.hpi.openmensa.api.Canteen
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
+import de.uni_potsdam.hpi.openmensa.data.AppDatabase
+import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.databinding.SelectCanteenDialogFragmentBinding
 import de.uni_potsdam.hpi.openmensa.extension.addTextChangeListener
+import de.uni_potsdam.hpi.openmensa.extension.map
+import de.uni_potsdam.hpi.openmensa.extension.switchMap
 import de.uni_potsdam.hpi.openmensa.extension.toggle
 
 class SelectCanteenDialogFragment : DialogFragment() {
@@ -27,7 +32,7 @@ class SelectCanteenDialogFragment : DialogFragment() {
     }
 
     private val adapter = CanteenDialogFragmentAdapter()
-    lateinit var selectedItems: MutableSet<String>
+    lateinit var selectedItems: MutableSet<Int>
     lateinit var binding: SelectCanteenDialogFragmentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +41,7 @@ class SelectCanteenDialogFragment : DialogFragment() {
         if (savedInstanceState == null) {
             selectedItems = SettingsUtils.getFavouriteCanteensFromPreferences(context!!).toMutableSet()
         } else {
-            selectedItems = savedInstanceState.getStringArray(STATE_SELECTED_CANTEENS)!!.toMutableSet()
+            selectedItems = savedInstanceState.getIntArray(STATE_SELECTED_CANTEENS)!!.toMutableSet()
         }
 
         adapter.checkedItemIds = selectedItems
@@ -45,75 +50,74 @@ class SelectCanteenDialogFragment : DialogFragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState.putStringArray(STATE_SELECTED_CANTEENS, selectedItems.toTypedArray())
+        outState.putIntArray(STATE_SELECTED_CANTEENS, selectedItems.toIntArray())
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = SelectCanteenDialogFragmentBinding.inflate(LayoutInflater.from(context!!), null, false)
-        val allCanteens = SettingsUtils.getStorage(context!!).canteens.values.toList()
+        val allCanteensLive = AppDatabase.with(context!!).canteen().getAll()
+        val termLive = MutableLiveData<String>().apply { value = binding.filter.text.toString() }
+        val sortByDistanceLive = MutableLiveData<Boolean>().apply { value = binding.sortByLocationCheckbox.isChecked }
 
-        fun updateList() {
-            val term = binding.filter.text.toString().trim()
-            val sortByDistance = binding.sortByLocationCheckbox.isChecked
-            val location = if (sortByDistance) LocationUtil.getLastBestLocation(context!!) else UnknownLocationStatus
-
-            if (location == MissingPermissionLocationStatus && sortByDistance) {
-                binding.sortByLocationCheckbox.isChecked = false
+        val canteensFilteredBySearchTerm = allCanteensLive.switchMap { canteens ->
+            termLive.map { term ->
+                if (term.isEmpty()) {
+                    canteens
+                } else {
+                    canteens.filter { it.name.contains(term, ignoreCase = true) }
+                }
             }
-
-            val listContent = if (term.isEmpty()) {
-                allCanteens
-            } else {
-                allCanteens.filter { it.name.contains(term, ignoreCase = true) }
-            }
-
-            val sortedList = if (sortByDistance && location is KnownLocationStatus) {
-                listContent
-                        // remove items with invalid coordinates
-                        .filter {
-                            it.coordinates.size == 2 &&
-                                    it.coordinates[0] != null &&
-                                    it.coordinates[1] != null
-                        }
-                        // sort by distance
-                        .sortedBy { canteen ->
-                            val canteenLocation = Location("").apply {
-                                latitude = canteen.coordinates[0]!!.toDouble()
-                                longitude = canteen.coordinates[1]!!.toDouble()
-                            }
-
-                            canteenLocation.distanceTo(location.location)
-                        }
-            } else {
-                listContent.sortedBy { it.name }
-            }
-
-            binding.missingLocation = sortByDistance && location == UnknownLocationStatus
-            adapter.content = sortedList
         }
+
+        val canteensSorted = canteensFilteredBySearchTerm.switchMap { canteens ->
+            sortByDistanceLive.map { sortByDistance ->
+                val location = if (sortByDistance) LocationUtil.getLastBestLocation(context!!) else UnknownLocationStatus
+
+                // FIXME: bad style + location updates should be handled
+                binding.missingLocation = sortByDistance && location == UnknownLocationStatus
+
+                if (sortByDistance && location is KnownLocationStatus) {
+                    canteens
+                            .filter { it.hasLocation }
+                            .sortedBy { canteen ->
+                                val canteenLocation = Location("").apply {
+                                    latitude = canteen.latitude
+                                    longitude = canteen.longitude
+                                }
+
+                                canteenLocation.distanceTo(location.location)
+                            }
+                } else {
+                    canteens.sortedBy { it.name }
+                }
+            }
+        }
+
+        canteensSorted.observe(this, Observer {
+            adapter.content = it
+        })
 
         binding.list.layoutManager = LinearLayoutManager(context!!)
         binding.list.adapter = adapter
 
-        binding.filter.addTextChangeListener { updateList() }
+        binding.filter.addTextChangeListener { termLive.value = binding.filter.text.toString() }
         binding.sortByLocationCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 if (LocationUtil.hasLocationAccessPermission(context!!)) {
-                    updateList()
+                    sortByDistanceLive.value = true
                 } else {
                     buttonView.isChecked = false
 
                     requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_ACCESS)
                 }
             } else {
-                updateList()
+                sortByDistanceLive.value = false
             }
         }
-        updateList()
 
         adapter.listener = object: AdapterListener {
             override fun onCanteenClicked(canteen: Canteen) {
-                selectedItems.toggle(canteen.key)
+                selectedItems.toggle(canteen.id)
                 adapter.notifyDataSetChanged()
             }
         }
