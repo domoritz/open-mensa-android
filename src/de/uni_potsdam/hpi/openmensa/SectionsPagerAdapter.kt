@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.openmensa
 
+import android.content.Context
 import android.text.format.DateUtils
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -14,7 +15,7 @@ import kotlin.properties.Delegates
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the primary sections of the app.
  */
-class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class SectionsPagerAdapter(val context: Context, fm: FragmentManager) : FragmentPagerAdapter(fm) {
     var currentDate: String by Delegates.observable("") {
         _, _, _ -> notifyDataSetChanged()
     }
@@ -41,10 +42,8 @@ class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        val context = MainActivity.appContext
-
         return if (position == 0) {
-            context!!.getString(R.string.section_canteen)
+            context.getString(R.string.section_canteen)
         } else {
             val indexToRead = position - 1
             val itemDate = if (indexToRead < (dates?.size ?: 0)) dates!![indexToRead] else ""

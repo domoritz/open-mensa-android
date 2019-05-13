@@ -101,8 +101,6 @@ class MainActivity : FragmentActivity() {
                     .commit()
         }
 
-        appContext = this
-
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         createSectionsPageAdapter()
@@ -204,7 +202,7 @@ class MainActivity : FragmentActivity() {
 
     private fun createSectionsPageAdapter() {
         // Create the adapterOld that will return a fragment for each day fragment views
-        sectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
+        sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
 
         // Set up the ViewPager with the sections adapterOld.
         viewPager = findViewById<View>(R.id.pager) as MapViewPager
@@ -228,9 +226,6 @@ class MainActivity : FragmentActivity() {
         const val TAG = "Canteendroid"
 
         var locationManager: LocationManager? = null
-            private set
-
-        var appContext: Context? = null
             private set
 
         /**

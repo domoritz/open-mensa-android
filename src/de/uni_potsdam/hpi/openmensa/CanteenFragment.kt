@@ -137,9 +137,9 @@ class CanteenFragment : Fragment(), OnClickListener {
                 "?z=" + zoom +
                 "&q=" + latlon + "(" + canteen.name + ")"
         try {
-            startActivity(Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)))
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(uri)))
         } catch (e: ActivityNotFoundException) {
-            Toast.makeText(MainActivity.appContext, resources.getString(R.string.nomapapp), Toast.LENGTH_LONG).show()
+            Toast.makeText(context!!, resources.getString(R.string.nomapapp), Toast.LENGTH_LONG).show()
         }
 
     }
