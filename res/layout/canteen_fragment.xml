@@ -8,6 +8,10 @@
         <variable
             name="address"
             type="String" />
+
+        <variable
+            name="mapCopyright"
+            type="String" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -76,14 +80,27 @@
 
             </RelativeLayout>
 
-            <org.osmdroid.views.MapView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/mapview"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                tilesource="Mapnik"
-                android:clickable="false" >
-            </org.osmdroid.views.MapView>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <org.osmdroid.views.MapView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/mapview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="false" />
+
+                <TextView
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:text="@{mapCopyright}"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
 
         </ViewFlipper>
 

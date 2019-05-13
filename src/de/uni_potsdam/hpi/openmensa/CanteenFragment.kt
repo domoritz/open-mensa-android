@@ -32,6 +32,8 @@ class CanteenFragment : Fragment() {
             override fun getDrawable(aFilePath: String?): Drawable? = null
             override fun getDrawable(aFileInputStream: InputStream?): Drawable? = null
         }
+
+        private val realTileSource = TileSourceFactory.MAPNIK
     }
 
     private val zoom = 18
@@ -54,6 +56,9 @@ class CanteenFragment : Fragment() {
         val binding = CanteenFragmentBinding.inflate(inflater, container, false)
         var lastLocation: GeoPoint? = null
 
+        binding.addressContainer.setOnClickListener { openMapIntent() }
+        binding.mapCopyright = realTileSource.copyrightNotice
+
         binding.mapview.setTileSource(nullTileSource)
         binding.mapview.zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
         binding.mapview.setMultiTouchControls(true)
@@ -62,13 +67,11 @@ class CanteenFragment : Fragment() {
             binding.flipper.displayedChild = if (enableMap) 1 else 0
 
             if (enableMap) {
-                binding.mapview.setTileSource(TileSourceFactory.MAPNIK)
+                binding.mapview.setTileSource(realTileSource)
             } else {
                 binding.mapview.setTileSource(nullTileSource)
             }
         })
-
-        binding.addressContainer.setOnClickListener { openMapIntent() }
 
         mainActivityModel.currentlySelectedCanteen.observe(this, Observer {
             val canteen = it?.canteen
