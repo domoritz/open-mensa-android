@@ -1,15 +1,17 @@
 buildscript {
     repositories {
         mavenCentral()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:3.4.0'
     }
 }
 apply plugin: 'android'
 
 repositories {
     mavenCentral()
+    google()
 }
 
 dependencies {
@@ -28,7 +30,6 @@ tasks.whenTaskAdded { task ->
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.2"
 
     sourceSets {
         main {
@@ -42,7 +43,7 @@ android {
         }
 
         // Move the tests to tests/java, tests/res, etc...
-        instrumentTest.setRoot('tests')
+        androidTest.setRoot('tests')
 
         // Move the build types to build-types/<type>
         // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
@@ -76,8 +77,13 @@ android {
             }
         }
     }
+    defaultConfig {
+        minSdkVersion 11
+        targetSdkVersion 21
+    }
 }
 
+/*
 task keystoreInfo << {
     def console = System.console()
     if (console == null)
@@ -89,3 +95,4 @@ task keystoreInfo << {
     android.signingConfigs.release.storePassword = new String(storePassword)
     android.signingConfigs.release.keyPassword = new String(keyPassword)
 }
+*/
