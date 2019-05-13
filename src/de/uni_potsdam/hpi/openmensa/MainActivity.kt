@@ -28,11 +28,9 @@ import com.google.android.material.snackbar.Snackbar
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsActivity
 import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
-import de.uni_potsdam.hpi.openmensa.helpers.CustomViewPager
-import de.uni_potsdam.hpi.openmensa.helpers.DateUtils
+import de.uni_potsdam.hpi.openmensa.helpers.MapViewPager
 import de.uni_potsdam.hpi.openmensa.sync.*
 import kotlinx.android.synthetic.main.activity_main.*
-import java.text.SimpleDateFormat
 import java.util.*
 
 // TODO: fix wrong headers for days (data always starting at today -> remove yesterday)
@@ -168,7 +166,7 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
         sectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
         // Set up the ViewPager with the sections adapterOld.
-        viewPager = findViewById<View>(R.id.pager) as CustomViewPager
+        viewPager = findViewById<View>(R.id.pager) as MapViewPager
         viewPager.adapter = sectionsPagerAdapter
         // 2 is today
         viewPager.currentItem = 2
@@ -238,7 +236,7 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
         /**
          * The [ViewPager] that will host the section contents.
          */
-        internal lateinit var viewPager: CustomViewPager
+        internal lateinit var viewPager: MapViewPager
 
         /**
          * Checks if we have a valid Internet Connection on the device.

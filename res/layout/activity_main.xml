@@ -1,4 +1,4 @@
-<de.uni_potsdam.hpi.openmensa.helpers.CustomViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+<de.uni_potsdam.hpi.openmensa.helpers.MapViewPager xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pager"
     android:layout_width="match_parent"
@@ -18,4 +18,4 @@
         android:paddingTop="4dp"
         android:paddingBottom="4dp" />
 
-</de.uni_potsdam.hpi.openmensa.helpers.CustomViewPager>
+</de.uni_potsdam.hpi.openmensa.helpers.MapViewPager>
