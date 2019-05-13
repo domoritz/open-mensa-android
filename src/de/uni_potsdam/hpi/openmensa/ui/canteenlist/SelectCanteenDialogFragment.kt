@@ -126,7 +126,6 @@ class SelectCanteenDialogFragment : DialogFragment() {
                 .setView(binding.root)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
                     SettingsUtils.setFavouriteCanteensAtPreferences(context!!, selectedItems)
-                    SettingsUtils.updateFavouriteCanteensFromPreferences(context!!)
                 }
                 .setNeutralButton(android.R.string.cancel) { _, _ ->
                     // do not save

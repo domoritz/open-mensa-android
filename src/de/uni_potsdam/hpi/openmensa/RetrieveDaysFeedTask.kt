@@ -2,15 +2,10 @@ package de.uni_potsdam.hpi.openmensa
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
-import de.uni_potsdam.hpi.openmensa.api.Canteen
-import de.uni_potsdam.hpi.openmensa.api.Day
-import de.uni_potsdam.hpi.openmensa.api.Days
 import de.uni_potsdam.hpi.openmensa.api.client.HttpApiClient
 import de.uni_potsdam.hpi.openmensa.data.AppDatabase
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener
 import de.uni_potsdam.hpi.openmensa.helpers.RetrieveAsyncTask
-import de.uni_potsdam.hpi.openmensa.helpers.RetrieveFeedTask
 import de.uni_potsdam.hpi.openmensa.sync.SyncUtil
 
 /**

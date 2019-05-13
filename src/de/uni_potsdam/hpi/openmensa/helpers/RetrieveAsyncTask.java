@@ -8,15 +8,6 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.Gson;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
-
 import de.uni_potsdam.hpi.openmensa.MainActivity;
 
 public abstract class RetrieveAsyncTask extends AsyncTask<String, Integer, Void> {
