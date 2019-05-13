@@ -206,15 +206,6 @@ class MainActivity : FragmentActivity() {
         tabs.setupWithViewPager(pager)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt("page", pager.currentItem)
-    }
-
-    override fun onRestoreInstanceState(savedState: Bundle) {
-        pager.currentItem = savedState.getInt("page")
-    }
-
     companion object {
         var locationManager: LocationManager? = null
             private set
