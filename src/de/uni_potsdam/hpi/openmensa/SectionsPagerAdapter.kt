@@ -46,7 +46,8 @@ class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         return if (position == 0) {
             context!!.getString(R.string.section_canteen)
         } else {
-            val itemDate = if ((dates?.size ?: 0) >= position - 1) dates!![position - 1] else ""
+            val indexToRead = position - 1
+            val itemDate = if (indexToRead < (dates?.size ?: 0)) dates!![indexToRead] else ""
 
             try {
                 de.uni_potsdam.hpi.openmensa.helpers.DateUtils.loadDateIntoCalendar(currentDate, today)

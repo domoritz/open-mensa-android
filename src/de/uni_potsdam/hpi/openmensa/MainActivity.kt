@@ -35,9 +35,8 @@ import de.uni_potsdam.hpi.openmensa.ui.nocanteen.NoCanteenFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
-// TODO: fix wrong headers for days (data always starting at today -> remove yesterday)
-// TODO: first time setup
 // TODO: open tab for today after launch
+// FIXME: sometimes crash during setup due to action bar mode change
 @SuppressLint("NewApi")
 class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
     private var spinnerAdapter: SpinnerAdapter? = null
@@ -94,8 +93,8 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
         prefs.registerOnSharedPreferenceChangeListener(listener)
 
         spinnerItems = ArrayList()
-        val actionBar = supportActionBar
-        actionBar!!.navigationMode = ActionBar.NAVIGATION_MODE_LIST
+        val actionBar = supportActionBar!!
+        actionBar.navigationMode = ActionBar.NAVIGATION_MODE_LIST
         try {
             actionBar.setHomeButtonEnabled(true)
         } catch (e: NoSuchMethodError) {
@@ -164,6 +163,8 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener {
 
         model.noFavoriteCanteens.observe(this, Observer {
             flipper.displayedChild = if (it) 1 else 0
+            actionBar.setDisplayShowCustomEnabled(!it)
+            actionBar.navigationMode = if (it) ActionBar.NAVIGATION_MODE_STANDARD else ActionBar.NAVIGATION_MODE_LIST
         })
 
         PrivacyDialogFragment.showIfRequired(this)
