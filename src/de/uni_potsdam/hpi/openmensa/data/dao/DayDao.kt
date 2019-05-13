@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.openmensa.data.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -13,4 +14,7 @@ interface DayDao {
 
     @Query("DELETE FROM day WHERE canteen_id = :canteenId AND NOT date IN (:currentDates)")
     fun deleteOldItems(canteenId: Int, currentDates: List<String>)
+
+    @Query("SELECT * FROM day WHERE canteen_id = :canteenId")
+    fun getByCanteenId(canteenId: Int): LiveData<List<Day>>
 }

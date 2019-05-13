@@ -15,7 +15,4 @@ interface MealDao {
 
     @Query("DELETE FROM meal WHERE canteen_id = :canteenId AND NOT id IN (:currentItemIds)")
     fun deleteOldItems(canteenId: Int, currentItemIds: List<Int>)
-
-    @Query("SELECT * FROM meal WHERE canteen_id = :canteenId")
-    fun getByCanteenId(canteenId: Int): LiveData<List<Day>>
 }

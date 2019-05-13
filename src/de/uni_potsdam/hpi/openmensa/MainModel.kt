@@ -35,7 +35,7 @@ data class CanteenWithDays(
     companion object {
         fun with(database: AppDatabase, canteenId: Int): LiveData<CanteenWithDays?> {
             val canteenLive = database.canteen().getById(canteenId)
-            val daysLive = database.meal().getByCanteenId(canteenId)
+            val daysLive = database.day().getByCanteenId(canteenId)
 
             return canteenLive.switchMap { canteen ->
                 daysLive.map { days ->
