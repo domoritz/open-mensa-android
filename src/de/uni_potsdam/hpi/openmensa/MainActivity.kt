@@ -37,10 +37,9 @@ import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.helpers.CustomViewPager
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingCanteensListener
 import de.uni_potsdam.hpi.openmensa.helpers.OnFinishedFetchingDaysListener
+import de.uni_potsdam.hpi.openmensa.sync.CanteenSyncing
 import de.uni_potsdam.hpi.openmensa.ui.day.DayFragment
 
-// TODO: update canteens if not yet done
-// TODO: update canteens if not done during the last 14 days
 // TODO: add refresh indicator at meal list
 // TODO: refresh meals if older than 1 hour
 // TODO: fix wrong headers for days (data always starting at today -> remove yesterday)
@@ -155,6 +154,12 @@ class MainActivity : AppCompatActivity(), ActionBar.OnNavigationListener, OnFini
             // FIXME: the section labels are horrible wrong with that
             sectionsPagerAdapter.dates = days.map { it.date }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        CanteenSyncing.runBackgroundSync(context = applicationContext)
     }
 
     private fun createSectionsPageAdapter() {

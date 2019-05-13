@@ -22,6 +22,8 @@ object SettingsUtils {
     private const val THEME_DARK = "dark"
     private const val THEME_LIGHT = "light"
 
+    const val KEY_LAST_CANTEEN_LIST_UPDATE = "last_canteen_list_update"
+
     private fun getSharedPrefs(context: Context): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     fun getSourceUrl(context: Context): String = getSharedPrefs(context).getString(KEY_SOURCE_URL, context.resources.getString(R.string.source_url_default))!!
@@ -77,4 +79,9 @@ object SettingsUtils {
             prefs.unregisterOnSharedPreferenceChangeListener(listener)
         }
     }
+
+    fun getLastCanteenListUpdate(context: Context) = getSharedPrefs(context).getLong(KEY_LAST_CANTEEN_LIST_UPDATE, 0)
+    fun updateLastCanteenListUpdate(context: Context) = getSharedPrefs(context).edit()
+            .putLong(KEY_LAST_CANTEEN_LIST_UPDATE, System.currentTimeMillis())
+            .apply()
 }
