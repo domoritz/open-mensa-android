@@ -6,16 +6,19 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import de.uni_potsdam.hpi.openmensa.data.dao.CanteenDao
 import de.uni_potsdam.hpi.openmensa.data.dao.DayDao
+import de.uni_potsdam.hpi.openmensa.data.dao.LastCanteenSyncDao
 import de.uni_potsdam.hpi.openmensa.data.dao.MealDao
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.data.model.Day
+import de.uni_potsdam.hpi.openmensa.data.model.LastCanteenSync
 import de.uni_potsdam.hpi.openmensa.data.model.Meal
 
 @Database(
         entities = [
             Canteen::class,
             Day::class,
-            Meal::class
+            Meal::class,
+            LastCanteenSync::class
         ], version = 1
 )
 abstract class AppDatabase: RoomDatabase() {
@@ -44,4 +47,5 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun canteen(): CanteenDao
     abstract fun day(): DayDao
     abstract fun meal(): MealDao
+    abstract fun lastCanteenSync(): LastCanteenSyncDao
 }

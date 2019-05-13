@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "323cbc341f88982f0be0478ac48e1ff3",
+    "identityHash": "fccac3ebc43d9a0d738427e2d82889ca",
     "entities": [
       {
         "tableName": "Canteen",
@@ -196,12 +196,50 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "last_canteen_sync",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`canteen_id` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`canteen_id`), FOREIGN KEY(`canteen_id`) REFERENCES `Canteen`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "canteenId",
+            "columnName": "canteen_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "canteen_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "Canteen",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "canteen_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"323cbc341f88982f0be0478ac48e1ff3\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"fccac3ebc43d9a0d738427e2d82889ca\")"
     ]
   }
 }
