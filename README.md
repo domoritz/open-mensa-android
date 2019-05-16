@@ -9,7 +9,7 @@ Android OpenMensa Client. Supports all canteens from [openmensa.org](https://ope
       alt="Get it on Google Play"
       height="80">](https://play.google.com/store/apps/details?id=de.uni_potsdam.hpi.openmensa)
 
-**Looking for new maintainers:** I don't have time to maintain this app anymore. Please [get in tuch with me](https://www.domoritz.de/) if you are interested in taking over development of new features and making releases.
+**Looking for new maintainers:** I don't have time to maintain this app anymore. Please [get in touch with me](https://www.domoritz.de/) if you are interested in taking over development of new features and making releases.
 
 ## Developer
 
