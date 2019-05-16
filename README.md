@@ -1,6 +1,6 @@
 # OpenMensa - Android
 
-Android OpenMensa Client. Supports all canteens from [openmensa.org](http://openmensa.org/).
+Android OpenMensa Client. Supports all canteens from [openmensa.org](https://openmensa.org/).
 
 [<img src="https://f-droid.org/badge/get-it-on.png"
       alt="Get it on F-Droid"
