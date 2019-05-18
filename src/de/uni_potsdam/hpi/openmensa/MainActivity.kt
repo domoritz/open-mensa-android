@@ -135,6 +135,16 @@ class MainActivity : FragmentActivity() {
             }
         })
 
+        // do background query of data after canteen selection
+        model.currentlySelectedCanteenId.observe(this, Observer {
+            if (it != null) {
+                // TODO: do this from the model
+                model.refresh(force = false)
+
+                lastSnackbar?.dismiss()
+            }
+        })
+
         // show sync notifications
         model.syncStatus.observe(this, Observer {
             if (it == MealSyncingDone) {

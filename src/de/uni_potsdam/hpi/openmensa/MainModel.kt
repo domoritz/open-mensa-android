@@ -24,21 +24,7 @@ class MainModel(application: Application): AndroidViewModel(application) {
 
     val noFavoriteCanteens = favoriteCanteens.map { it.isEmpty() }
 
-    val currentlySelectedCanteenId = object: MutableLiveData<Int?>() {
-        override fun setValue(value: Int?) {
-            super.setValue(value)
-
-            // do background query of data after canteen selection
-            if (value != null) {
-                refresh(force = false)
-            }
-        }
-    }
-
-    init {
-        currentlySelectedCanteenId.value = SettingsUtils.getLastSelectedCanteenId(application)
-    }
-
+    val currentlySelectedCanteenId = MutableLiveData<Int?>().apply { value = SettingsUtils.getLastSelectedCanteenId(application) }
     val currentlySelectedCanteen = currentlySelectedCanteenId.switchMap { id ->
         if (id != null)
             CanteenWithDays.with(database, id)
