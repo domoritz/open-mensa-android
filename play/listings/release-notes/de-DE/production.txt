@@ -1,1 +1,1 @@
-Abstürze beim Sortieren der Mensaliste nach Entfernung behoben
+Fehlerbehebung: Preise für Studenten wurden nicht angezeigt
