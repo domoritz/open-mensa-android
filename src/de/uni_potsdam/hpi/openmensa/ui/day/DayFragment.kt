@@ -114,6 +114,13 @@ class DayFragment : Fragment() {
             if (it != null) DateMealItem(it) else null
         }
 
+        val externalDateHeader = model.dayMode.switchMap { dayMode ->
+            if (dayMode == DayMode.ShowList)
+                MutableLiveData<String>().apply { value = null }
+            else
+                dateHeaderText
+        }
+
         val fullMealList = dateHeader.switchMap { date ->
             mealList.map { meals ->
                 if (date == null)
@@ -133,6 +140,10 @@ class DayFragment : Fragment() {
                 DayMode.NoInformation -> PAGE_NO_DATA
                 DayMode.Closed -> PAGE_CLOSED
             }
+        })
+
+        externalDateHeader.observe(this, Observer {
+            binding.date.date = it
         })
 
         binding.recycler.layoutManager = LinearLayoutManager(context!!)

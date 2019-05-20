@@ -7,9 +7,12 @@
             name="date"
             type="String" />
 
+        <import type="android.text.TextUtils" />
+        <import type="android.view.View" />
     </data>
 
     <TextView
+        android:visibility="@{TextUtils.isEmpty(date) ? View.GONE : View.VISIBLE}"
         android:gravity="center_horizontal"
         android:padding="8dp"
         android:textAppearance="?android:textAppearanceMedium"
