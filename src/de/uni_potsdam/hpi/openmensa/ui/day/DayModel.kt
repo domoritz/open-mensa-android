@@ -17,7 +17,7 @@ class DayModel(application: Application): AndroidViewModel(application) {
         it?.currentlySelectedCanteenId ?: MutableLiveData<Int?>().apply { value = null }
     }
     val indexLive = MutableLiveData<Int>()
-    private val dateLive = activityViewModelLive.switchMap { model ->
+    val dateLive = activityViewModelLive.switchMap { model ->
         model.datesToShow.switchMap { dates ->
             indexLive.map { index ->
                 if (dates.size > index)

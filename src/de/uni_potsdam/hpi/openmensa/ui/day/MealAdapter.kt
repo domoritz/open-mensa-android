@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import de.uni_potsdam.hpi.openmensa.data.model.Meal
 import de.uni_potsdam.hpi.openmensa.data.model.isEmpty
 import de.uni_potsdam.hpi.openmensa.databinding.MealCategoryItemBinding
+import de.uni_potsdam.hpi.openmensa.databinding.MealDateInfoBinding
 import de.uni_potsdam.hpi.openmensa.databinding.MealDetailsItemBinding
 import de.uni_potsdam.hpi.openmensa.databinding.MealOverviewItemBinding
 import java.util.*
@@ -42,7 +43,13 @@ class MealAdapter: RecyclerView.Adapter<MealViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (viewType) {
-        TYPE_DATE -> TODO()
+        TYPE_DATE -> MealDateHolder(
+                MealDateInfoBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                )
+        )
         TYPE_CATEGORY -> MealCategoryHolder(
                 MealCategoryItemBinding.inflate(
                         LayoutInflater.from(parent.context),
@@ -71,7 +78,12 @@ class MealAdapter: RecyclerView.Adapter<MealViewHolder>() {
         val item = meals!![position]
 
         when (item) {
-            is DateMealItem -> TODO()
+            is DateMealItem -> {
+                holder as MealDateHolder
+
+                holder.view.date = item.date
+                holder.view.executePendingBindings()
+            }
             is MealCategoryItem -> {
                 holder as MealCategoryHolder
 
@@ -118,6 +130,7 @@ class MealAdapter: RecyclerView.Adapter<MealViewHolder>() {
 }
 
 sealed class MealViewHolder(view: View): RecyclerView.ViewHolder(view)
+class MealDateHolder(val view: MealDateInfoBinding): MealViewHolder(view.root)
 class MealCategoryHolder(val view: MealCategoryItemBinding): MealViewHolder(view.root)
 class MealInfoHolder(val view: MealOverviewItemBinding): MealViewHolder(view.root)
 class MealDetailHolder(val view: MealDetailsItemBinding): MealViewHolder(view.root)

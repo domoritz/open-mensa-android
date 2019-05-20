@@ -15,6 +15,10 @@ import de.uni_potsdam.hpi.openmensa.databinding.DayFragmentBinding
 import de.uni_potsdam.hpi.openmensa.extension.map
 import de.uni_potsdam.hpi.openmensa.extension.switchMap
 import de.uni_potsdam.hpi.openmensa.extension.toggle
+import de.uni_potsdam.hpi.openmensa.helpers.DateUtils
+import java.text.DateFormat
+import java.text.ParseException
+import java.util.*
 
 /**
  * A fragment representing a section of the app, that displays the Meals for
@@ -68,33 +72,59 @@ class DayFragment : Fragment() {
             }
         }
 
-        model.meals.switchMap { meals ->
+        val mealList = model.meals.switchMap { meals ->
             expandedItems.map { items ->
-                meals to items
-            }
-        }.observe(this, Observer { (meals, items) ->
-            val categories = meals.map { it.category }.distinct()
-            val mealsByCategory = meals.groupBy { it.category }
+                val categories = meals.map { it.category }.distinct()
+                val mealsByCategory = meals.groupBy { it.category }
 
-            val list = mutableListOf<MealItem>()
+                val list = mutableListOf<MealItem>()
 
-            // TODO: list.add(DateMealItem("todo"))
+                categories.forEach { category ->
+                    list.add(MealCategoryItem(category))
 
-            categories.forEach { category ->
-                list.add(MealCategoryItem(category))
+                    val categoryMeals = mealsByCategory[category]!!
 
-                val categoryMeals = mealsByCategory[category]!!
+                    categoryMeals.forEach { meal ->
+                        list.add(MealShortInfoItem(meal))
 
-                categoryMeals.forEach { meal ->
-                    list.add(MealShortInfoItem(meal))
-
-                    if (items.contains(meal.id)) {
-                        list.add(MealDetailInfoItem(meal))
+                        if (items.contains(meal.id)) {
+                            list.add(MealDetailInfoItem(meal))
+                        }
                     }
                 }
-            }
 
-            adapter.meals = list
+                list
+            }
+        }
+
+        val dateHeaderText = model.dateLive.map {
+            if (it != null) {
+                try {
+                    DateFormat.getDateInstance(DateFormat.FULL).let { dateFormat ->
+                        dateFormat.timeZone = TimeZone.getDefault()
+                        dateFormat.format(DateUtils.parseToLocalTimezone(it))
+                    }
+                } catch (ex: ParseException) {
+                    null
+                }
+            } else null
+        }
+
+        val dateHeader = dateHeaderText.map {
+            if (it != null) DateMealItem(it) else null
+        }
+
+        val fullMealList = dateHeader.switchMap { date ->
+            mealList.map { meals ->
+                if (date == null)
+                    meals
+                else
+                    listOf(date) + meals
+            }
+        }
+
+        fullMealList.observe(this, Observer {
+            adapter.meals = it
         })
 
         model.dayMode.observe(this, Observer {
