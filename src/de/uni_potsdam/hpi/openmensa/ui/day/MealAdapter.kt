@@ -1,11 +1,14 @@
 package de.uni_potsdam.hpi.openmensa.ui.day
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import de.uni_potsdam.hpi.openmensa.data.model.Meal
 import de.uni_potsdam.hpi.openmensa.data.model.isEmpty
-import de.uni_potsdam.hpi.openmensa.databinding.MealListItemBinding
+import de.uni_potsdam.hpi.openmensa.databinding.MealCategoryItemBinding
+import de.uni_potsdam.hpi.openmensa.databinding.MealDetailsItemBinding
+import de.uni_potsdam.hpi.openmensa.databinding.MealOverviewItemBinding
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -13,10 +16,14 @@ class MealAdapter: RecyclerView.Adapter<MealViewHolder>() {
     companion object {
         @JvmStatic
         fun formatPrice(double: Double?) = String.format(Locale.getDefault(), "%.2f", double)
+
+        private const val TYPE_DATE = 1
+        private const val TYPE_CATEGORY = 2
+        private const val TYPE_INFO = 3
+        private const val TYPE_DETAIL = 4
     }
 
-    var meals: List<Meal>? by Delegates.observable(null as List<Meal>?) { _, _, _ -> notifyDataSetChanged() }
-    var expandedItemIds: Set<Int> by Delegates.observable(emptySet()) { _, _, _ -> notifyDataSetChanged() }
+    var meals: List<MealItem>? by Delegates.observable(null as List<MealItem>?) { _, _, _ -> notifyDataSetChanged() }
     var listener: MealAdapterListener? = null
 
     init {
@@ -25,41 +32,95 @@ class MealAdapter: RecyclerView.Adapter<MealViewHolder>() {
 
     override fun getItemCount(): Int = meals?.size ?: 0
 
-    override fun getItemId(position: Int): Long = meals!![position].id.toLong()
+    override fun getItemId(position: Int): Long = meals!![position].hashCode().toLong()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MealViewHolder(
-            MealListItemBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-            )
-    )
+    override fun getItemViewType(position: Int): Int = when(meals!![position]) {
+        is DateMealItem -> TYPE_DATE
+        is MealCategoryItem -> TYPE_CATEGORY
+        is MealShortInfoItem -> TYPE_INFO
+        is MealDetailInfoItem -> TYPE_DETAIL
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (viewType) {
+        TYPE_DATE -> TODO()
+        TYPE_CATEGORY -> MealCategoryHolder(
+                MealCategoryItemBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                )
+        )
+        TYPE_INFO -> MealInfoHolder(
+                MealOverviewItemBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                )
+        )
+        TYPE_DETAIL -> MealDetailHolder(
+                MealDetailsItemBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                )
+        )
+        else -> throw IllegalArgumentException()
+    }
 
     override fun onBindViewHolder(holder: MealViewHolder, position: Int) {
         val item = meals!![position]
 
-        holder.view.apply {
-            header.name = item.name
-            header.category = item.category
-            header.notes = item.notes.joinToString(", ")
+        when (item) {
+            is DateMealItem -> TODO()
+            is MealCategoryItem -> {
+                holder as MealCategoryHolder
 
-            details.visible = expandedItemIds.contains(item.id)
-            details.studentsPrice = item.prices?.students
-            details.employeesPrice = item.prices?.employees
-            details.pupilsPrice = item.prices?.pupils
-            details.otherPrice = item.prices?.others
-            details.noKnownPrice = item.prices.isEmpty()
-
-            linearLayout.setOnClickListener {
-                listener?.onItemClicked(item)
+                holder.view.category = item.title
+                holder.view.executePendingBindings()
             }
+            is MealShortInfoItem -> {
+                holder as MealInfoHolder
+                val meal = item.meal
 
-            executePendingBindings()
+                holder.view.apply {
+                    name = meal.name
+                    notes = meal.notes.joinToString(", ")
+
+                    linearLayout.setOnClickListener {
+                        listener?.onItemClicked(meal)
+                    }
+
+                    executePendingBindings()
+                }
+            }
+            is MealDetailInfoItem -> {
+                val meal = item.meal
+                val prices = meal.prices
+
+                holder as MealDetailHolder
+
+                holder.view.apply {
+                    studentsPrice = prices?.students
+                    employeesPrice = prices?.employees
+                    pupilsPrice = prices?.pupils
+                    otherPrice = prices?.others
+                    noKnownPrice = prices.isEmpty()
+
+                    linearLayout.setOnClickListener {
+                        listener?.onItemClicked(meal)
+                    }
+
+                    executePendingBindings()
+                }
+            }
         }
     }
 }
 
-class MealViewHolder(val view: MealListItemBinding): RecyclerView.ViewHolder(view.root)
+sealed class MealViewHolder(view: View): RecyclerView.ViewHolder(view)
+class MealCategoryHolder(val view: MealCategoryItemBinding): MealViewHolder(view.root)
+class MealInfoHolder(val view: MealOverviewItemBinding): MealViewHolder(view.root)
+class MealDetailHolder(val view: MealDetailsItemBinding): MealViewHolder(view.root)
 
 interface MealAdapterListener {
     fun onItemClicked(meal: Meal)

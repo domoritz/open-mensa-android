@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools">
 	<data>
-		<variable
-			name="visible"
-			type="boolean" />
-
 		<variable
 			name="studentsPrice"
 			type="Double" />
@@ -29,14 +26,15 @@
 		<import type="de.uni_potsdam.hpi.openmensa.ui.day.MealAdapter" />
 	</data>
 
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	<LinearLayout
+		android:background="?selectableItemBackground"
+		android:id="@+id/linear_layout"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:visibility="@{visible ? View.VISIBLE : View.GONE}"
+		android:layout_height="wrap_content"
 		android:orientation="vertical"
-		android:paddingBottom="10dip"
+		android:paddingBottom="4dip"
 		android:paddingLeft="@dimen/expanderPadding"
-		android:paddingTop="10dip"
+		android:paddingTop="4dip"
 		android:paddingRight="10dip">
 
 		<RelativeLayout

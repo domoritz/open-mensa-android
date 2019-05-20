@@ -73,8 +73,28 @@ class DayFragment : Fragment() {
                 meals to items
             }
         }.observe(this, Observer { (meals, items) ->
-            adapter.meals = meals
-            adapter.expandedItemIds = items
+            val categories = meals.map { it.category }.distinct()
+            val mealsByCategory = meals.groupBy { it.category }
+
+            val list = mutableListOf<MealItem>()
+
+            // TODO: list.add(DateMealItem("todo"))
+
+            categories.forEach { category ->
+                list.add(MealCategoryItem(category))
+
+                val categoryMeals = mealsByCategory[category]!!
+
+                categoryMeals.forEach { meal ->
+                    list.add(MealShortInfoItem(meal))
+
+                    if (items.contains(meal.id)) {
+                        list.add(MealDetailInfoItem(meal))
+                    }
+                }
+            }
+
+            adapter.meals = list
         })
 
         model.dayMode.observe(this, Observer {

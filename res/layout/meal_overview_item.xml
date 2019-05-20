@@ -4,10 +4,6 @@
 
     <data>
         <variable
-            name="category"
-            type="String" />
-
-        <variable
             name="name"
             type="String" />
 
@@ -20,20 +16,15 @@
     </data>
 
     <LinearLayout
+        android:id="@+id/linear_layout"
+        android:background="?selectableItemBackground"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="10dip"
-        android:paddingTop="10dip"
+        android:paddingBottom="4dip"
+        android:paddingTop="4dip"
         android:paddingRight="10dip"
         android:paddingLeft="10dip">
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            tools:text="Lorem Ipsum"
-            android:text="@{category}"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
 
         <TextView
             android:layout_width="fill_parent"
