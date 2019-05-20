@@ -1,0 +1,1 @@
+Abstürze beim Sortieren der Mensaliste nach Entfernung behoben
