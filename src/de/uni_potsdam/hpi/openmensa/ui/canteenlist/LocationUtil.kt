@@ -10,6 +10,7 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import de.uni_potsdam.hpi.openmensa.Threads
+import de.uni_potsdam.hpi.openmensa.extension.requestLocationUpdatesIfSupported
 
 object LocationUtil {
     fun hasLocationAccessPermission(context: Context): Boolean {
@@ -79,10 +80,11 @@ object LocationUtil {
 
         init {
             registerRunnable = Runnable {
-                try {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10 * 1000L, 1000.0f, locationListener)
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10 * 1000L, 1000.0f, locationListener)
-                } catch (ex: SecurityException) {
+                val success1 = locationManager.requestLocationUpdatesIfSupported(LocationManager.GPS_PROVIDER, 10 * 1000L, 1000.0f, locationListener)
+                val success2 = locationManager.requestLocationUpdatesIfSupported(LocationManager.NETWORK_PROVIDER, 10 * 1000L, 1000.0f, locationListener)
+                val success = success1 && success2
+
+                if (!success) {
                     // retry later
                     Threads.handler.postDelayed(registerRunnable, 1000)
                 }
