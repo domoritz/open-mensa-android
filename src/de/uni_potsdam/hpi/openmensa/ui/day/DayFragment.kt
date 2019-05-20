@@ -1,18 +1,19 @@
 package de.uni_potsdam.hpi.openmensa.ui.day
 
-import java.util.ArrayList
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.uni_potsdam.hpi.openmensa.MainActivity
 import de.uni_potsdam.hpi.openmensa.data.model.Meal
 import de.uni_potsdam.hpi.openmensa.databinding.DayFragmentBinding
+import de.uni_potsdam.hpi.openmensa.extension.map
+import de.uni_potsdam.hpi.openmensa.extension.switchMap
 import de.uni_potsdam.hpi.openmensa.extension.toggle
 
 /**
@@ -39,7 +40,7 @@ class DayFragment : Fragment() {
     }
 
     val adapter = MealAdapter()
-    val expandedItems = mutableSetOf<Int>()
+    val expandedItems = MutableLiveData<Set<Int>>().apply { value = emptySet() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,29 +49,32 @@ class DayFragment : Fragment() {
         model.indexLive.value = arguments!!.getInt(EXTRA_INDEX)
 
         if (savedInstanceState != null) {
-            expandedItems.addAll(savedInstanceState.getIntArray(STATE_EXPANDED_ITEMS)!!.toList())
+            expandedItems.value = savedInstanceState.getIntArray(STATE_EXPANDED_ITEMS)!!.toSet()
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState.putIntArray(STATE_EXPANDED_ITEMS, expandedItems.toIntArray())
+        outState.putIntArray(STATE_EXPANDED_ITEMS, expandedItems.value!!.toIntArray())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = DayFragmentBinding.inflate(inflater, container, false)
 
-        adapter.expandedItemIds = expandedItems
         adapter.listener = object: MealAdapterListener {
             override fun onItemClicked(meal: Meal) {
-                expandedItems.toggle(meal.id)
-                adapter.notifyDataSetChanged()
+                expandedItems.value = expandedItems.value!!.toMutableSet().apply { toggle(meal.id) }
             }
         }
 
-        model.meals.observe(this, Observer {
-            adapter.meals = it
+        model.meals.switchMap { meals ->
+            expandedItems.map { items ->
+                meals to items
+            }
+        }.observe(this, Observer { (meals, items) ->
+            adapter.meals = meals
+            adapter.expandedItemIds = items
         })
 
         model.dayMode.observe(this, Observer {
