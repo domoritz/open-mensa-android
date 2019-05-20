@@ -1,1 +1,1 @@
-Migration für Nutzer von alten Versionen hinzugefügt
+Gruppierung der Speisen nach Kategorie

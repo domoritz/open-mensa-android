@@ -1,1 +1,1 @@
-Added migration for users of old versions
+Grouping meals by category
