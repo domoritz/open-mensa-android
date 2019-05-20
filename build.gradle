@@ -48,8 +48,8 @@ tasks.whenTaskAdded { task ->
 
 android {
     defaultConfig {
-        versionCode 16
-        versionName "0.16"
+        versionCode 17
+        versionName "0.17"
 
         kapt {
             arguments {

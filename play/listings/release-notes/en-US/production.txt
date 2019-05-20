@@ -1,1 +1,1 @@
-Bugfix: Prices for students were not shown
+Added migration for users of old versions
