@@ -7,6 +7,10 @@
             name="missingLocation"
             type="boolean" />
 
+        <variable
+            name="isEmpty"
+            type="boolean" />
+
         <import type="android.view.View" />
     </data>
 
@@ -38,6 +42,15 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <TextView
+                android:visibility="@{isEmpty ? View.VISIBLE : View.GONE}"
+                android:padding="16dp"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:gravity="center"
+                android:text="@string/select_canteen_dialog_empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/list"

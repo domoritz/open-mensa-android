@@ -56,6 +56,7 @@ class SelectCanteenDialogFragment : DialogFragment() {
 
         model.canteensSorted.observe(this, Observer {
             adapter.content = it
+            binding.isEmpty = it.isEmpty()
         })
 
         model.missingLocation.observe(this, Observer {
