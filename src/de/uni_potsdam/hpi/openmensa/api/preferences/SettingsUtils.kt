@@ -26,6 +26,7 @@ object SettingsUtils {
 
     const val KEY_LAST_SELECTED_CANTEEN_ID = "last_canteen_id"
     const val KEY_LAST_CANTEEN_LIST_UPDATE = "last_canteen_list_update"
+    const val DID_MIGRATE_FROM_OLD_URL = "did_migrate_from_old_url"
 
     private fun getSharedPrefs(context: Context): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -178,4 +179,17 @@ object SettingsUtils {
 
                 editor.apply()
             }
+
+    fun eventuallyDeleteOldUrl(context: Context) {
+        val prefs = getSharedPrefs(context)
+
+        if (getSourceUrl(context) == context.getString(R.string.source_url_old_default)) {
+            if (!prefs.getBoolean(DID_MIGRATE_FROM_OLD_URL, false)) {
+                prefs.edit()
+                        .putBoolean(DID_MIGRATE_FROM_OLD_URL, true)
+                        .remove(KEY_SOURCE_URL)
+                        .apply()
+            }
+        }
+    }
 }

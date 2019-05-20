@@ -44,6 +44,7 @@
     <string name="source_url_title">OpenMensa Server</string>
     <string name="source_url_desc">URL to the API endpoint of an OpenMensa server.</string>
     <string name="source_url_default" translatable="false">https://openmensa.org/api/v2/</string>
+    <string name="source_url_old_default" translatable="false">http://openmensa.org/api/v2/</string>
     <string name="canteen_title">Favourite Canteens</string>
     <string name="canteen_desc_empty">No favourite canteens</string>
     <string name="canteen_desc">%s favourite canteens</string>

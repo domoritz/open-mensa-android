@@ -18,6 +18,8 @@ class PrivacyDialogFragment: DialogFragment() {
         private const val REQUEST_SETTINGS = 1
 
         fun showIfRequired(activity: FragmentActivity) {
+            SettingsUtils.eventuallyDeleteOldUrl(activity)
+
             if (SettingsUtils.getSourceUrl(activity).isBlank()) {
                 if (activity.supportFragmentManager.findFragmentByTag(DIALOG_TAG) == null) {
                     PrivacyDialogFragment().show(activity.supportFragmentManager, DIALOG_TAG)
