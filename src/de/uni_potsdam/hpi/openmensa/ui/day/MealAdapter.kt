@@ -44,7 +44,7 @@ class MealAdapter: RecyclerView.Adapter<MealViewHolder>() {
             header.notes = item.notes.joinToString(", ")
 
             details.visible = expandedItemIds.contains(item.id)
-            details.employeesPrice = item.prices?.students
+            details.studentsPrice = item.prices?.students
             details.employeesPrice = item.prices?.employees
             details.pupilsPrice = item.prices?.pupils
             details.otherPrice = item.prices?.others
