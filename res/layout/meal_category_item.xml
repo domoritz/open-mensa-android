@@ -17,5 +17,5 @@
         android:layout_height="wrap_content"
         tools:text="Lorem Ipsum"
         android:text="@{category}"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+        android:textAppearance="?android:textAppearanceMedium" />
 </layout>
