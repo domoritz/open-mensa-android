@@ -1,0 +1,14 @@
+OpenMensa shows you what you can eat in the cafeteria or canteen at your university. At the moment about 200 canteens in German speaking countries are supported. In order to get today's meal plan, this app connects to the database at http://openmensa.org/.
+
+Features:
+- show meals and prices for hundreds of canteens
+- preview of the next couple of days
+- multiple favourite canteens
+- offline usage (when not connected)
+- canteen on a map, tap on address to navigate to canteen
+
+Report issue at https://github.com/domoritz/open-mensa-android/issues.
+
+Your canteen or cafeteria is missing? With a little bit of technical knowledge you can write your own parser. More information at http://openmensa.org/.
+
+At this point we are supporting canteens at universities at many German universities among others in Berlin, Hamburg, Aachen, Karlsruhe and Munich. Also canteens at the HPI, KIT, LMU, HU and FU.

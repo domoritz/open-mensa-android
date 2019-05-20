@@ -1,0 +1,15 @@
+OpenMensa zeigt dir, was es heute in der Mensa Deiner Uni zu essen gibt. Zur Zeit werden rund 150 Mensen im deutschsprachigen Raum unterstützt. Diese App stellt dabei eine Verbindung zur Datenbank auf http://openmensa.org/ her.
+
+Features:
+- Speiseplan und Preise für hunderte Mensen
+- Vorschau der nächsten Tage
+- Mehrere bevorzugte Mensen festlegbar
+- Funktioniert auch, wenn man nicht mit dem Internet verbunden ist
+- Mensa auf einer Karte, Tippe auf Adresse um zur Mensa zu navigieren
+
+Melde Fehler auf https://github.com/domoritz/open-mensa-android/issues.
+
+Deine Mensa fehlt? Mit etwas technischem Wissen, sollte es Dir leicht fallen, einen Parser für Deine Mensa zu schreiben. Weitere Informationen auf http://openmensa.org/.
+
+
+Im Moment unterstützt die App Mensen an vielen deutschen Universitäten unter Anderem in Berlin, Hamburg, Aachen, Karlsruhe und München. Außerdem die Mensen an HPI, KIT, LMU, HU und der FU.
