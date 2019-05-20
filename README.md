@@ -22,9 +22,9 @@ Create a release with `./gradlew --no-daemon assembleRelease`.
 
 ## Screenshots
 
-![Meals view with different meals](https://github.com/domoritz/open-mensa-android/raw/master/screenshots/en_meal.png "Meals view")
+![Meals view with different meals](https://github.com/domoritz/open-mensa-android/raw/master/play/listings/en-US/graphics/phone-screenshot/1_meal.png "Meals view")
 
-![Canteen view with map](https://github.com/domoritz/open-mensa-android/raw/master/screenshots/en_map.png "Canteen view")
+![Canteen view with map](https://github.com/domoritz/open-mensa-android/raw/master/play/listings/en-US/graphics/phone-screenshot/4_map.png "Canteen view")
 
 
 ## License
