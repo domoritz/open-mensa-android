@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.openmensa.api.preferences
+package de.uni_potsdam.hpi.openmensa.ui.settings
 
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
@@ -14,9 +14,10 @@ import androidx.preference.PreferenceFragmentCompat
 import de.uni_potsdam.hpi.openmensa.R
 import de.uni_potsdam.hpi.openmensa.Threads
 import de.uni_potsdam.hpi.openmensa.data.AppDatabase
+import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.sync.CanteenSyncing
 
-import de.uni_potsdam.hpi.openmensa.ui.canteenlist.SelectCanteenDialogFragment
+import de.uni_potsdam.hpi.openmensa.ui.settings.canteenlist.SelectCanteenDialogFragment
 
 /**
  * The fragment that displays the preferences.
@@ -27,9 +28,8 @@ class SettingsFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeLis
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
 
-        val sp = preferenceScreen.sharedPreferences
         val editTextPref = findPreference(SettingsUtils.KEY_SOURCE_URL) as EditTextPreference
-        editTextPref.summary = SettingsUtils.getSourceUrl(context!!)
+        editTextPref.summary = SettingsUtils.with(context!!).sourceUrl
 
         val themePref = findPreference(SettingsUtils.KEY_STYLE) as ListPreference
         themePref.summary = themePref.entry
@@ -76,7 +76,7 @@ class SettingsFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeLis
 
             Threads.network.execute {
                 AppDatabase.with(context).canteen().deleteAllItems()
-                SettingsUtils.deleteLastCanteenListUpdate(context)
+                SettingsUtils.with(context).lastCanteenListUpdate = 0
                 CanteenSyncing.runBackgroundSync(context)
             }
         }

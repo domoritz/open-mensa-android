@@ -21,6 +21,9 @@ interface CanteenDao {
     @Query("SELECT * FROM canteen")
     fun getAll(): LiveData<List<Canteen>>
 
+    @Query("SELECT * FROM canteen WHERE city = :city")
+    fun getByCity(city: String): LiveData<List<Canteen>>
+
     @Query("SELECT * FROM canteen WHERE id IN (:ids)")
     fun getByIds(ids: List<Int>): LiveData<List<Canteen>>
 

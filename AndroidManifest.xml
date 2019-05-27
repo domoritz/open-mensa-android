@@ -24,7 +24,7 @@
         </activity>
 
         <activity
-            android:name=".api.preferences.SettingsActivity"
+            android:name="de.uni_potsdam.hpi.openmensa.ui.settings.SettingsActivity"
             android:label="@string/title_activity_preferences"
             android:parentActivityName=".MainActivity">
             

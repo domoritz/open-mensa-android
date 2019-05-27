@@ -1,28 +1,24 @@
 package de.uni_potsdam.hpi.openmensa
 
 import android.app.Application
+import android.provider.Settings
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
+import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.data.AppDatabase
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.data.model.Day
 import de.uni_potsdam.hpi.openmensa.extension.map
 import de.uni_potsdam.hpi.openmensa.extension.switchMap
+import de.uni_potsdam.hpi.openmensa.extension.toggle
 import de.uni_potsdam.hpi.openmensa.helpers.DateUtils
 import de.uni_potsdam.hpi.openmensa.sync.MealSyncing
 import java.util.*
 
 class MainModel(application: Application): AndroidViewModel(application) {
     private val database = AppDatabase.with(application)
-    private val favoriteCanteenIds = SettingsUtils.getFavoriteCanteenIdsLive(application)
-
-    val favoriteCanteens = favoriteCanteenIds.switchMap { ids ->
-        database.canteen().getByIds(ids.toList())
-    }
-
-    val noFavoriteCanteens = favoriteCanteens.map { it.isEmpty() }
+    private val settings = SettingsUtils.with(application)
 
     val currentlySelectedCanteenId = object: MutableLiveData<Int?>() {
         override fun setValue(value: Int?) {
@@ -33,7 +29,7 @@ class MainModel(application: Application): AndroidViewModel(application) {
     }
 
     init {
-        currentlySelectedCanteenId.value = SettingsUtils.getLastSelectedCanteenId(application)
+        currentlySelectedCanteenId.value = settings.lastSelectedCanteenId
     }
 
     val currentlySelectedCanteen = currentlySelectedCanteenId.switchMap { id ->
@@ -101,6 +97,12 @@ class MainModel(application: Application): AndroidViewModel(application) {
         }
     }
 
+    val isSelectedCanteenFavorite = settings.favoriteCanteensLive.switchMap { favorites ->
+        currentlySelectedCanteenId.map { canteenId ->
+            canteenId != null && favorites.contains(canteenId)
+        }
+    }
+
     fun refresh(force: Boolean) {
         currentlySelectedCanteenId.value?.let { id ->
             MealSyncing.syncInBackground(canteenId = id, force = force, context = getApplication())
@@ -114,7 +116,15 @@ class MainModel(application: Application): AndroidViewModel(application) {
     }
 
     fun saveSelectedCanteenId() {
-        SettingsUtils.setLastSelectedCanteenId(getApplication(), currentlySelectedCanteenId.value)
+        settings.lastSelectedCanteenId = currentlySelectedCanteenId.value
+    }
+
+    fun toggleFavorite() {
+        currentlySelectedCanteenId.value?.let { canteenId ->
+            settings.favoriteCanteens = settings.favoriteCanteens.toMutableSet().apply {
+                toggle(canteenId)
+            }
+        }
     }
 }
 

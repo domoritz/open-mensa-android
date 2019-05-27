@@ -21,8 +21,8 @@
         <include android:id="@+id/no_data"
             layout="@layout/no_canteen_fragment_no_data" />
 
-        <include android:id="@+id/no_favorites"
-            layout="@layout/no_canteen_fragment_no_favorites" />
+        <include android:id="@+id/no_selection"
+            layout="@layout/no_canteen_fragment_no_selection" />
 
     </ViewFlipper>
 

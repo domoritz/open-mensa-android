@@ -1,12 +1,8 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="de.uni_potsdam.hpi.openmensa.ui.settings.canteenlist.SelectCanteenDialogFragment">
+    tools:context="de.uni_potsdam.hpi.openmensa.ui.canteenlist.full.FullCanteenListDialogFragment">
 
     <data>
-        <variable
-            name="missingLocation"
-            type="boolean" />
-
         <variable
             name="isEmpty"
             type="boolean" />
@@ -25,20 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <CheckBox
-            android:text="@string/canteen_choose_sort_by_loc"
-            android:id="@+id/sort_by_location_checkbox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:padding="8dp"
-            android:visibility="@{missingLocation ? View.VISIBLE : View.GONE}"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:text="@string/canteen_choose_sort_by_loc_no_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -53,7 +35,7 @@
                 android:layout_height="match_parent" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/list"
+                android:id="@+id/recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 

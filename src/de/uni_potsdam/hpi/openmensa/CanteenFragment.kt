@@ -24,7 +24,7 @@ import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
+import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.databinding.CanteenFragmentBinding
 import de.uni_potsdam.hpi.openmensa.ui.privacy.EnableMapDialogFragment
 import org.osmdroid.tileprovider.tilesource.BitmapTileSourceBase
@@ -86,7 +86,7 @@ class CanteenFragment : BottomSheetDialogFragment() {
         binding.mapview.zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
         binding.mapview.setMultiTouchControls(true)
 
-        SettingsUtils.isMapEnabledLive(context!!).observe(this, Observer { enableMap ->
+        SettingsUtils.with(context!!).enableMapLive.observe(this, Observer { enableMap ->
             binding.flipper.displayedChild = if (enableMap) 1 else 0
 
             if (enableMap) {

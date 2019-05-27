@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.openmensa.ui.canteenlist
+package de.uni_potsdam.hpi.openmensa.ui.settings.canteenlist
 
 
 import android.Manifest
@@ -15,7 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.uni_potsdam.hpi.openmensa.R
-import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
+import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.databinding.SelectCanteenDialogFragmentBinding
 import de.uni_potsdam.hpi.openmensa.extension.addTextChangeListener
@@ -36,7 +36,7 @@ class SelectCanteenDialogFragment : DialogFragment() {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
-            selectedItems = SettingsUtils.getFavouriteCanteensFromPreferences(context!!).toMutableSet()
+            selectedItems = SettingsUtils.with(context!!).favoriteCanteens.toMutableSet()
         } else {
             selectedItems = savedInstanceState.getIntArray(STATE_SELECTED_CANTEENS)!!.toMutableSet()
         }
@@ -94,7 +94,7 @@ class SelectCanteenDialogFragment : DialogFragment() {
         return AlertDialog.Builder(context!!)
                 .setView(binding.root)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
-                    SettingsUtils.setFavouriteCanteensAtPreferences(context!!, selectedItems)
+                    SettingsUtils.with(context!!).favoriteCanteens = selectedItems
                 }
                 .setNeutralButton(android.R.string.cancel) { _, _ ->
                     // do not save

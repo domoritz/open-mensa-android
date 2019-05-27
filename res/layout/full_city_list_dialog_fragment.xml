@@ -1,12 +1,8 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="de.uni_potsdam.hpi.openmensa.ui.settings.canteenlist.SelectCanteenDialogFragment">
+    tools:context="de.uni_potsdam.hpi.openmensa.ui.citylist.full.FullCityListDialogFragment">
 
     <data>
-        <variable
-            name="missingLocation"
-            type="boolean" />
-
         <variable
             name="isEmpty"
             type="boolean" />
@@ -22,20 +18,6 @@
         <EditText
             android:hint="@string/select_canteen_dialog_search_hint"
             android:id="@+id/filter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <CheckBox
-            android:text="@string/canteen_choose_sort_by_loc"
-            android:id="@+id/sort_by_location_checkbox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:padding="8dp"
-            android:visibility="@{missingLocation ? View.VISIBLE : View.GONE}"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:text="@string/canteen_choose_sort_by_loc_no_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

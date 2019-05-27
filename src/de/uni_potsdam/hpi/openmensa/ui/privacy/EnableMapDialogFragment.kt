@@ -6,7 +6,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import de.uni_potsdam.hpi.openmensa.R
-import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
+import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
 
 class EnableMapDialogFragment: DialogFragment() {
     companion object {
@@ -17,7 +17,7 @@ class EnableMapDialogFragment: DialogFragment() {
             .setTitle(R.string.map_privacy_title)
             .setMessage(R.string.map_privacy_text)
             .setPositiveButton(R.string.map_privacy_accept) { _, _ ->
-                SettingsUtils.setEnableMap(context!!, true)
+                SettingsUtils.with(context!!).enableMap = true
             }
             .setNegativeButton(R.string.map_privacy_reject, null)
             .create()

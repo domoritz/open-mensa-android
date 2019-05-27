@@ -1,4 +1,9 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/menu_star"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_star_black_24dp"
+        android:orderInCategory="50" />
     <item android:id="@+id/menu_settings"
         android:title="@string/menu_preferences"
         android:orderInCategory="100"

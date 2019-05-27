@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.openmensa.ui.canteenlist
+package de.uni_potsdam.hpi.openmensa.ui.settings.canteenlist
 
 import android.app.Application
 import android.location.Location

@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.openmensa.api.preferences
+package de.uni_potsdam.hpi.openmensa.ui.settings
 
 import android.content.Context
 import android.util.AttributeSet

@@ -13,16 +13,16 @@
             <TextView
                 android:padding="16dp"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:text="@string/setup_no_favorites_text"
+                android:text="@string/setup_no_selection_text"
                 android:gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <Button
-                android:id="@+id/select_favorites_button"
+                android:id="@+id/select_canteen_button"
                 android:layout_gravity="center_horizontal"
                 android:background="?selectableItemBackground"
-                android:text="@string/setup_no_favorites_action"
+                android:text="@string/setup_no_selection_action"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

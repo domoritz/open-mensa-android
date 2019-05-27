@@ -4,10 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import de.uni_potsdam.hpi.openmensa.data.dao.CanteenDao
-import de.uni_potsdam.hpi.openmensa.data.dao.DayDao
-import de.uni_potsdam.hpi.openmensa.data.dao.LastCanteenSyncDao
-import de.uni_potsdam.hpi.openmensa.data.dao.MealDao
+import de.uni_potsdam.hpi.openmensa.data.dao.*
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.data.model.Day
 import de.uni_potsdam.hpi.openmensa.data.model.LastCanteenSync
@@ -45,6 +42,7 @@ abstract class AppDatabase: RoomDatabase() {
     }
 
     abstract fun canteen(): CanteenDao
+    abstract fun canteenCity(): CanteenCityDao
     abstract fun day(): DayDao
     abstract fun meal(): MealDao
     abstract fun lastCanteenSync(): LastCanteenSyncDao

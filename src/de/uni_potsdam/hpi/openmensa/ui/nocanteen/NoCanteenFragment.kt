@@ -8,10 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import de.uni_potsdam.hpi.openmensa.R
 import de.uni_potsdam.hpi.openmensa.databinding.NoCanteenFragmentBinding
 import de.uni_potsdam.hpi.openmensa.sync.CanteenSyncing
-import de.uni_potsdam.hpi.openmensa.ui.canteenlist.SelectCanteenDialogFragment
+import de.uni_potsdam.hpi.openmensa.ui.canteenlist.small.SmallCanteenListDialogFragment
+import de.uni_potsdam.hpi.openmensa.ui.settings.canteenlist.SelectCanteenDialogFragment
 
 class NoCanteenFragment : Fragment() {
     companion object {
@@ -32,8 +32,8 @@ class NoCanteenFragment : Fragment() {
             }
         })
 
-        binding.noFavorites.selectFavoritesButton.setOnClickListener {
-            SelectCanteenDialogFragment().show(fragmentManager!!)
+        binding.noSelection.selectCanteenButton.setOnClickListener {
+            SmallCanteenListDialogFragment().show(fragmentManager!!)
         }
 
         binding.noData.retryButton.setOnClickListener {

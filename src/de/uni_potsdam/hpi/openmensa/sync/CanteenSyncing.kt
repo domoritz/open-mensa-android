@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import de.uni_potsdam.hpi.openmensa.BuildConfig
 import de.uni_potsdam.hpi.openmensa.Threads
 import de.uni_potsdam.hpi.openmensa.api.client.HttpApiClient
-import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
+import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.data.AppDatabase
 
 object CanteenSyncing {
@@ -29,7 +29,7 @@ object CanteenSyncing {
     }
 
     private fun shouldDoBackgroundSync(context: Context): Boolean {
-        val lastSync = SettingsUtils.getLastCanteenListUpdate(context)
+        val lastSync = SettingsUtils.with(context).lastCanteenListUpdate
 
         return lastSync + 1000 * 60 * 60 * 24 * 7 /* 7 days */ < System.currentTimeMillis()
     }
@@ -64,7 +64,7 @@ object CanteenSyncing {
                         database = AppDatabase.with(context)
                 )
 
-                SettingsUtils.updateLastCanteenListUpdate(context)
+                SettingsUtils.with(context).lastCanteenListUpdate = System.currentTimeMillis()
             } finally {
                 isWorkingInternal.postValue(false)
             }

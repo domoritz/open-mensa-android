@@ -4,18 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 
 import android.view.*
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 
-import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsActivity
-import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
-import de.uni_potsdam.hpi.openmensa.data.model.Canteen
+import de.uni_potsdam.hpi.openmensa.ui.settings.SettingsActivity
+import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.sync.*
+import de.uni_potsdam.hpi.openmensa.ui.canteenlist.small.SmallCanteenListDialogFragment
 import de.uni_potsdam.hpi.openmensa.ui.privacy.PrivacyDialogFragment
 import de.uni_potsdam.hpi.openmensa.ui.nocanteen.NoCanteenFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -28,13 +25,13 @@ class MainActivity : FragmentActivity() {
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-        val initialTheme = SettingsUtils.getSelectedTheme(this)
+        val initialTheme = SettingsUtils.with(this).selectedTheme
         var lastSnackbar: Snackbar? = null
 
         setTheme(initialTheme)
         super.onCreate(savedInstanceState)
 
-        SettingsUtils.getSelectedThemeLive(this).observe(this, Observer {
+        SettingsUtils.with(this).selectedThemeLive.observe(this, Observer {
             if (it != initialTheme) recreate()
         })
 
@@ -57,6 +54,11 @@ class MainActivity : FragmentActivity() {
                 }
                 R.id.canteen_info -> {
                     CanteenFragment().show(supportFragmentManager)
+
+                    true
+                }
+                R.id.menu_star -> {
+                    model.toggleFavorite()
 
                     true
                 }
@@ -84,43 +86,20 @@ class MainActivity : FragmentActivity() {
         model.datesToShow.observe(this, Observer { sectionsPagerAdapter.dates = it })
 
         // init canteen selection
-        val spinnerItems = mutableListOf<Canteen>()
-        val spinnerAdapter = object: ArrayAdapter<Canteen>(this, android.R.layout.simple_spinner_dropdown_item, spinnerItems) {
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View = (super.getView(position, convertView, parent) as TextView).let { view ->
-                view.text = spinnerItems[position].name
-                view
-            }
+        model.currentlySelectedCanteen.observe(this, Observer { currentCanteen ->
+            spinner.text = currentCanteen?.canteen?.name ?: ""
 
-            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View = (super.getDropDownView(position, convertView, parent) as TextView).let { view ->
-                view.text = spinnerItems[position].name
-                view
-            }
-        }
+            val noCanteen = currentCanteen == null
+            val hasCanteen = currentCanteen != null
 
-        spinner.adapter = spinnerAdapter
-        spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                model.currentlySelectedCanteenId.postValue(spinnerItems[position].id)
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                // ignore
-            }
-        }
-
-        model.favoriteCanteens.observe(this, Observer { favoriteCanteens ->
-            spinnerItems.clear()
-            spinnerItems.addAll(favoriteCanteens)
-            spinnerAdapter.notifyDataSetChanged()
-
-            model.currentlySelectedCanteenId.value?.let { cur ->
-                val displayedCanteenPosition = spinnerItems.indexOfFirst { it.id == cur }
-
-                if (spinner.selectedItemPosition != displayedCanteenPosition) {
-                    spinner.setSelection(displayedCanteenPosition)
-                }
-            }
+            flipper.displayedChild = if (noCanteen) 1 else 0
+            spinner.visibility = if (noCanteen) View.GONE else View.VISIBLE
+            tabs.visibility = if (noCanteen) View.GONE else View.VISIBLE
+            toolbar.menu.findItem(R.id.reload).isVisible = hasCanteen
+            toolbar.menu.findItem(R.id.canteen_info).isVisible = hasCanteen
+            toolbar.menu.findItem(R.id.menu_star).isVisible = hasCanteen
         })
+        spinner.setOnClickListener {  SmallCanteenListDialogFragment().show(supportFragmentManager) }
 
         // do background query of data after canteen selection
         model.currentlySelectedCanteenId.observe(this, Observer {
@@ -144,13 +123,11 @@ class MainActivity : FragmentActivity() {
             }
         })
 
-        // handle empty list of favorite canteens
-        model.noFavoriteCanteens.observe(this, Observer {
-            flipper.displayedChild = if (it) 1 else 0
-            spinner.visibility = if (it) View.GONE else View.VISIBLE
-            tabs.visibility = if (it) View.GONE else View.VISIBLE
-            toolbar.menu.findItem(R.id.reload).isVisible = !it
-            toolbar.menu.findItem(R.id.canteen_info).isVisible = !it
+        model.isSelectedCanteenFavorite.observe(this, Observer { isFavorite ->
+            val star = toolbar.menu.findItem(R.id.menu_star)
+
+            star.setIcon(if (isFavorite) R.drawable.ic_star_black_24dp else R.drawable.ic_star_border_black_24dp)
+            star.setTitle(if (isFavorite) R.string.menu_favorite_rm else R.string.menu_favorite_add)
         })
     }
 

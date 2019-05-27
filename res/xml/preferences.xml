@@ -29,7 +29,7 @@
 			android:defaultValue="false" />
 	</PreferenceCategory>
     <PreferenceCategory android:title="@string/about_title">
-    	<de.uni_potsdam.hpi.openmensa.api.preferences.VersionPreference android:title="@string/version_title" />
+    	<de.uni_potsdam.hpi.openmensa.ui.settings.VersionPreference android:title="@string/version_title" />
     	<Preference android:title="@string/powered_by_title" android:summary="@string/powered_by_desc">
     		<intent android:action="android.intent.action.VIEW"
             android:data="http://openmensa.org/" />

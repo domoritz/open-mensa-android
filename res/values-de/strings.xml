@@ -4,6 +4,8 @@
     <string name="section_canteen">Mensa</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_preferences">Einstellungen</string>
+    <string name="menu_favorite_add">Als Favorit markieren</string>
+    <string name="menu_favorite_rm">Markierung als Favorit aufheben</string>
     <string name="title_activity_main">OpenMensa</string>
     
     <string name="spinner_favourites">Favoriten Auswählen</string>
@@ -70,8 +72,8 @@
     <string name="privacy_dialog_accept">Akzeptieren</string>
     <string name="privacy_dialog_settings">Einstellungen öffnen</string>
 
-    <string name="setup_no_favorites_text">Bitte wähle bevorzugte Mensen. Diese werden dann im Mensadropdown angezeigt.</string>
-    <string name="setup_no_favorites_action">Mensen wählen</string>
+    <string name="setup_no_selection_text">Bitte wähle eine Mensa, um Inhalte anzuzeigen.</string>
+    <string name="setup_no_selection_action">Mensa wählen</string>
     <string name="setup_no_data_text">Es war nicht möglich, die Mensaliste zu laden</string>
     <string name="setup_no_data_action">Erneut versuchen</string>
 
@@ -83,4 +85,8 @@
     <string name="pref_map_category">Karte</string>
     <string name="pref_map">@string/map_btn_enable</string>
     <string name="pref_map_text">@string/map_privacy_text</string>
+
+    <string name="canteen_list_show_more">Alle anzeigen</string>
+    <string name="canteen_list_select_city">Stadt wählen</string>
+    <string name="canteen_list_enable_loc_access">Standortzugriff aktivieren</string>
 </resources>

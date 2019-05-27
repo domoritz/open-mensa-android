@@ -8,8 +8,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import de.uni_potsdam.hpi.openmensa.R
-import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsActivity
-import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
+import de.uni_potsdam.hpi.openmensa.ui.settings.SettingsActivity
+import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.sync.CanteenSyncing
 
 class PrivacyDialogFragment: DialogFragment() {
@@ -18,9 +18,7 @@ class PrivacyDialogFragment: DialogFragment() {
         private const val REQUEST_SETTINGS = 1
 
         fun showIfRequired(activity: FragmentActivity) {
-            SettingsUtils.eventuallyDeleteOldUrl(activity)
-
-            if (SettingsUtils.getSourceUrl(activity).isBlank()) {
+            if (SettingsUtils.with(activity).sourceUrl.isBlank()) {
                 if (activity.supportFragmentManager.findFragmentByTag(DIALOG_TAG) == null) {
                     PrivacyDialogFragment().show(activity.supportFragmentManager, DIALOG_TAG)
                 }
@@ -32,7 +30,7 @@ class PrivacyDialogFragment: DialogFragment() {
             .setTitle(R.string.privacy_dialog_title)
             .setMessage(getString(R.string.privacy_dialog_text, getString(R.string.source_url_default)))
             .setPositiveButton(R.string.privacy_dialog_accept) { _, _ ->
-                SettingsUtils.serSourceUrl(context!!, getString(R.string.source_url_default))
+                SettingsUtils.with(context!!).sourceUrl = getString(R.string.source_url_default)
                 CanteenSyncing.runBackgroundSync(context!!)
             }
             .setNeutralButton(R.string.privacy_dialog_settings) { _, _ ->
@@ -51,7 +49,7 @@ class PrivacyDialogFragment: DialogFragment() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_SETTINGS) {
-            if (!SettingsUtils.getSourceUrl(context!!).isBlank()) {
+            if (!SettingsUtils.with(context!!).sourceUrl.isBlank()) {
                 dismiss()
             }
         }

@@ -2,7 +2,7 @@ package de.uni_potsdam.hpi.openmensa.api.client
 
 import android.content.Context
 import android.util.JsonReader
-import de.uni_potsdam.hpi.openmensa.api.preferences.SettingsUtils
+import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.data.model.DayWithMeals
 import okhttp3.OkHttpClient
@@ -40,7 +40,7 @@ class HttpApiClient(val serverUrl: String): ApiClient {
             }
         }
 
-        fun getInstance(context: Context) = HttpApiClient(serverUrl = SettingsUtils.getSourceUrl(context))
+        fun getInstance(context: Context) = HttpApiClient(serverUrl = SettingsUtils.with(context).sourceUrl)
     }
 
     init {

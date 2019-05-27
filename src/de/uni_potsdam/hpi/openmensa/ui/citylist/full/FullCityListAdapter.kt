@@ -1,21 +1,18 @@
-package de.uni_potsdam.hpi.openmensa.ui.canteenlist
+package de.uni_potsdam.hpi.openmensa.ui.citylist.full
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.CheckedTextView
 import androidx.recyclerview.widget.RecyclerView
-import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import kotlin.properties.Delegates
 
-class CanteenDialogFragmentAdapter: RecyclerView.Adapter<ViewHolder>() {
-    var content: List<Canteen>? by Delegates.observable(null as List<Canteen>?) {
+class FullCityListAdapter: RecyclerView.Adapter<ViewHolder>() {
+    var content: List<String>? by Delegates.observable(null as List<String>?) {
         _, _, _ -> notifyDataSetChanged()
     }
-
-    var checkedItemIds: Set<Int> by Delegates.observable(emptySet()) {
+    var selectedCityName: String? by Delegates.observable(null as String?) {
         _, _, _ -> notifyDataSetChanged()
     }
-
     var listener: AdapterListener? = null
 
     init {
@@ -24,20 +21,20 @@ class CanteenDialogFragmentAdapter: RecyclerView.Adapter<ViewHolder>() {
 
     override fun getItemCount(): Int = content?.size ?: 0
 
-    override fun getItemId(position: Int): Long = content!![position].id.toLong()
+    override fun getItemId(position: Int): Long = content!![position].hashCode().toLong()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
             LayoutInflater.from(parent.context)
-                    .inflate(android.R.layout.simple_list_item_multiple_choice, parent, false) as CheckedTextView
+                    .inflate(android.R.layout.simple_list_item_single_choice, parent, false) as CheckedTextView
     )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = content!![position]
 
-        holder.view.text = item.name
-        holder.view.isChecked = checkedItemIds.contains(item.id)
+        holder.view.text = item
+        holder.view.isChecked = item == selectedCityName
         holder.view.setOnClickListener {
-            listener?.onCanteenClicked(item)
+            listener?.onCityClicked(item)
         }
     }
 }
@@ -45,5 +42,5 @@ class CanteenDialogFragmentAdapter: RecyclerView.Adapter<ViewHolder>() {
 class ViewHolder(val view: CheckedTextView): RecyclerView.ViewHolder(view)
 
 interface AdapterListener {
-    fun onCanteenClicked(canteen: Canteen)
+    fun onCityClicked(cityName: String)
 }

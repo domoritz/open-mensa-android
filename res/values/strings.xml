@@ -4,6 +4,8 @@
     <string name="section_canteen">Canteen</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_preferences">Preferences</string>
+    <string name="menu_favorite_add">Mark as favorite</string>
+    <string name="menu_favorite_rm">Remove from favorites</string>
     <string name="title_activity_main">OpenMensa</string>
     
     <string name="spinner_favourites">Choose Favourites</string>
@@ -80,8 +82,8 @@
     <string name="privacy_dialog_accept">Accept</string>
     <string name="privacy_dialog_settings">Open settings</string>
 
-    <string name="setup_no_favorites_text">Please select favorite canteens. These canteens will be shown in the canteen dropdown.</string>
-    <string name="setup_no_favorites_action">Select canteens</string>
+    <string name="setup_no_selection_text">Please select a canteen to show some content.</string>
+    <string name="setup_no_selection_action">Select canteen</string>
     <string name="setup_no_data_text">It was not possible to load a list of canteens</string>
     <string name="setup_no_data_action">Retry</string>
 
@@ -93,4 +95,8 @@
     <string name="pref_map_category">Map</string>
     <string name="pref_map">@string/map_btn_enable</string>
     <string name="pref_map_text">@string/map_privacy_text</string>
+    
+    <string name="canteen_list_show_more">Show all</string>
+    <string name="canteen_list_select_city">Select city</string>
+    <string name="canteen_list_enable_loc_access">Enable location access</string>
 </resources>

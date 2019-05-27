@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.openmensa.api.preferences
+package de.uni_potsdam.hpi.openmensa.ui.settings
 
 import android.os.Bundle
 
@@ -9,6 +9,7 @@ import androidx.core.app.NavUtils
 import androidx.lifecycle.Observer
 
 import de.uni_potsdam.hpi.openmensa.R
+import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
 
 /**
  *
@@ -17,12 +18,12 @@ import de.uni_potsdam.hpi.openmensa.R
 class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val initialTheme = SettingsUtils.getSelectedTheme(this)
+        val initialTheme = SettingsUtils.with(this).selectedTheme
         setTheme(initialTheme)
 
         super.onCreate(savedInstanceState)
 
-        SettingsUtils.getSelectedThemeLive(this).observe(this, Observer {
+        SettingsUtils.with(this).selectedThemeLive.observe(this, Observer {
             if (it != initialTheme) recreate()
         })
 
