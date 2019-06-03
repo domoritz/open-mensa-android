@@ -1,1 +1,1 @@
-Überarbeitete Mensaauswahl
+Farbfehler im dunklen Theme behoben
