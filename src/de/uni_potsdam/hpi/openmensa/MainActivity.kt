@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 
 import android.view.*
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -25,13 +27,14 @@ class MainActivity : FragmentActivity() {
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-        val initialTheme = SettingsUtils.with(this).selectedTheme
+        val settings = SettingsUtils.with(this)
+        val initialTheme = settings.selectedTheme
         var lastSnackbar: Snackbar? = null
 
         setTheme(initialTheme)
         super.onCreate(savedInstanceState)
 
-        SettingsUtils.with(this).selectedThemeLive.observe(this, Observer {
+        settings.selectedThemeLive.observe(this, Observer {
             if (it != initialTheme) recreate()
         })
 
@@ -87,7 +90,7 @@ class MainActivity : FragmentActivity() {
 
         // init canteen selection
         model.currentlySelectedCanteen.observe(this, Observer { currentCanteen ->
-            spinner.text = currentCanteen?.canteen?.name ?: ""
+            spinner_text.text = currentCanteen?.canteen?.name ?: ""
 
             val noCanteen = currentCanteen == null
             val hasCanteen = currentCanteen != null
@@ -99,7 +102,10 @@ class MainActivity : FragmentActivity() {
             toolbar.menu.findItem(R.id.canteen_info).isVisible = hasCanteen
             toolbar.menu.findItem(R.id.menu_star).isVisible = hasCanteen
         })
-        spinner.setOnClickListener {  SmallCanteenListDialogFragment().show(supportFragmentManager) }
+        spinner.setOnClickListener { SmallCanteenListDialogFragment().show(supportFragmentManager) }
+        spinner_image.setImageDrawable(DrawableCompat.wrap(ContextCompat.getDrawable(this, R.drawable.ic_arrow_drop_down_black_24dp)!!).apply {
+            DrawableCompat.setTint(this, settings.selectedThemeIconColor)
+        })
 
         // do background query of data after canteen selection
         model.currentlySelectedCanteenId.observe(this, Observer {
@@ -126,7 +132,12 @@ class MainActivity : FragmentActivity() {
         model.isSelectedCanteenFavorite.observe(this, Observer { isFavorite ->
             val star = toolbar.menu.findItem(R.id.menu_star)
 
-            star.setIcon(if (isFavorite) R.drawable.ic_star_black_24dp else R.drawable.ic_star_border_black_24dp)
+            star.icon = DrawableCompat.wrap(ContextCompat.getDrawable(
+                    this,
+                    if (isFavorite) R.drawable.ic_star_black_24dp else R.drawable.ic_star_border_black_24dp
+            )!!).apply {
+                DrawableCompat.setTint(this, settings.selectedThemeIconColor)
+            }
             star.setTitle(if (isFavorite) R.string.menu_favorite_rm else R.string.menu_favorite_add)
         })
     }

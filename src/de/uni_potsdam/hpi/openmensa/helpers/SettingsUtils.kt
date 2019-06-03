@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.openmensa.helpers
 
 import android.app.Application
 import android.content.Context
+import android.graphics.Color
 import android.preference.PreferenceManager
 import android.util.Log
 import de.uni_potsdam.hpi.openmensa.BuildConfig
@@ -68,11 +69,29 @@ class SettingsUtils(private val context: Application) {
         else -> R.style.LightAppTheme
     }
 
+    private fun getBottomSheetTheme(theme: String): Int = when(theme) {
+        THEME_DARK -> R.style.DarkBottomSheetTheme
+        THEME_LIGHT -> R.style.LightBottomSheetTheme
+        else -> R.style.LightBottomSheetTheme
+    }
+
+    private fun getIconColorByThemeByString(theme: String): Int = when(theme) {
+        THEME_DARK -> Color.WHITE
+        THEME_LIGHT -> Color.BLACK
+        else -> Color.BLACK
+    }
+
     private val selectedThemeName: String
         get() = prefs.getString(KEY_STYLE, THEME_LIGHT)!!
 
     val selectedTheme: Int
         get() = getThemeByString(selectedThemeName)
+
+    val selectedBottomSheetThemeTheme: Int
+        get() = getBottomSheetTheme(selectedThemeName)
+
+    val selectedThemeIconColor: Int
+        get() = getIconColorByThemeByString(selectedThemeName)
 
     val selectedThemeLive = LiveSettings.createObservablePreference(prefs, KEY_STYLE) { selectedTheme }
 

@@ -2,4 +2,9 @@
 <resources>
     <style name="DarkAppTheme" parent="Theme.AppCompat" />
     <style name="LightAppTheme" parent="Theme.AppCompat.Light" />
+
+    <style name="DarkBottomSheetTheme" parent="Theme.MaterialComponents.BottomSheetDialog">
+        <item name="android:backgroundDimAmount">0.3</item>
+    </style>
+    <style name="LightBottomSheetTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog" />
 </resources>

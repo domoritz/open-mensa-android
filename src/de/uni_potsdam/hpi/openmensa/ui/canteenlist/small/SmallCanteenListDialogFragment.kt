@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.openmensa.ui.canteenlist.small
 
 import android.Manifest
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,9 +14,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import de.uni_potsdam.hpi.openmensa.MainActivity
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
+import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.ui.canteenlist.full.FullCanteenListDialogFragment
 import de.uni_potsdam.hpi.openmensa.ui.citylist.small.SmallCityListDialogFragment
 
@@ -25,6 +28,10 @@ class SmallCanteenListDialogFragment : BottomSheetDialogFragment() {
         private const val REQUEST_FULL_CANTEEN_LIST = 1
         private const val REQUEST_LOCATION_ACCESS = 2
         private const val REQUEST_SELECT_CITY_SETUP = 3
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return BottomSheetDialog(context!!, SettingsUtils.with(context!!).selectedBottomSheetThemeTheme)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -53,6 +60,7 @@ class SmallCanteenListDialogFragment : BottomSheetDialogFragment() {
                 requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_ACCESS)
             }
         }
+        adapter.iconTint = SettingsUtils.with(context!!).selectedThemeIconColor
 
         model.shortList.observe(this, Observer { adapter.content = it })
         model.noCitySelected.observe(this, Observer {

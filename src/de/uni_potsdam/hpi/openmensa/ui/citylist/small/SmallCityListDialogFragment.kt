@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.openmensa.ui.citylist.small
 
 import android.Manifest
 import android.app.Activity
+import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -13,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.ui.citylist.full.FullCityListDialogFragment
@@ -22,6 +24,10 @@ class SmallCityListDialogFragment: BottomSheetDialogFragment() {
         const val DIALOG_TAG = "SmallCityListDialogFragment"
         private const val REQUEST_FULL_LIST = 1
         private const val REQUEST_LOCATION_ACCESS = 2
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return BottomSheetDialog(context!!, SettingsUtils.with(context!!).selectedBottomSheetThemeTheme)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -46,6 +52,7 @@ class SmallCityListDialogFragment: BottomSheetDialogFragment() {
                 requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_ACCESS)
             }
         }
+        adapter.iconTint = SettingsUtils.with(context!!).selectedThemeIconColor
 
         recycler.layoutManager = LinearLayoutManager(context!!)
         recycler.adapter = adapter
