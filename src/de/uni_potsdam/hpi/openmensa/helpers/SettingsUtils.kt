@@ -8,6 +8,7 @@ import android.util.Log
 import de.uni_potsdam.hpi.openmensa.BuildConfig
 
 import de.uni_potsdam.hpi.openmensa.R
+import de.uni_potsdam.hpi.openmensa.api.DefaultApiUrl
 
 /**
  * Provides simple methods to access shared settings.
@@ -31,7 +32,7 @@ class SettingsUtils(private val context: Application) {
 
         const val KEY_LAST_SELECTED_CANTEEN_ID = "last_canteen_id"
         const val KEY_LAST_CANTEEN_LIST_UPDATE = "last_canteen_list_update"
-        const val DID_MIGRATE_FROM_OLD_URL = "did_migrate_from_old_url"
+        const val DID_MIGRATE_TO_SAFE_URL = "did_migrate_to_safe_url"
         // note: the current selection is the first selection
         // the last recently used items should be at the start of the list
         const val SELECTED_CITIES = "selected_cities"
@@ -164,11 +165,11 @@ class SettingsUtils(private val context: Application) {
 
     init {
         // eventually delete old source url
-        if (sourceUrl == context.getString(R.string.source_url_old_default)) {
-            if (!prefs.getBoolean(DID_MIGRATE_FROM_OLD_URL, false)) {
+        if (sourceUrl == DefaultApiUrl.UNSAFE_URL && !DefaultApiUrl.NEEDS_UNSAFE_URL) {
+            if (!prefs.getBoolean(DID_MIGRATE_TO_SAFE_URL, false)) {
                 prefs.edit()
-                        .putBoolean(DID_MIGRATE_FROM_OLD_URL, true)
-                        .remove(KEY_SOURCE_URL)
+                        .putBoolean(DID_MIGRATE_TO_SAFE_URL, true)
+                        .putString(KEY_SOURCE_URL, DefaultApiUrl.SAFE_URL)
                         .apply()
             }
         }
@@ -181,10 +182,18 @@ class SettingsUtils(private val context: Application) {
                 Log.d(LOG_TAG, "did update => wipe canteen list cache")
             }
 
-            prefs.edit()
+            val edit = prefs.edit()
                     .putInt(KEY_LAST_APP_VERSION, currentAppVersion)
                     .remove(KEY_LAST_CANTEEN_LIST_UPDATE)
-                    .apply()
+
+            if (lastAppVersion < 21) {
+                if (sourceUrl == DefaultApiUrl.SAFE_URL && DefaultApiUrl.NEEDS_UNSAFE_URL) {
+                    // require new confirmation
+                    edit.remove(KEY_SOURCE_URL)
+                }
+            }
+
+            edit.apply()
         } else {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "no update")

@@ -69,6 +69,7 @@
 
     <string name="privacy_dialog_title">Datenschutz</string>
     <string name="privacy_dialog_text">Diese App nutzt die Daten von %s. Der Betreiber dieses Servers könnte Logfiles erstellen. Sie können in den Einstellungen einen anderen Server wählen.</string>
+    <string name="privacy_dialog_warning_plaintext">Aufgrund Deiner alten Android-Version wird HTTP (eine unverschlüsselte Verbindung) verwendet.</string>
     <string name="privacy_dialog_accept">Akzeptieren</string>
     <string name="privacy_dialog_settings">Einstellungen öffnen</string>
 

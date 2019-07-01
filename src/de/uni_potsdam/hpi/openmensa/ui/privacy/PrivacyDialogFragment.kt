@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import de.uni_potsdam.hpi.openmensa.R
+import de.uni_potsdam.hpi.openmensa.api.DefaultApiUrl
 import de.uni_potsdam.hpi.openmensa.ui.settings.SettingsActivity
 import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.sync.CanteenSyncing
@@ -26,11 +27,22 @@ class PrivacyDialogFragment: DialogFragment() {
         }
     }
 
+    private val serverUrl = if (DefaultApiUrl.NEEDS_UNSAFE_URL)
+        DefaultApiUrl.UNSAFE_URL
+    else
+        DefaultApiUrl.SAFE_URL
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = AlertDialog.Builder(context!!, theme)
             .setTitle(R.string.privacy_dialog_title)
-            .setMessage(getString(R.string.privacy_dialog_text, getString(R.string.source_url_default)))
+            .setMessage(
+                    getString(R.string.privacy_dialog_text, serverUrl) +
+                            if (DefaultApiUrl.NEEDS_UNSAFE_URL)
+                                " " + getString(R.string.privacy_dialog_warning_plaintext)
+                            else
+                                ""
+            )
             .setPositiveButton(R.string.privacy_dialog_accept) { _, _ ->
-                SettingsUtils.with(context!!).sourceUrl = getString(R.string.source_url_default)
+                SettingsUtils.with(context!!).sourceUrl = serverUrl
                 CanteenSyncing.runBackgroundSync(context!!)
             }
             .setNeutralButton(R.string.privacy_dialog_settings) { _, _ ->
