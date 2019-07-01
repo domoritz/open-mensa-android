@@ -60,6 +60,9 @@ class SmallCanteenListModel (application: Application): AndroidViewModel(applica
                     // add up to 5 items by distance
                     val itemsByDistanceCounter = Math.max(3, 5 - result.size)
                     val itemsByDistance = src.subList(0, Math.min(itemsByDistanceCounter, src.size))
+                            // required to clone the list because some android versions
+                            // just return a wrapper for the original list (which is modified later)
+                            .toMutableList()
 
                     result.addAll(itemsByDistance.map { CanteenListItem(it, CanteenListItemReason.Distance) })
                     src.removeAll(itemsByDistance)
