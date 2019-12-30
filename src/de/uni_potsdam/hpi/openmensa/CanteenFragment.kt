@@ -64,10 +64,10 @@ class CanteenFragment : BottomSheetDialogFragment() {
             dialog as BottomSheetDialog
 
             dialog.setOnShowListener {
-                val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+                val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)!!
                 val behavior = BottomSheetBehavior.from(bottomSheet)
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                behavior.peekHeight = bottomSheet!!.measuredHeight
+                behavior.peekHeight = bottomSheet.measuredHeight
                 behavior.isHideable = false
             }
 
