@@ -1,1 +1,1 @@
-Farbfehler im dunklen Theme behoben
+Libraries akutalisiert
