@@ -1,1 +1,1 @@
-updated libraries
+no real change, only adjusted metadata for fdroid
