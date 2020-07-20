@@ -17,5 +17,7 @@
         android:layout_height="wrap_content"
         tools:text="Lorem Ipsum"
         android:text="@{category}"
+        android:textStyle="bold"
+        android:textColor="?android:textColorPrimary"
         android:textAppearance="?android:textAppearanceMedium" />
 </layout>
