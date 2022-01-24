@@ -12,8 +12,8 @@ interface CanteenDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOrReplace(items: List<Canteen>)
 
-    @Query("DELETE FROM canteen WHERE NOT id IN (:currentItemIds)")
-    fun deleteOldItems(currentItemIds: List<Int>)
+    @Query("DELETE FROM canteen WHERE NOT id IN (SELECT id FROM current_canteen)")
+    fun deleteOldItems()
 
     @Query("DELETE FROM canteen")
     fun deleteAllItems()

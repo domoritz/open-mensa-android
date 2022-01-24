@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.openmensa.sync
 import de.uni_potsdam.hpi.openmensa.api.client.ApiClient
 import de.uni_potsdam.hpi.openmensa.api.client.queryAllItems
 import de.uni_potsdam.hpi.openmensa.data.AppDatabase
+import de.uni_potsdam.hpi.openmensa.data.model.CurrentCanteen
 import de.uni_potsdam.hpi.openmensa.data.model.LastCanteenSync
 
 object SyncUtil {
@@ -10,8 +11,12 @@ object SyncUtil {
         val canteens = api.canteens.queryAllItems()
 
         database.runInTransaction {
+            database.currentCanteen().deleteAllItems()
+
             database.canteen().insertOrReplace(canteens)
-            database.canteen().deleteOldItems(currentItemIds = canteens.map { it.id })
+            database.currentCanteen().insert(canteens.map { CurrentCanteen(id = it.id) })
+
+            database.canteen().deleteOldItems()
         }
     }
 
