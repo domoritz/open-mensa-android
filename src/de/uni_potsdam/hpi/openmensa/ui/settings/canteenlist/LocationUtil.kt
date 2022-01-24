@@ -51,19 +51,19 @@ object LocationUtil {
     fun getLocationLive(context: Context) = object: LiveData<LocationStatus>() {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val locationListener = object: LocationListener {
-            override fun onLocationChanged(location: Location?) {
+            override fun onLocationChanged(location: Location) {
                 update()
             }
 
-            override fun onProviderDisabled(provider: String?) {
+            override fun onProviderDisabled(provider: String) {
                 // ignore
             }
 
-            override fun onProviderEnabled(provider: String?) {
+            override fun onProviderEnabled(provider: String) {
                 // ignore
             }
 
-            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+            override fun onStatusChanged(provider: String, status: Int, extras: Bundle?) {
                 // ignore
             }
         }
