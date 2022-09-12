@@ -1,9 +1,9 @@
 buildscript {
-    ext.kotlin_version = '1.6.10'
+    ext.kotlin_version = '1.7.10'
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
@@ -18,21 +18,21 @@ apply plugin: 'kotlin-kapt'
 
 repositories {
     google()
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
-    def room_version = "2.4.1"
+    def room_version = "2.4.3"
     def lifecycle_version = "2.2.0"
 
     // compile fileTree(dir: 'libs', include: '*.jar')
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation "com.google.android.material:material:1.5.0"
-    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation "com.google.android.material:material:1.6.1"
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
     implementation 'org.osmdroid:osmdroid-android:6.1.0'
     implementation 'org.slf4j:slf4j-android:1.6.1-RC1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
