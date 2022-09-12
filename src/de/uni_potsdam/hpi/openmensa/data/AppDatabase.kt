@@ -14,7 +14,7 @@ import de.uni_potsdam.hpi.openmensa.data.model.*
             Day::class,
             Meal::class,
             LastCanteenSync::class
-        ], version = 2
+        ], version = 3
 )
 abstract class AppDatabase: RoomDatabase() {
     companion object {

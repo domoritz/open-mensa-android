@@ -3,9 +3,17 @@ package de.uni_potsdam.hpi.openmensa.data.model
 import android.util.JsonReader
 import android.util.JsonToken
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(
+    indices = [
+        Index(
+            name = "canteen_city_index",
+            value = ["city"]
+        )
+    ]
+)
 data class Canteen(
         @PrimaryKey
         val id: Int,
