@@ -50,7 +50,7 @@ class DayFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         model.init((activity as MainActivity).model)
-        model.indexLive.value = arguments!!.getInt(EXTRA_INDEX)
+        model.indexLive.value = requireArguments().getInt(EXTRA_INDEX)
 
         if (savedInstanceState != null) {
             expandedItems.value = savedInstanceState.getIntArray(STATE_EXPANDED_ITEMS)!!.toSet()
@@ -80,15 +80,15 @@ class DayFragment : Fragment() {
                 val list = mutableListOf<MealItem>()
 
                 categories.forEach { category ->
-                    list.add(MealCategoryItem(category))
+                    list.add(MealItem.Category(category))
 
                     val categoryMeals = mealsByCategory[category]!!
 
                     categoryMeals.forEach { meal ->
-                        list.add(MealShortInfoItem(meal))
+                        list.add(MealItem.ShortInfo(meal))
 
                         if (items.contains(meal.id)) {
-                            list.add(MealDetailInfoItem(meal))
+                            list.add(MealItem.DetailInfo(meal))
                         }
                     }
                 }
@@ -111,7 +111,7 @@ class DayFragment : Fragment() {
         }
 
         val dateHeader = dateHeaderText.map {
-            if (it != null) DateMealItem(it) else null
+            if (it != null) MealItem.Date(it) else null
         }
 
         val externalDateHeader = model.dayMode.switchMap { dayMode ->
@@ -130,21 +130,19 @@ class DayFragment : Fragment() {
             }
         }
 
-        fullMealList.observe(this, Observer {
-            adapter.meals = it
-        })
+        fullMealList.observe(viewLifecycleOwner) { adapter.meals = it }
 
-        model.dayMode.observe(this, Observer {
+        model.dayMode.observe(viewLifecycleOwner) {
             binding.flipper.displayedChild = when (it!!) {
                 DayMode.ShowList -> PAGE_LIST
                 DayMode.NoInformation -> PAGE_NO_DATA
                 DayMode.Closed -> PAGE_CLOSED
             }
-        })
+        }
 
-        externalDateHeader.observe(this, Observer {
+        externalDateHeader.observe(viewLifecycleOwner) {
             binding.date.date = it
-        })
+        }
 
         binding.recycler.layoutManager = LinearLayoutManager(context!!)
         binding.recycler.adapter = adapter

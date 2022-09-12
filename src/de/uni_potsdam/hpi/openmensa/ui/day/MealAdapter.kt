@@ -36,10 +36,10 @@ class MealAdapter: RecyclerView.Adapter<MealViewHolder>() {
     override fun getItemId(position: Int): Long = meals!![position].hashCode().toLong()
 
     override fun getItemViewType(position: Int): Int = when(meals!![position]) {
-        is DateMealItem -> TYPE_DATE
-        is MealCategoryItem -> TYPE_CATEGORY
-        is MealShortInfoItem -> TYPE_INFO
-        is MealDetailInfoItem -> TYPE_DETAIL
+        is MealItem.Date -> TYPE_DATE
+        is MealItem.Category -> TYPE_CATEGORY
+        is MealItem.ShortInfo -> TYPE_INFO
+        is MealItem.DetailInfo -> TYPE_DETAIL
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (viewType) {
@@ -78,19 +78,19 @@ class MealAdapter: RecyclerView.Adapter<MealViewHolder>() {
         val item = meals!![position]
 
         when (item) {
-            is DateMealItem -> {
+            is MealItem.Date -> {
                 holder as MealDateHolder
 
                 holder.view.date = item.date
                 holder.view.executePendingBindings()
             }
-            is MealCategoryItem -> {
+            is MealItem.Category -> {
                 holder as MealCategoryHolder
 
                 holder.view.category = item.title
                 holder.view.executePendingBindings()
             }
-            is MealShortInfoItem -> {
+            is MealItem.ShortInfo -> {
                 holder as MealInfoHolder
                 val meal = item.meal
 
@@ -105,7 +105,7 @@ class MealAdapter: RecyclerView.Adapter<MealViewHolder>() {
                     executePendingBindings()
                 }
             }
-            is MealDetailInfoItem -> {
+            is MealItem.DetailInfo -> {
                 val meal = item.meal
                 val prices = meal.prices
 
