@@ -46,9 +46,14 @@ tasks.whenTaskAdded { task ->
 }
 
 android {
+    namespace 'de.uni_potsdam.hpi.openmensa'
+
     defaultConfig {
+        applicationId 'de.uni_potsdam.hpi.openmensa'
         versionCode 28
         versionName "1.0.6"
+        minSdkVersion 21
+        targetSdkVersion 33
 
         kapt {
             arguments {
@@ -112,10 +117,6 @@ android {
                 applicationIdSuffix ".debug"
             }
         }
-    }
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 33
     }
 }
 
