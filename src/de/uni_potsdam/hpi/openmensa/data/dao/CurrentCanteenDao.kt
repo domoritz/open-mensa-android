@@ -10,6 +10,6 @@ interface CurrentCanteenDao {
     @Insert()
     fun insert(items: List<CurrentCanteen>)
 
-    @Query("DELETE FROM canteen")
+    @Query("DELETE FROM current_canteen")
     fun deleteAllItems()
 }

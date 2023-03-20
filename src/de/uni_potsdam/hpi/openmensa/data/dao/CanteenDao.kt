@@ -1,16 +1,16 @@
 package de.uni_potsdam.hpi.openmensa.data.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 
 @Dao
 interface CanteenDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOrReplace(items: List<Canteen>)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertOrIgnore(items: List<Canteen>)
+
+    @Update
+    fun update(items: List<Canteen>)
 
     @Query("DELETE FROM canteen WHERE NOT id IN (SELECT id FROM current_canteen)")
     fun deleteOldItems()

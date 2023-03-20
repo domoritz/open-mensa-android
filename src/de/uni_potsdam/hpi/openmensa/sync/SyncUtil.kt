@@ -13,9 +13,10 @@ object SyncUtil {
         database.runInTransaction {
             database.currentCanteen().deleteAllItems()
 
-            database.canteen().insertOrReplace(canteens)
-            database.currentCanteen().insert(canteens.map { CurrentCanteen(id = it.id) })
+            database.canteen().update(canteens)
+            database.canteen().insertOrIgnore(canteens)
 
+            database.currentCanteen().insert(canteens.map { CurrentCanteen(id = it.id) })
             database.canteen().deleteOldItems()
         }
     }
