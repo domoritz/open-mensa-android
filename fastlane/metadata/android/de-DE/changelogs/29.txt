@@ -1,0 +1,2 @@
+- gelegentliches Löschen der Speisepläne behoben
+- Wartungsupdate
