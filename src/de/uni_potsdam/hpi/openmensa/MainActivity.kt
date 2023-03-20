@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
+import de.uni_potsdam.hpi.openmensa.databinding.ActivityMainBinding
 
 import de.uni_potsdam.hpi.openmensa.ui.settings.SettingsActivity
 import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
@@ -17,7 +18,6 @@ import de.uni_potsdam.hpi.openmensa.sync.*
 import de.uni_potsdam.hpi.openmensa.ui.canteenlist.small.SmallCanteenListDialogFragment
 import de.uni_potsdam.hpi.openmensa.ui.privacy.PrivacyDialogFragment
 import de.uni_potsdam.hpi.openmensa.ui.nocanteen.NoCanteenFragment
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : FragmentActivity() {
     private var isFirstResume = true
@@ -38,12 +38,14 @@ class MainActivity : FragmentActivity() {
             if (it != initialTheme) recreate()
         })
 
-        setContentView(R.layout.activity_main)
+        val binding = ActivityMainBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         // setup toolbar
-        toolbar.title = title
-        toolbar.inflateMenu(R.menu.menu_main)
-        toolbar.setOnMenuItemClickListener { item ->
+        binding.toolbar.title = title
+        binding.toolbar.inflateMenu(R.menu.menu_main)
+        binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.menu_settings -> {
                     startActivity(Intent(this, SettingsActivity::class.java))
@@ -81,29 +83,29 @@ class MainActivity : FragmentActivity() {
         // setup pager
         val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
 
-        pager.adapter = sectionsPagerAdapter
+        binding.pager.adapter = sectionsPagerAdapter
 
-        tabs.setupWithViewPager(pager)
+        binding.tabs.setupWithViewPager(binding.pager)
 
         model.currentDate.observe(this, Observer { sectionsPagerAdapter.currentDate = it })
         model.datesToShow.observe(this, Observer { sectionsPagerAdapter.dates = it })
 
         // init canteen selection
         model.currentlySelectedCanteen.observe(this, Observer { currentCanteen ->
-            spinner_text.text = currentCanteen?.canteen?.name ?: ""
+            binding.spinnerText.text = currentCanteen?.canteen?.name ?: ""
 
             val noCanteen = currentCanteen == null
             val hasCanteen = currentCanteen != null
 
-            flipper.displayedChild = if (noCanteen) 1 else 0
-            spinner.visibility = if (noCanteen) View.GONE else View.VISIBLE
-            tabs.visibility = if (noCanteen) View.GONE else View.VISIBLE
-            toolbar.menu.findItem(R.id.reload).isVisible = hasCanteen
-            toolbar.menu.findItem(R.id.canteen_info).isVisible = hasCanteen
-            toolbar.menu.findItem(R.id.menu_star).isVisible = hasCanteen
+            binding.flipper.displayedChild = if (noCanteen) 1 else 0
+            binding.spinner.visibility = if (noCanteen) View.GONE else View.VISIBLE
+            binding.tabs.visibility = if (noCanteen) View.GONE else View.VISIBLE
+            binding.toolbar.menu.findItem(R.id.reload).isVisible = hasCanteen
+            binding.toolbar.menu.findItem(R.id.canteen_info).isVisible = hasCanteen
+            binding.toolbar.menu.findItem(R.id.menu_star).isVisible = hasCanteen
         })
-        spinner.setOnClickListener { SmallCanteenListDialogFragment().show(supportFragmentManager) }
-        spinner_image.setImageDrawable(DrawableCompat.wrap(ContextCompat.getDrawable(this, R.drawable.ic_arrow_drop_down_black_24dp)!!).apply {
+        binding.spinner.setOnClickListener { SmallCanteenListDialogFragment().show(supportFragmentManager) }
+        binding.spinnerImage.setImageDrawable(DrawableCompat.wrap(ContextCompat.getDrawable(this, R.drawable.ic_arrow_drop_down_black_24dp)!!).apply {
             DrawableCompat.setTint(this, settings.selectedThemeIconColor)
         })
 
@@ -115,22 +117,22 @@ class MainActivity : FragmentActivity() {
         // show sync notifications
         model.syncStatus.observe(this, Observer {
             if (it == MealSyncingDone) {
-                lastSnackbar = Snackbar.make(pager, R.string.sync_snackbar_done, Snackbar.LENGTH_SHORT).apply { show() }
+                lastSnackbar = Snackbar.make(binding.pager, R.string.sync_snackbar_done, Snackbar.LENGTH_SHORT).apply { show() }
 
                 model.confirmSyncStatus()
             } else if (it == MealSyncingFailed) {
-                lastSnackbar = Snackbar.make(pager, R.string.sync_snackbar_failed, Snackbar.LENGTH_LONG)
+                lastSnackbar = Snackbar.make(binding.pager, R.string.sync_snackbar_failed, Snackbar.LENGTH_LONG)
                         .setAction(R.string.sync_snackbar_retry) { model.refresh(true) }
                         .apply { show() }
 
                 model.confirmSyncStatus()
             } else if (it == MealSyncingRunning) {
-                lastSnackbar = Snackbar.make(pager, R.string.sync_snackbar_running, Snackbar.LENGTH_SHORT).apply { show() }
+                lastSnackbar = Snackbar.make(binding.pager, R.string.sync_snackbar_running, Snackbar.LENGTH_SHORT).apply { show() }
             }
         })
 
         model.isSelectedCanteenFavorite.observe(this, Observer { isFavorite ->
-            val star = toolbar.menu.findItem(R.id.menu_star)
+            val star = binding.toolbar.menu.findItem(R.id.menu_star)
 
             star.icon = DrawableCompat.wrap(ContextCompat.getDrawable(
                     this,
