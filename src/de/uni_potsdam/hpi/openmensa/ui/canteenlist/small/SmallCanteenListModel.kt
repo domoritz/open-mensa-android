@@ -20,7 +20,7 @@ class SmallCanteenListModel (application: Application): AndroidViewModel(applica
     private val selectedCity = settings.selectedCityLive
     private val allCanteens = selectedCity.switchMap { city ->
         if (city != null)
-            database.canteen().getByCity(city)
+            database.canteen.getByCity(city)
         else
             MutableLiveData<List<Canteen>>().apply { value = emptyList() }
     }

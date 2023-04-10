@@ -75,7 +75,7 @@ class SettingsFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeLis
             val context = context!!.applicationContext
 
             Threads.network.execute {
-                AppDatabase.with(context).canteen().deleteAllItems()
+                AppDatabase.with(context).canteen.deleteAllItems()
                 SettingsUtils.with(context).lastCanteenListUpdate = 0
                 CanteenSyncing.runBackgroundSync(context)
             }

@@ -10,7 +10,7 @@ import de.uni_potsdam.hpi.openmensa.extension.switchMap
 import de.uni_potsdam.hpi.openmensa.sync.CanteenSyncing
 
 class NoCanteenModel(application: Application): AndroidViewModel(application) {
-    private val canteenListLength = AppDatabase.with(application).canteen().countItems()
+    private val canteenListLength = AppDatabase.with(application).canteen.countItems()
 
     val status: LiveData<NoCanteenStatus> = CanteenSyncing.isWorking.switchMap { isWorking ->
         if (isWorking)

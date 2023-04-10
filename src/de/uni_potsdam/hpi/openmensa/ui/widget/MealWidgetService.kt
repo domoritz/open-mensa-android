@@ -41,7 +41,7 @@ class MealWidgetService: RemoteViewsService() {
             val currentDate = DateUtils.formatWithLocalTimezone(System.currentTimeMillis())
             val canteen = CanteenWithDays.getSync(database, canteenId)
             val dates = canteen?.getDatesToShow(currentDate) ?: emptyList()
-            val meals = database.meal().getByCanteenSync(canteenId)
+            val meals = database.meal.getByCanteenSync(canteenId)
             val mealsByDate = meals.groupBy { it.date }
 
             data = if (canteen != null) {

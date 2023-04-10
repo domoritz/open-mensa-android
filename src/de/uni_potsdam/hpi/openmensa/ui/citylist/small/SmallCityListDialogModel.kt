@@ -17,7 +17,7 @@ class SmallCityListDialogModel(application: Application): AndroidViewModel(appli
 
     private val selectedCitiesHistory = settings.selectedCitiesLive
     private val location = LocationUtil.getLocationLive(application)
-    private val canteensFromDatabase = database.canteen().getAll()
+    private val canteensFromDatabase = database.canteen.getAll()
 
     private val citiesByDistance = canteensFromDatabase.switchMap { canteens ->
         location.map { loc ->

@@ -45,11 +45,11 @@ abstract class AppDatabase: RoomDatabase() {
         }
     }
 
-    abstract fun canteen(): CanteenDao
-    abstract fun canteenCity(): CanteenCityDao
-    abstract fun currentCanteen(): CurrentCanteenDao
-    abstract fun day(): DayDao
-    abstract fun meal(): MealDao
+    abstract val canteen: CanteenDao
+    abstract val canteenCity: CanteenCityDao
+    abstract val currentCanteen: CurrentCanteenDao
+    abstract val day: DayDao
+    abstract val meal: MealDao
     abstract val widgetConfiguration: WidgetConfigurationDao
-    abstract fun lastCanteenSync(): LastCanteenSyncDao
+    abstract val lastCanteenSync: LastCanteenSyncDao
 }

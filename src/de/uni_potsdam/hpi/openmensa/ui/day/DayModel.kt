@@ -40,7 +40,7 @@ class DayModel(application: Application): AndroidViewModel(application) {
         } else {
             dateLive.switchMap { date ->
                 if (date != null) {
-                    database.meal().getByCanteenAndDate(canteenId = canteenId, date = date)
+                    database.meal.getByCanteenAndDate(canteenId = canteenId, date = date)
                 } else {
                     MutableLiveData<List<Meal>>().apply { value = emptyList() }
                 }

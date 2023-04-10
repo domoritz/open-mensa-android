@@ -43,7 +43,7 @@ object MealSyncing {
     private fun syncCanteenSynchronousThrowEventually(canteenId: Int, force: Boolean, context: Context) {
         val database = AppDatabase.with(context)
 
-        fun shouldSync() = force || database.lastCanteenSync().getByCanteenIdSync(canteenId)?.let {
+        fun shouldSync() = force || database.lastCanteenSync.getByCanteenIdSync(canteenId)?.let {
             val now = System.currentTimeMillis()
 
             it.timestamp > now || it.timestamp + 1000 * 60 * 60 /* 1 hour */ < now

@@ -10,7 +10,7 @@ import de.uni_potsdam.hpi.openmensa.extension.switchMap
 class FullCityListDialogModel(application: Application): AndroidViewModel(application) {
     private val database = AppDatabase.with(application)
     val termLive = MutableLiveData<String>().apply { value = "" }
-    private val allCityNames = database.canteenCity().getCities().map { list -> list.map { it.city } }
+    private val allCityNames = database.canteenCity.getCities().map { list -> list.map { it.city } }
 
     val filteredCityNames = allCityNames.switchMap { cityNames ->
         termLive.map { term ->

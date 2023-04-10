@@ -15,8 +15,8 @@ data class CanteenWithDays(
 ) {
     companion object {
         fun getLive(database: AppDatabase, canteenId: Int): LiveData<CanteenWithDays?> {
-            val canteenLive = database.canteen().getById(canteenId)
-            val daysLive = database.day().getByCanteenId(canteenId)
+            val canteenLive = database.canteen.getById(canteenId)
+            val daysLive = database.day.getByCanteenId(canteenId)
 
             return canteenLive.switchMap { canteen ->
                 daysLive.map { days ->
@@ -27,8 +27,8 @@ data class CanteenWithDays(
         }
 
         fun getSync(database: AppDatabase, canteenId: Int): CanteenWithDays? {
-            val canteen = database.canteen().getByIdSync(canteenId)
-            val days = database.day().getByCanteenIdSync(canteenId)
+            val canteen = database.canteen.getByIdSync(canteenId)
+            val days = database.day.getByCanteenIdSync(canteenId)
 
             return if (canteen != null) CanteenWithDays(canteen, days)
             else null

@@ -10,7 +10,7 @@ import de.uni_potsdam.hpi.openmensa.extension.switchMap
 
 class SelectCanteenDialogModel(application: Application): AndroidViewModel(application) {
     private val locationLive = LocationUtil.getLocationLive(application)
-    private val allCanteensLive = AppDatabase.with(application).canteen().getAll()
+    private val allCanteensLive = AppDatabase.with(application).canteen.getAll()
 
     val termLive = MutableLiveData<String>().apply { value = "" }
     val sortByDistanceLive = MutableLiveData<Boolean>().apply { value = false }

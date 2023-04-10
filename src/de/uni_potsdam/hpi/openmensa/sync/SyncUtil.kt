@@ -11,13 +11,13 @@ object SyncUtil {
         val canteens = api.canteens.queryAllItems()
 
         database.runInTransaction {
-            database.currentCanteen().deleteAllItems()
+            database.currentCanteen.deleteAllItems()
 
-            database.canteen().update(canteens)
-            database.canteen().insertOrIgnore(canteens)
+            database.canteen.update(canteens)
+            database.canteen.insertOrIgnore(canteens)
 
-            database.currentCanteen().insert(canteens.map { CurrentCanteen(id = it.id) })
-            database.canteen().deleteOldItems()
+            database.currentCanteen.insert(canteens.map { CurrentCanteen(id = it.id) })
+            database.canteen.deleteOldItems()
         }
     }
 
@@ -26,13 +26,13 @@ object SyncUtil {
         val meals = days.map { it.meals }.flatten()
 
         database.runInTransaction {
-            database.day().insertOrReplace(days.map { it.toDay(canteenId) })
-            database.day().deleteOldItems(canteenId = canteenId, currentDates = days.map { it.date })
+            database.day.insertOrReplace(days.map { it.toDay(canteenId) })
+            database.day.deleteOldItems(canteenId = canteenId, currentDates = days.map { it.date })
 
-            database.meal().insertOrReplace(meals)
-            database.meal().deleteOldItems(canteenId = canteenId, currentItemIds = meals.map { it.id })
+            database.meal.insertOrReplace(meals)
+            database.meal.deleteOldItems(canteenId = canteenId, currentItemIds = meals.map { it.id })
 
-            database.lastCanteenSync().insertOrReplace(LastCanteenSync(
+            database.lastCanteenSync.insertOrReplace(LastCanteenSync(
                     canteenId = canteenId,
                     timestamp = System.currentTimeMillis()
             ))
