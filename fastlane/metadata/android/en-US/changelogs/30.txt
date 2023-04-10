@@ -1,0 +1,2 @@
+- light/dark depending on the OS settings
+- Widget
