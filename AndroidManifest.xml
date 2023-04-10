@@ -9,7 +9,7 @@
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/LightAppTheme"
+        android:theme="@style/DayNightAppTheme"
         android:name=".Application"
         android:hardwareAccelerated="true"
         android:allowBackup="true">
@@ -43,7 +43,7 @@
 
         <activity
             android:taskAffinity=":widget"
-            android:theme="@style/LightTranslucentAppTheme"
+            android:theme="@style/DayNightTranslucentAppTheme"
             android:name="de.uni_potsdam.hpi.openmensa.ui.widget.MealWidgetConfigureActivity"
             android:exported="false">
 

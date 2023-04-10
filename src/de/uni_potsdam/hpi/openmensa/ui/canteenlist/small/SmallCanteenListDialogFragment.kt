@@ -83,7 +83,7 @@ class SmallCanteenListDialogFragment : BottomSheetDialogFragment() {
                 requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_ACCESS)
             }
         }
-        adapter.iconTint = SettingsUtils.with(context!!).selectedThemeIconColor
+        adapter.iconTint = SettingsUtils.with(context!!).selectedThemeIconColor(resources.configuration)
 
         model.shortList.observe(this, Observer { adapter.content = it })
         model.noCitySelected.observe(this, Observer {

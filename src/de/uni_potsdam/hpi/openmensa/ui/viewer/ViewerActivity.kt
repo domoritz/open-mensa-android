@@ -161,7 +161,7 @@ class ViewerActivity : FragmentActivity() {
         }
 
         binding.spinnerImage.setImageDrawable(DrawableCompat.wrap(ContextCompat.getDrawable(this, R.drawable.ic_arrow_drop_down_black_24dp)!!).apply {
-            DrawableCompat.setTint(this, settings.selectedThemeIconColor)
+            DrawableCompat.setTint(this, settings.selectedThemeIconColor(resources.configuration))
         })
 
         supportFragmentManager.setFragmentResultListener(REQUEST_SELECT_CANTEEN, this) { _, bundle ->
@@ -199,7 +199,7 @@ class ViewerActivity : FragmentActivity() {
                     this,
                     if (isFavorite) R.drawable.ic_star_black_24dp else R.drawable.ic_star_border_black_24dp
             )!!).apply {
-                DrawableCompat.setTint(this, settings.selectedThemeIconColor)
+                DrawableCompat.setTint(this, settings.selectedThemeIconColor(resources.configuration))
             }
             star.setTitle(if (isFavorite) R.string.menu_favorite_rm else R.string.menu_favorite_add)
         })

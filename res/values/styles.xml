@@ -2,6 +2,7 @@
 <resources>
     <style name="DarkAppTheme" parent="Theme.AppCompat" />
     <style name="LightAppTheme" parent="Theme.AppCompat.Light" />
+    <style name="DayNightAppTheme" parent="Theme.AppCompat.DayNight" />
 
     <style name="DarkTranslucentAppTheme" parent="DarkAppTheme">
         <item name="android:windowIsFloating">true</item>
@@ -9,11 +10,15 @@
     <style name="LightTranslucentAppTheme" parent="LightAppTheme">
         <item name="android:windowIsFloating">true</item>
     </style>
+    <style name="DayNightTranslucentAppTheme" parent="DayNightAppTheme">
+        <item name="android:windowIsFloating">true</item>
+    </style>
 
     <style name="DarkBottomSheetTheme" parent="Theme.MaterialComponents.BottomSheetDialog">
         <item name="android:backgroundDimAmount">0.3</item>
     </style>
     <style name="LightBottomSheetTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog" />
+    <style name="DayNightBottomSheetTheme" parent="Theme.MaterialComponents.DayNight.BottomSheetDialog" />
 
     <style name="Widget.Openmensaandroid.AppWidget.Container" parent="android:Widget" />
 </resources>

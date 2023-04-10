@@ -52,7 +52,7 @@ class SmallCityListDialogFragment: BottomSheetDialogFragment() {
                 requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_ACCESS)
             }
         }
-        adapter.iconTint = SettingsUtils.with(context!!).selectedThemeIconColor
+        adapter.iconTint = SettingsUtils.with(context!!).selectedThemeIconColor(resources.configuration)
 
         recycler.layoutManager = LinearLayoutManager(context!!)
         recycler.adapter = adapter

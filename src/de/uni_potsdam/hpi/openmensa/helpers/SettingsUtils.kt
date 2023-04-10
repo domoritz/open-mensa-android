@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.openmensa.helpers
 
 import android.app.Application
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Color
 import android.preference.PreferenceManager
 import android.util.Log
@@ -15,7 +16,7 @@ import de.uni_potsdam.hpi.openmensa.api.DefaultApiUrl
  *
  * @author dominik
  */
-class SettingsUtils(private val context: Application) {
+class SettingsUtils(context: Application) {
     companion object {
         private const val LOG_TAG = "SettingsUtils"
 
@@ -27,6 +28,7 @@ class SettingsUtils(private val context: Application) {
         const val KEY_STYLE = "pref_style"
         private const val THEME_DARK = "dark"
         private const val THEME_LIGHT = "light"
+        private const val THEME_AUTO = "auto"
 
         const val KEY_ENABLE_MAP = "pref_map"
 
@@ -67,26 +69,33 @@ class SettingsUtils(private val context: Application) {
     private fun getThemeByString(theme: String): Int = when(theme) {
         THEME_DARK -> R.style.DarkAppTheme
         THEME_LIGHT -> R.style.LightAppTheme
-        else -> R.style.LightAppTheme
+        THEME_AUTO -> R.style.DayNightAppTheme
+        else -> R.style.DayNightAppTheme
     }
 
     private fun getTranslucentTheme(theme: String): Int = when(theme) {
         THEME_DARK -> R.style.DarkTranslucentAppTheme
         THEME_LIGHT -> R.style.LightTranslucentAppTheme
-        else -> R.style.LightTranslucentAppTheme
+        THEME_AUTO -> R.style.DayNightTranslucentAppTheme
+        else -> R.style.DayNightTranslucentAppTheme
     }
 
     private fun getBottomSheetTheme(theme: String): Int = when(theme) {
         THEME_DARK -> R.style.DarkBottomSheetTheme
         THEME_LIGHT -> R.style.LightBottomSheetTheme
-        else -> R.style.LightBottomSheetTheme
+        THEME_AUTO -> R.style.DayNightBottomSheetTheme
+        else -> R.style.DayNightBottomSheetTheme
     }
 
-    private fun getIconColorByThemeByString(theme: String): Int = when(theme) {
+    private fun getIconColorByThemeByString(configuration: Configuration, theme: String): Int = when(theme) {
         THEME_DARK -> Color.WHITE
         THEME_LIGHT -> Color.BLACK
-        else -> Color.BLACK
+        THEME_AUTO -> if (isUsingOsNightMode(configuration)) Color.WHITE else Color.BLACK
+        else -> if (isUsingOsNightMode(configuration)) Color.WHITE else Color.BLACK
     }
+
+    private fun isUsingOsNightMode(configuration: Configuration) =
+        configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
     private val selectedThemeName: String
         get() = prefs.getString(KEY_STYLE, THEME_LIGHT)!!
@@ -100,8 +109,8 @@ class SettingsUtils(private val context: Application) {
     val selectedBottomSheetThemeTheme: Int
         get() = getBottomSheetTheme(selectedThemeName)
 
-    val selectedThemeIconColor: Int
-        get() = getIconColorByThemeByString(selectedThemeName)
+    fun selectedThemeIconColor(configuration: Configuration): Int =
+        getIconColorByThemeByString(configuration, selectedThemeName)
 
     val selectedThemeLive = LiveSettings.createObservablePreference(prefs, KEY_STYLE) { selectedTheme }
     val selectedTranslucentThemeLive = LiveSettings.createObservablePreference(prefs, KEY_STYLE) { selectedTranslucentTheme }
