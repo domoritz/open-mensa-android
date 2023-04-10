@@ -98,4 +98,6 @@
     <string name="canteen_list_show_more">Show all</string>
     <string name="canteen_list_select_city">Select city</string>
     <string name="canteen_list_enable_loc_access">Enable location access</string>
+
+    <string name="widget_requires_app_setup_toast">you must setup the App before you can use the Widget</string>
 </resources>

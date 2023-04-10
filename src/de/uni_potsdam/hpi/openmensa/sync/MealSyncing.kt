@@ -8,6 +8,7 @@ import de.uni_potsdam.hpi.openmensa.BuildConfig
 import de.uni_potsdam.hpi.openmensa.Threads
 import de.uni_potsdam.hpi.openmensa.api.client.HttpApiClient
 import de.uni_potsdam.hpi.openmensa.data.AppDatabase
+import de.uni_potsdam.hpi.openmensa.ui.widget.MealWidget
 
 object MealSyncing {
     private const val LOG_TAG = "MealSyncing"
@@ -16,15 +17,26 @@ object MealSyncing {
     private val statusInternalLive = MutableLiveData<Map<Int, MealSyncingStatus>>().apply { postValue(statusInternal.toMap()) }
     val status: LiveData<Map<Int, MealSyncingStatus>> = statusInternalLive
 
-    fun syncInBackground(canteenId: Int, force: Boolean, context: Context) {
+    fun syncInBackground(
+        canteenId: Int,
+        force: Boolean,
+        context: Context,
+        onCompletion: (Result<Unit>) -> Unit = {}
+    ) {
         Threads.network.execute {
-            try {
+            val result = try {
                 syncCanteenSynchronousThrowEventually(canteenId, force, context)
+
+                Result.success(Unit)
             } catch (ex: Exception) {
                 if (BuildConfig.DEBUG) {
                     Log.w(LOG_TAG, "meal syncing failed", ex)
                 }
+
+                Result.failure(ex)
             }
+
+            Threads.handler.post { onCompletion(result) }
         }
     }
 
@@ -63,6 +75,11 @@ object MealSyncing {
                         api = HttpApiClient.getInstance(context),
                         database = database,
                         canteenId = canteenId
+                )
+
+                MealWidget.updateAppWidgets(
+                    context = context,
+                    appWidgetIds = database.widgetConfiguration.getWidgetIdsByCanteenId(canteenId)
                 )
 
                 setCanteenStatus(canteenId, MealSyncingDone)

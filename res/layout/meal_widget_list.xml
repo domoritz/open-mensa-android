@@ -1,0 +1,9 @@
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.Openmensaandroid.AppWidget.Container"
+    android:id="@android:id/background"
+    android:background="@drawable/app_widget_background"
+    android:theme="@style/LightAppTheme.AppWidgetContainer"
+    android:padding="0dp"
+    android:divider="@null"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />

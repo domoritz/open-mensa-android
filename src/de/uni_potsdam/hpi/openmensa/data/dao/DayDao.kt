@@ -17,4 +17,7 @@ interface DayDao {
 
     @Query("SELECT * FROM day WHERE canteen_id = :canteenId")
     fun getByCanteenId(canteenId: Int): LiveData<List<Day>>
+
+    @Query("SELECT * FROM day WHERE canteen_id = :canteenId")
+    fun getByCanteenIdSync(canteenId: Int): List<Day>
 }

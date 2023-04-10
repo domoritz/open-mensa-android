@@ -9,6 +9,7 @@ import de.uni_potsdam.hpi.openmensa.Threads
 import de.uni_potsdam.hpi.openmensa.api.client.HttpApiClient
 import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.data.AppDatabase
+import de.uni_potsdam.hpi.openmensa.ui.widget.MealWidget
 
 object CanteenSyncing {
     private const val LOG_TAG = "CanteenSyncing"
@@ -63,6 +64,8 @@ object CanteenSyncing {
                         api = HttpApiClient.getInstance(context),
                         database = AppDatabase.with(context)
                 )
+
+                MealWidget.updateAppWidgets(context)
 
                 SettingsUtils.with(context).lastCanteenListUpdate = System.currentTimeMillis()
             } finally {

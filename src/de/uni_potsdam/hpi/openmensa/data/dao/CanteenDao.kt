@@ -30,6 +30,9 @@ interface CanteenDao {
     @Query("SELECT * FROM canteen WHERE id = :id")
     fun getById(id: Int): LiveData<Canteen?>
 
+    @Query("SELECT * FROM canteen WHERE id = :id")
+    fun getByIdSync(id: Int): Canteen?
+
     @Query("SELECT COUNT(1) FROM canteen")
     fun countItems(): LiveData<Long>
 }

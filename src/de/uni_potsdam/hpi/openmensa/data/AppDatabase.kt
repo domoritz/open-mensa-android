@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.openmensa.data
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -8,13 +9,18 @@ import de.uni_potsdam.hpi.openmensa.data.dao.*
 import de.uni_potsdam.hpi.openmensa.data.model.*
 
 @Database(
-        entities = [
-            Canteen::class,
-            CurrentCanteen::class,
-            Day::class,
-            Meal::class,
-            LastCanteenSync::class
-        ], version = 3
+    entities = [
+        Canteen::class,
+        CurrentCanteen::class,
+        Day::class,
+        Meal::class,
+        LastCanteenSync::class,
+        WidgetConfiguration::class
+    ],
+    version = 4,
+    autoMigrations = [
+        AutoMigration(from = 3, to = 4)
+    ]
 )
 abstract class AppDatabase: RoomDatabase() {
     companion object {
@@ -44,5 +50,6 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun currentCanteen(): CurrentCanteenDao
     abstract fun day(): DayDao
     abstract fun meal(): MealDao
+    abstract val widgetConfiguration: WidgetConfigurationDao
     abstract fun lastCanteenSync(): LastCanteenSyncDao
 }

@@ -70,6 +70,12 @@ class SettingsUtils(private val context: Application) {
         else -> R.style.LightAppTheme
     }
 
+    private fun getTranslucentTheme(theme: String): Int = when(theme) {
+        THEME_DARK -> R.style.DarkTranslucentAppTheme
+        THEME_LIGHT -> R.style.LightTranslucentAppTheme
+        else -> R.style.LightTranslucentAppTheme
+    }
+
     private fun getBottomSheetTheme(theme: String): Int = when(theme) {
         THEME_DARK -> R.style.DarkBottomSheetTheme
         THEME_LIGHT -> R.style.LightBottomSheetTheme
@@ -88,6 +94,9 @@ class SettingsUtils(private val context: Application) {
     val selectedTheme: Int
         get() = getThemeByString(selectedThemeName)
 
+    val selectedTranslucentTheme: Int
+        get() = getTranslucentTheme(selectedThemeName)
+
     val selectedBottomSheetThemeTheme: Int
         get() = getBottomSheetTheme(selectedThemeName)
 
@@ -95,6 +104,7 @@ class SettingsUtils(private val context: Application) {
         get() = getIconColorByThemeByString(selectedThemeName)
 
     val selectedThemeLive = LiveSettings.createObservablePreference(prefs, KEY_STYLE) { selectedTheme }
+    val selectedTranslucentThemeLive = LiveSettings.createObservablePreference(prefs, KEY_STYLE) { selectedTranslucentTheme }
 
     var favoriteCanteens: Set<Int>
         get() = prefs.getStringSet(KEY_FAVOURITES, emptySet())!!.map { it.toInt() }.toSet()

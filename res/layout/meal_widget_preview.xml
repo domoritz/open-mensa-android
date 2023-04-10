@@ -1,0 +1,121 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText"
+    style="@style/Widget.Openmensaandroid.AppWidget.Container"
+    android:id="@android:id/background"
+    android:background="@drawable/app_widget_background"
+    android:theme="@style/LightAppTheme.AppWidgetContainer"
+    android:padding="0dp"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:theme="@style/LightAppTheme.AppWidgetContainer"
+        android:background="@color/green_900"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/appWidgetRadius"
+        android:paddingTop="12dp"
+        android:paddingRight="?attr/appWidgetRadius"
+        android:paddingLeft="?attr/appWidgetRadius"
+        android:paddingBottom="8dp"
+        android:layout_marginBottom="4dp"
+        android:text="Magdeburg Herrenkurg"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
+        android:text="Heute"
+        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
+        android:text="2 Quinoa-Erbsen-Frikadellen mit Gemüsesalsa dazu eine Gemüsebeilage und eine Sättigungsbeilage zur Auswahl"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
+        android:text="Barbecueburger mit Kartoffelspalten und Buttermilch-Ranch-Dip"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
+        android:text="Magdeburger Gehacktesstippe mit Gewürzgurke und Kartoffelpüree"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
+        android:text="Ausgabe Cafeteria: Pastabuffet: Tagliatelle al Pollo mit Hähnchenbruststreifen in Tomaten-Chili-Sahnesoße"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
+        android:text="Ausgabe Cafeteria: Pastabuffet: Tagliatelle alla Primavera mit buntem Gemüse in Kräutersoße"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
+        android:text="Morgen"
+        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
+        android:text="Rindergeschnetzeltes Stroganoff Art mit Champignons, Gewürzgurke und Rote Beete in Sauerrahm dazu Kräuter-Bandnudeln"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
+        android:text="5 Gemüse-Maultaschen dazu Käsesoße und Kürbis-Linsengemüse mit Apfel und Lauch"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
+        android:text="Ausgabe Cafeteria: Currywurst mit Pommes Frites und Weißkrautsalat"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
+        android:text="Erbseneintopf wahlweise mit einem Paar Wiener Würstchen oder Soja-Geröstel"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+
+</LinearLayout>

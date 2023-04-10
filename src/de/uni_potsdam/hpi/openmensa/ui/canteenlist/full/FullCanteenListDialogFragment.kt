@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.openmensa.ui.canteenlist.full
 
 
-import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +12,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import de.uni_potsdam.hpi.openmensa.MainActivity
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.databinding.FullCanteenListDialogFragmentBinding
 import de.uni_potsdam.hpi.openmensa.extension.addTextChangeListener
@@ -21,18 +19,38 @@ import de.uni_potsdam.hpi.openmensa.extension.addTextChangeListener
 class FullCanteenListDialogFragment : DialogFragment() {
     companion object {
         private const val DIALOG_TAG = "FullCanteenListDialogFragment"
+        private const val EXTRA_REQUEST_KEY = "request key"
+
+        const val RESULT_CANTEEN_ID = "canteenId"
+
+        fun newInstance(requestKey: String) = FullCanteenListDialogFragment().apply {
+            arguments = Bundle().apply {
+                putString(EXTRA_REQUEST_KEY, requestKey)
+            }
+        }
+    }
+
+    private lateinit var requestKey: String
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (!requireArguments().containsKey(EXTRA_REQUEST_KEY)) throw IllegalStateException()
+
+        requestKey = requireArguments().getString(EXTRA_REQUEST_KEY, "")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FullCanteenListDialogFragmentBinding.inflate(inflater, container, false)
         val model = ViewModelProviders.of(this).get(FullCanteenListModel::class.java)
         val adapter = CanteenListAdapter()
-        val activity = activity as MainActivity
 
         adapter.listener = object: AdapterListener {
             override fun onCanteenClicked(canteen: Canteen) {
-                activity.model.currentlySelectedCanteenId.value = canteen.id
-                targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, null)
+                parentFragmentManager.setFragmentResult(requestKey, Bundle().apply {
+                    putInt(RESULT_CANTEEN_ID, canteen.id)
+                })
+
                 dismiss()
             }
         }

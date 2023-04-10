@@ -90,4 +90,6 @@
     <string name="canteen_list_show_more">Alle anzeigen</string>
     <string name="canteen_list_select_city">Stadt wählen</string>
     <string name="canteen_list_enable_loc_access">Standortzugriff aktivieren</string>
+
+    <string name="widget_requires_app_setup_toast">das Widget kann erst verwendet werden, wenn die App eingerichtet wurde</string>
 </resources>

@@ -1,0 +1,9 @@
+<resources>
+    <style name="LightAppTheme.AppWidgetContainerParent" parent="@android:style/Theme.DeviceDefault">
+        <item name="appWidgetRadius">16dp</item>
+    </style>
+
+    <style name="LightAppTheme.AppWidgetContainer"
+        parent="LightAppTheme.AppWidgetContainerParent">
+    </style>
+</resources>

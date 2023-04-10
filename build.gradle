@@ -35,6 +35,7 @@ dependencies {
     implementation 'org.osmdroid:osmdroid-android:6.1.0'
     implementation 'org.slf4j:slf4j-android:1.6.1-RC1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.work:work-runtime-ktx:2.8.1'
 
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"

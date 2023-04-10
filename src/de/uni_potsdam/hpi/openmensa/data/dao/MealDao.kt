@@ -18,4 +18,7 @@ interface MealDao {
 
     @Query("SELECT * FROM meal WHERE canteen_id = :canteenId AND date = :date")
     fun getByCanteenAndDate(canteenId: Int, date: String): LiveData<List<Meal>>
+
+    @Query("SELECT * FROM meal WHERE canteen_id = :canteenId")
+    fun getByCanteenSync(canteenId: Int): List<Meal>
 }

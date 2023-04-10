@@ -6,16 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import de.uni_potsdam.hpi.openmensa.MainActivity
 import de.uni_potsdam.hpi.openmensa.data.model.Meal
 import de.uni_potsdam.hpi.openmensa.databinding.DayFragmentBinding
 import de.uni_potsdam.hpi.openmensa.extension.map
 import de.uni_potsdam.hpi.openmensa.extension.switchMap
 import de.uni_potsdam.hpi.openmensa.extension.toggle
 import de.uni_potsdam.hpi.openmensa.helpers.DateUtils
+import de.uni_potsdam.hpi.openmensa.ui.viewer.ViewerActivity
 import java.text.DateFormat
 import java.text.ParseException
 import java.util.*
@@ -49,11 +48,15 @@ class DayFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        model.init((activity as MainActivity).model)
+        val viewer = activity as ViewerActivity
+
+        model.init(viewer.model)
         model.indexLive.value = requireArguments().getInt(EXTRA_INDEX)
 
         if (savedInstanceState != null) {
             expandedItems.value = savedInstanceState.getIntArray(STATE_EXPANDED_ITEMS)!!.toSet()
+        } else {
+            viewer.initialMealId?.let { expandedItems.value = setOf(it) }
         }
     }
 

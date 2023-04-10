@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.Openmensaandroid.AppWidget.Container"
+    android:id="@android:id/background"
+    android:background="@drawable/app_widget_background"
+    android:theme="@style/LightAppTheme.AppWidgetContainer"
+    android:padding="?attr/appWidgetRadius"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:text="@string/setup_no_selection_text"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/select_canteen_button"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/setup_no_selection_action"
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</RelativeLayout>

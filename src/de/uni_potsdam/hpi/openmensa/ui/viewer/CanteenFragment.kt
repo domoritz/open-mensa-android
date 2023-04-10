@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.openmensa
+package de.uni_potsdam.hpi.openmensa.ui.viewer
 
 import android.app.Dialog
 import java.io.File
@@ -24,6 +24,8 @@ import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import de.uni_potsdam.hpi.openmensa.BuildConfig
+import de.uni_potsdam.hpi.openmensa.R
 import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.databinding.CanteenFragmentBinding
 import de.uni_potsdam.hpi.openmensa.ui.privacy.EnableMapDialogFragment
@@ -45,8 +47,8 @@ class CanteenFragment : BottomSheetDialogFragment() {
 
     private val zoom = 18
 
-    private val mainActivity: MainActivity by lazy { activity as MainActivity }
-    private val mainActivityModel: MainModel by lazy { mainActivity.model }
+    private val mainActivity: ViewerActivity by lazy { activity as ViewerActivity }
+    private val mainActivityModel: ViewerModel by lazy { mainActivity.model }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
