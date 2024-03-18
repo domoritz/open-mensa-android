@@ -7,7 +7,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath 'com.android.tools.build:gradle:8.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -34,16 +34,11 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation 'org.osmdroid:osmdroid-android:6.1.0'
     implementation 'org.slf4j:slf4j-android:1.6.1-RC1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
 
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-}
-
-tasks.whenTaskAdded { task ->
-    if (task.name == 'validateReleaseSigning')
-        task.dependsOn keystoreInfo
 }
 
 android {
@@ -99,37 +94,18 @@ android {
         release.setRoot('build-types/release')
     }
 
-
-    signingConfigs {
-        release {
-            storeFile file('android.keystore')
-            storePassword ''
-            keyAlias 'openmensa'
-            keyPassword ''
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
         }
 
-        buildTypes {
-            release {
-                debuggable false
-                signingConfig signingConfigs.release
-            }
-            debug {
-                applicationIdSuffix ".debug"
-            }
+        release {
+            debuggable false
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
 }
-
-/*
-task keystoreInfo << {
-    def console = System.console()
-    if (console == null)
-        throw new IllegalStateException('no console available, use --no-daemon flag')
-
-    def storePassword = console.readPassword('Keystore password: ')
-    def keyPassword = console.readPassword('Key password: ')
-
-    android.signingConfigs.release.storePassword = new String(storePassword)
-    android.signingConfigs.release.keyPassword = new String(keyPassword)
-}
-*/

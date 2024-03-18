@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.uni_potsdam.hpi.openmensa.data.model.Meal
 import de.uni_potsdam.hpi.openmensa.databinding.DayFragmentBinding
-import de.uni_potsdam.hpi.openmensa.extension.map
-import de.uni_potsdam.hpi.openmensa.extension.switchMap
 import de.uni_potsdam.hpi.openmensa.extension.toggle
 import de.uni_potsdam.hpi.openmensa.helpers.DateUtils
 import de.uni_potsdam.hpi.openmensa.ui.viewer.ViewerActivity

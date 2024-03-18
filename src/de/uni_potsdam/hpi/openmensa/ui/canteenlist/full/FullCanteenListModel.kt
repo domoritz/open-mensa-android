@@ -3,10 +3,10 @@ package de.uni_potsdam.hpi.openmensa.ui.canteenlist.full
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import de.uni_potsdam.hpi.openmensa.data.AppDatabase
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
-import de.uni_potsdam.hpi.openmensa.extension.map
-import de.uni_potsdam.hpi.openmensa.extension.switchMap
 import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
 
 class FullCanteenListModel (application: Application): AndroidViewModel(application) {

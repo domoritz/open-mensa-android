@@ -4,10 +4,10 @@ import android.app.Application
 import android.location.Location
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import de.uni_potsdam.hpi.openmensa.data.AppDatabase
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
-import de.uni_potsdam.hpi.openmensa.extension.map
-import de.uni_potsdam.hpi.openmensa.extension.switchMap
 import de.uni_potsdam.hpi.openmensa.helpers.SettingsUtils
 import de.uni_potsdam.hpi.openmensa.ui.settings.canteenlist.KnownLocationStatus
 import de.uni_potsdam.hpi.openmensa.ui.settings.canteenlist.LocationUtil
