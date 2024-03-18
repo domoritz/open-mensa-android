@@ -65,7 +65,7 @@ class SettingsFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeLis
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences,
-                                           key: String) {
+                                           key: String?) {
         val pref = findPreference(key)
         if (pref is EditTextPreference) {
             pref.setSummary(pref.text)
