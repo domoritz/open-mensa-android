@@ -5,8 +5,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import de.uni_potsdam.hpi.openmensa.data.model.Day
 import de.uni_potsdam.hpi.openmensa.data.model.Meal
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MealDao {
@@ -21,4 +21,7 @@ interface MealDao {
 
     @Query("SELECT * FROM meal WHERE canteen_id = :canteenId")
     fun getByCanteenSync(canteenId: Int): List<Meal>
+
+    @Query("SELECT * FROM meal WHERE canteen_id = :canteenId")
+    fun getByCanteenFlow(canteenId: Int): Flow<List<Meal>>
 }

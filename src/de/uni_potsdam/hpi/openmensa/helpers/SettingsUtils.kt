@@ -10,6 +10,12 @@ import de.uni_potsdam.hpi.openmensa.BuildConfig
 
 import de.uni_potsdam.hpi.openmensa.R
 import de.uni_potsdam.hpi.openmensa.api.DefaultApiUrl
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.update
 
 /**
  * Provides simple methods to access shared settings.
@@ -58,12 +64,30 @@ class SettingsUtils(context: Application) {
 
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
+    data class Settings(
+        val sourceUrl: String?,
+        val lastSelectedCanteenId: Int?,
+        val favoriteCanteenIds: Set<Int>
+    )
+
+    private val settingsFlowInternal = MutableStateFlow(Settings(
+        sourceUrl = sourceUrl.let { if (it.isBlank()) null else it },
+        lastSelectedCanteenId = lastSelectedCanteenId,
+        favoriteCanteenIds = favoriteCanteens
+    ))
+
+    val settingsFlow: StateFlow<Settings> = settingsFlowInternal
+
     var sourceUrl: String
         get() = prefs.getString(KEY_SOURCE_URL, "")!!
         set(value) {
             prefs.edit()
                     .putString(KEY_SOURCE_URL, value)
                     .apply()
+
+            settingsFlowInternal.update {
+                it.copy(sourceUrl = value.let { if (it.isBlank()) null else it })
+            }
         }
 
     private fun getThemeByString(theme: String): Int = when(theme) {
@@ -121,6 +145,10 @@ class SettingsUtils(context: Application) {
             prefs.edit()
                     .putStringSet(KEY_FAVOURITES, value.map { it.toString() }.toSet())
                     .apply()
+
+            settingsFlowInternal.update {
+                it.copy(favoriteCanteenIds = value)
+            }
         }
 
     val favoriteCanteensLive = LiveSettings.createObservablePreference(prefs, KEY_FAVOURITES) { favoriteCanteens }
@@ -159,6 +187,10 @@ class SettingsUtils(context: Application) {
 
                         editor.apply()
                     }
+
+            settingsFlowInternal.update {
+                it.copy(lastSelectedCanteenId = value)
+            }
         }
 
     var selectedCities: List<String>

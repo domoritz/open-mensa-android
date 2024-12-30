@@ -90,9 +90,12 @@
     <string name="pref_map">@string/map_btn_enable</string>
     <string name="pref_map_text">@string/map_privacy_text</string>
 
+    <string name="canteen_list_open">Mensaliste anzeigen</string>
     <string name="canteen_list_show_more">Alle anzeigen</string>
     <string name="canteen_list_select_city">Stadt wählen</string>
     <string name="canteen_list_enable_loc_access">Standortzugriff aktivieren</string>
 
     <string name="widget_requires_app_setup_toast">das Widget kann erst verwendet werden, wenn die App eingerichtet wurde</string>
+
+    <string name="menu_opeb">Menü öffnen</string>
 </resources>

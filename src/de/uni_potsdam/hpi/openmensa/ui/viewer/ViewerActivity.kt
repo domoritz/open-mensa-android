@@ -4,6 +4,39 @@ import android.content.Intent
 import android.os.Bundle
 
 import android.view.*
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.FragmentActivity
@@ -41,6 +74,9 @@ class ViewerActivity : FragmentActivity() {
         ViewModelProviders.of(this).get(ViewerModel::class.java)
     }
 
+    val newModel: ViewerModelInterface by viewModels<NewViewerModel>()
+
+    @OptIn(ExperimentalMaterial3Api::class)
     public override fun onCreate(savedInstanceState: Bundle?) {
         val settings = SettingsUtils.with(this)
         val initialTheme = settings.selectedTheme
@@ -54,7 +90,7 @@ class ViewerActivity : FragmentActivity() {
         })
 
         val binding = ActivityMainBinding.inflate(layoutInflater).also {
-            setContentView(it.root)
+            // setContentView(it.root)
         }
 
         if (savedInstanceState != null) {
@@ -78,39 +114,14 @@ class ViewerActivity : FragmentActivity() {
         }
 
         // setup toolbar
-        binding.toolbar.title = title
-        binding.toolbar.inflateMenu(R.menu.menu_main)
-        binding.toolbar.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.menu_settings -> {
-                    startActivity(Intent(this, SettingsActivity::class.java))
-
-                    true
-                }
-                R.id.reload -> {
-                    model.refresh(force = true)
-
-                    true
-                }
-                R.id.canteen_info -> {
-                    CanteenFragment().show(supportFragmentManager)
-
-                    true
-                }
-                R.id.menu_star -> {
-                    model.toggleFavorite()
-
-                    true
-                }
-                else -> false
-            }
-        }
 
         // prepare setup screens
         if (savedInstanceState == null) {
+            /*
             supportFragmentManager.beginTransaction()
                     .replace(R.id.no_canteen_container, NoCanteenFragment.newInstance(REQUEST_SELECT_CANTEEN))
                     .commit()
+             */
         }
 
         PrivacyDialogFragment.showIfRequired(this)
@@ -118,9 +129,9 @@ class ViewerActivity : FragmentActivity() {
         // setup pager
         val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
 
-        binding.pager.adapter = sectionsPagerAdapter
+        // binding.pager.adapter = sectionsPagerAdapter
 
-        binding.tabs.setupWithViewPager(binding.pager)
+        // binding.tabs.setupWithViewPager(binding.pager)
 
         model.currentDate.observe(this) { sectionsPagerAdapter.currentDate = it }
         model.datesToShow.observe(this) {
@@ -146,14 +157,10 @@ class ViewerActivity : FragmentActivity() {
             binding.spinnerText.text = currentCanteen?.canteen?.name ?: ""
 
             val noCanteen = currentCanteen == null
-            val hasCanteen = currentCanteen != null
 
             binding.flipper.displayedChild = if (noCanteen) 1 else 0
             binding.spinner.visibility = if (noCanteen) View.GONE else View.VISIBLE
             binding.tabs.visibility = if (noCanteen) View.GONE else View.VISIBLE
-            binding.toolbar.menu.findItem(R.id.reload).isVisible = hasCanteen
-            binding.toolbar.menu.findItem(R.id.canteen_info).isVisible = hasCanteen
-            binding.toolbar.menu.findItem(R.id.menu_star).isVisible = hasCanteen
         })
 
         binding.spinner.setOnClickListener {
@@ -192,20 +199,145 @@ class ViewerActivity : FragmentActivity() {
             }
         })
 
-        model.isSelectedCanteenFavorite.observe(this, Observer { isFavorite ->
-            val star = binding.toolbar.menu.findItem(R.id.menu_star)
-
-            star.icon = DrawableCompat.wrap(ContextCompat.getDrawable(
-                    this,
-                    if (isFavorite) R.drawable.ic_star_black_24dp else R.drawable.ic_star_border_black_24dp
-            )!!).apply {
-                DrawableCompat.setTint(this, settings.selectedThemeIconColor(resources.configuration))
-            }
-            star.setTitle(if (isFavorite) R.string.menu_favorite_rm else R.string.menu_favorite_add)
-        })
-
         // update the widgets
         if (savedInstanceState == null) MealWidget.updateAppWidgets(this)
+
+        enableEdgeToEdge()
+
+        setContent {
+            val status by newModel.screen.collectAsState(ViewerModelInterface.Screen.Initializing)
+
+            val canteenHeader = status.let { when (it) {
+                is ViewerModelInterface.Screen.Data -> Pair(
+                    it.currentCanteen.database, it.currentCanteen.isFavorite
+                )
+                else -> null
+            } }
+
+            MaterialTheme {
+                Scaffold (
+                    topBar = {
+                        TopAppBar(
+                            title = {
+                                if (canteenHeader == null) Text(stringResource(R.string.app_name))
+                                else {
+                                    Row(
+                                        Modifier
+                                            .fillMaxSize()
+                                            .clickable {
+                                            // TODO: implement this dialog in compose
+                                            SmallCanteenListDialogFragment.newInstance(REQUEST_SELECT_CANTEEN).show(supportFragmentManager)
+                                        },
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text(canteenHeader.first.name)
+
+                                        Icon(
+                                            Icons.Default.ArrowDropDown,
+                                            contentDescription = stringResource(R.string.canteen_list_open)
+                                        )
+                                    }
+                                }
+                            },
+                            actions = {
+                                if (canteenHeader != null) {
+                                    val isFavorite = canteenHeader.second
+
+                                    IconButton(
+                                        onClick = {
+                                            if (isFavorite) {
+                                                newModel.removeFavoriteCanteen(canteenHeader.first.id)
+                                            } else {
+                                                newModel.addFavoriteCanteen(canteenHeader.first.id)
+                                            }
+                                        },
+                                        content = {
+                                            if (isFavorite) {
+                                                Icon(
+                                                    Icons.Default.Star,
+                                                    contentDescription = stringResource(R.string.menu_favorite_rm)
+                                                )
+                                            } else {
+                                                Icon(
+                                                    Icons.Default.StarBorder,
+                                                    contentDescription = stringResource(R.string.menu_favorite_add)
+                                                )
+                                            }
+                                        }
+                                    )
+                                }
+
+                                var dropdownMenuExpanded by remember { mutableStateOf(false) }
+
+                                IconButton(
+                                    onClick = {
+                                        dropdownMenuExpanded = true
+                                    },
+                                    content = {
+                                        Icon(
+                                            Icons.Default.MoreVert,
+                                            contentDescription = stringResource(R.string.menu_opeb)
+                                        )
+                                    }
+                                )
+
+                                DropdownMenu(
+                                    expanded = dropdownMenuExpanded,
+                                    onDismissRequest = { dropdownMenuExpanded = false },
+                                    content = {
+                                        DropdownMenuItem(
+                                            text = {
+                                                Text(stringResource(R.string.reload))
+                                            },
+                                            onClick = {
+                                                model.refresh(true)
+                                            }
+                                        )
+
+                                        DropdownMenuItem(
+                                            text = {
+                                                Text(stringResource(R.string.canteen_info))
+                                            },
+                                            onClick = {
+                                                // TODO: implement this dialog in compose
+                                                CanteenFragment().show(supportFragmentManager)
+                                            }
+                                        )
+
+                                        DropdownMenuItem(
+                                            text = {
+                                                Text(stringResource(R.string.menu_preferences))
+                                            },
+                                            onClick = {
+                                                startActivity(Intent(this@ViewerActivity, SettingsActivity::class.java))
+                                            }
+                                        )
+                                    }
+                                )
+                            }
+                        )
+                    }
+                ) { insets ->
+                    when (status) {
+                        ViewerModelInterface.Screen.Initializing -> {
+                            Box(Modifier.fillMaxSize().padding(insets).padding(16.dp)) {
+                                CircularProgressIndicator(Modifier.align(Alignment.Center))
+                            }
+                        }
+                        ViewerModelInterface.Screen.Privacy -> {
+                            Text("TODO: Privacy", modifier = Modifier.padding(insets))
+                        }
+                        ViewerModelInterface.Screen.WaitingForInitialCanteenSelection -> {
+                            Text("TODO: waiting for initial canteen selection", modifier = Modifier.padding(insets))
+                        }
+                        is ViewerModelInterface.Screen.Data -> {
+                            Text("TODO: Data", modifier = Modifier.padding(insets))
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun onResume() {
