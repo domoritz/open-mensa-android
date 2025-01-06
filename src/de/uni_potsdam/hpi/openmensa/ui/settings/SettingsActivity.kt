@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -69,6 +70,8 @@ class SettingsActivity : FragmentActivity() {
                 snackbarHostState.showSnackbar(getString(R.string.settings_toast_no_app_found))
             }
         }
+
+        enableEdgeToEdge()
 
         setContent {
             val scope = rememberCoroutineScope()
