@@ -1,8 +1,8 @@
 package de.uni_potsdam.hpi.openmensa.data.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CanteenDao {
@@ -19,20 +19,17 @@ interface CanteenDao {
     fun deleteAllItems()
 
     @Query("SELECT * FROM canteen")
-    fun getAll(): LiveData<List<Canteen>>
+    fun getAllFlow(): Flow<List<Canteen>>
 
-    @Query("SELECT * FROM canteen WHERE city = :city")
-    fun getByCity(city: String): LiveData<List<Canteen>>
-
-    @Query("SELECT * FROM canteen WHERE id IN (:ids)")
-    fun getByIds(ids: List<Int>): LiveData<List<Canteen>>
-
-    @Query("SELECT * FROM canteen WHERE id = :id")
-    fun getById(id: Int): LiveData<Canteen?>
+    @Query("SELECT * FROM canteen WHERE city = :city ORDER BY name")
+    fun getByCityFlow(city: String): Flow<List<Canteen>>
 
     @Query("SELECT * FROM canteen WHERE id = :id")
     fun getByIdSync(id: Int): Canteen?
 
+    @Query("SELECT * FROM canteen WHERE id = :id")
+    fun getByIdFlow(id: Int): Flow<Canteen?>
+
     @Query("SELECT COUNT(1) FROM canteen")
-    fun countItems(): LiveData<Long>
+    fun countItems(): Flow<Long>
 }

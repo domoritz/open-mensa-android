@@ -31,7 +31,7 @@
         <activity
             android:exported="false"
             android:name="de.uni_potsdam.hpi.openmensa.ui.settings.SettingsActivity"
-            android:label="@string/title_activity_preferences"
+            android:label="@string/menu_preferences"
             android:parentActivityName=".MainActivity">
             
             <intent-filter>

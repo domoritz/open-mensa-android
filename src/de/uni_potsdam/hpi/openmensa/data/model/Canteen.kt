@@ -39,7 +39,9 @@ data class Canteen(
                                         "id" -> id = reader.nextInt()
                                         "name" -> name = reader.nextString()
                                         "city" -> city = reader.nextString()
-                                        "address" -> address = reader.nextString()
+                                        "address" -> address =
+                                                if (reader.peek() == JsonToken.NULL) { reader.nextNull(); "" }
+                                                else reader.nextString()
                                         "coordinates" -> {
                                                 if (reader.peek() == JsonToken.NULL) {
                                                         reader.nextNull()

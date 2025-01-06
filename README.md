@@ -24,9 +24,6 @@ Create a release with `./gradlew --no-daemon assembleRelease`.
 
 ![Meals view with different meals](https://github.com/domoritz/open-mensa-android/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/1_meal.png "Meals view")
 
-![Canteen view with map](https://github.com/domoritz/open-mensa-android/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/4_map.png "Canteen view")
-
-
 ## License
 
 License [GNU General Public License, version 3](https://www.gnu.org/licenses/gpl-3.0.html)

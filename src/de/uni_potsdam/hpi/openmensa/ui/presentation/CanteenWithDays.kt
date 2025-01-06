@@ -1,8 +1,5 @@
 package de.uni_potsdam.hpi.openmensa.ui.presentation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.map
-import androidx.lifecycle.switchMap
 import de.uni_potsdam.hpi.openmensa.data.AppDatabase
 import de.uni_potsdam.hpi.openmensa.data.model.Canteen
 import de.uni_potsdam.hpi.openmensa.data.model.Day
@@ -14,18 +11,6 @@ data class CanteenWithDays(
     val days: List<Day>
 ) {
     companion object {
-        fun getLive(database: AppDatabase, canteenId: Int): LiveData<CanteenWithDays?> {
-            val canteenLive = database.canteen.getById(canteenId)
-            val daysLive = database.day.getByCanteenId(canteenId)
-
-            return canteenLive.switchMap { canteen ->
-                daysLive.map { days ->
-                    if (canteen != null) CanteenWithDays(canteen, days)
-                    else null
-                }
-            }
-        }
-
         fun getSync(database: AppDatabase, canteenId: Int): CanteenWithDays? {
             val canteen = database.canteen.getByIdSync(canteenId)
             val days = database.day.getByCanteenIdSync(canteenId)

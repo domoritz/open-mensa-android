@@ -7,11 +7,11 @@ import de.uni_potsdam.hpi.openmensa.BuildConfig
 import de.uni_potsdam.hpi.openmensa.data.AppDatabase
 import de.uni_potsdam.hpi.openmensa.sync.MealSyncing
 import de.uni_potsdam.hpi.openmensa.ui.widget.MealWidget
-import java.util.concurrent.CountDownLatch
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicBoolean
 
-class WidgetDataRefreshWorker(context: Context, workerParameters: WorkerParameters): Worker(context, workerParameters) {
+class WidgetDataRefreshWorker(context: Context, workerParameters: WorkerParameters): CoroutineWorker(context, workerParameters) {
     companion object {
         private const val LOG_TAG = "WidgetDataRefreshWorker"
         private const val WORK_NAME = "WidgetDataRefreshWorker"
@@ -57,7 +57,7 @@ class WidgetDataRefreshWorker(context: Context, workerParameters: WorkerParamete
         }
     }
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         val database = AppDatabase.with(applicationContext)
         val appWidgetIds = MealWidget.getAppWidgetIds(applicationContext)
 
@@ -73,25 +73,33 @@ class WidgetDataRefreshWorker(context: Context, workerParameters: WorkerParamete
 
         val canteenIds = database.widgetConfiguration.getCanteenIdsByWidgetIds(appWidgetIds)
 
-        val latch = CountDownLatch(canteenIds.size)
-        val hadError = AtomicBoolean(false)
-
-        canteenIds.forEach { canteenId ->
-            MealSyncing.syncInBackground(
-                canteenId = canteenId,
-                force = false,
-                context = applicationContext,
-                onCompletion = {
-                    if (it.isFailure) hadError.set(true)
-
-                    latch.countDown()
+        val allOk = supervisorScope {
+            val jobs = canteenIds.map { canteenId ->
+                launch {
+                    MealSyncing.syncCanteenSynchronousThrowEventually(
+                        canteenId = canteenId,
+                        force = false,
+                        context = applicationContext
+                    )
                 }
-            )
+            }
+
+            jobs.map {
+                try {
+                    it.join()
+
+                    false
+                } catch (ex: Exception) {
+                    if (BuildConfig.DEBUG) {
+                        Log.d(LOG_TAG, "task failed", ex)
+                    }
+
+                    true
+                }
+            }.none()
         }
 
-        latch.await()
-
-        return if (hadError.get()) Result.retry()
-        else Result.success()
+        return if (allOk) Result.success()
+        else Result.retry()
     }
 }

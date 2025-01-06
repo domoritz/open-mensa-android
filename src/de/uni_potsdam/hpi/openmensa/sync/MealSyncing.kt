@@ -2,132 +2,60 @@ package de.uni_potsdam.hpi.openmensa.sync
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import de.uni_potsdam.hpi.openmensa.BuildConfig
-import de.uni_potsdam.hpi.openmensa.Threads
 import de.uni_potsdam.hpi.openmensa.api.client.HttpApiClient
 import de.uni_potsdam.hpi.openmensa.data.AppDatabase
 import de.uni_potsdam.hpi.openmensa.ui.widget.MealWidget
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 
 object MealSyncing {
     private const val LOG_TAG = "MealSyncing"
     private val lock = Object()
-    private val statusInternal = mutableMapOf<Int, MealSyncingStatus>()
-    private val statusInternalLive = MutableLiveData<Map<Int, MealSyncingStatus>>().apply { postValue(statusInternal.toMap()) }
-    val status: LiveData<Map<Int, MealSyncingStatus>> = statusInternalLive
+    private val mutexes = mutableMapOf<Int, Mutex>()
 
-    fun syncInBackground(
-        canteenId: Int,
-        force: Boolean,
-        context: Context,
-        onCompletion: (Result<Unit>) -> Unit = {}
-    ) {
-        Threads.network.execute {
-            val result = try {
-                syncCanteenSynchronousThrowEventually(canteenId, force, context)
-
-                Result.success(Unit)
-            } catch (ex: Exception) {
-                if (BuildConfig.DEBUG) {
-                    Log.w(LOG_TAG, "meal syncing failed", ex)
-                }
-
-                Result.failure(ex)
-            }
-
-            Threads.handler.post { onCompletion(result) }
-        }
-    }
-
-    private fun syncCanteenSynchronousThrowEventually(canteenId: Int, force: Boolean, context: Context) {
+    suspend fun shouldSync(canteenId: Int, context: Context): Boolean = withContext(Dispatchers.IO) {
         val database = AppDatabase.with(context)
 
-        fun shouldSync() = force || database.lastCanteenSync.getByCanteenIdSync(canteenId)?.let {
+        database.lastCanteenSync.getByCanteenIdSync(canteenId)?.let {
             val now = System.currentTimeMillis()
 
             it.timestamp > now || it.timestamp + 1000 * 60 * 60 /* 1 hour */ < now
         } ?: true
+    }
 
-        if (!shouldSync()) {
-            if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "should not sync now")
-            }
+    suspend fun syncCanteenSynchronousThrowEventually(canteenId: Int, force: Boolean, context: Context) = withContext(Dispatchers.IO) {
+        getMutex(canteenId).withLock {
+            val database = AppDatabase.with(context)
 
-            return
-        }
-
-        if (reportCanteenSyncing(canteenId)) {
-            try {
-                if (!shouldSync()) {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(LOG_TAG, "should not sync now")
-                    }
-
-                    return
-                }
-
+            if (!force && !shouldSync(canteenId, context)) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "sync $canteenId now")
+                    Log.d(LOG_TAG, "should not sync now")
                 }
 
-                SyncUtil.syncDaysAndMeals(
-                        api = HttpApiClient.getInstance(context),
-                        database = database,
-                        canteenId = canteenId
-                )
-
-                MealWidget.updateAppWidgets(
-                    context = context,
-                    appWidgetIds = database.widgetConfiguration.getWidgetIdsByCanteenId(canteenId)
-                )
-
-                setCanteenStatus(canteenId, MealSyncingDone)
-            } catch (ex: Exception) {
-                setCanteenStatus(canteenId, MealSyncingFailed)
-
-                throw ex
+                return@withContext
             }
-        }
-    }
 
-    private fun reportCanteenSyncing(canteenId: Int): Boolean {
-        synchronized(lock) {
-            return if (statusInternal[canteenId] == MealSyncingRunning) {
-                false
-            } else {
-                statusInternal[canteenId] = MealSyncingRunning
-                updateLiveData()
-
-                true
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "sync $canteenId now")
             }
+
+            SyncUtil.syncDaysAndMeals(
+                api = HttpApiClient.getInstance(context),
+                database = database,
+                canteenId = canteenId
+            )
+
+            MealWidget.updateAppWidgets(
+                context = context,
+                appWidgetIds = database.widgetConfiguration.getWidgetIdsByCanteenId(canteenId)
+            )
         }
     }
 
-    private fun setCanteenStatus(canteenId: Int, status: MealSyncingStatus) {
-        synchronized(lock) {
-            statusInternal[canteenId] = status
-            updateLiveData()
-        }
-    }
-
-    fun removeDoneStatus(canteenId: Int) {
-        synchronized(lock) {
-            val currentStatus = statusInternal[canteenId]
-
-            if (currentStatus == MealSyncingFailed || currentStatus == MealSyncingDone) {
-                statusInternal.remove(canteenId)
-                updateLiveData()
-            }
-        }
-    }
-
-    private fun updateLiveData() {
-        statusInternalLive.postValue(statusInternal.toMap())
+    private fun getMutex(canteenId: Int): Mutex = synchronized(lock) {
+        mutexes.getOrPut(canteenId) { Mutex() }
     }
 }
-
-sealed class MealSyncingStatus
-object MealSyncingRunning: MealSyncingStatus()
-object MealSyncingFailed: MealSyncingStatus()
-object MealSyncingDone: MealSyncingStatus()

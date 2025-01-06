@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.openmensa.ui.settings.canteenlist
+package de.uni_potsdam.hpi.openmensa.ui.canteenlist
 
 import android.Manifest
 import android.content.Context
@@ -9,16 +9,17 @@ import android.location.LocationManager
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.asFlow
 import de.uni_potsdam.hpi.openmensa.Threads
 import de.uni_potsdam.hpi.openmensa.extension.requestLocationUpdatesIfSupported
 
 object LocationUtil {
-    fun hasLocationAccessPermission(context: Context): Boolean {
+    private fun hasLocationAccessPermission(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED
     }
 
-    fun getLastBestLocation(context: Context): LocationStatus {
+    private fun getLastBestLocation(context: Context): LocationStatus {
         if (!hasLocationAccessPermission(context)) {
             return MissingPermissionLocationStatus
         }
@@ -48,7 +49,7 @@ object LocationUtil {
         }
     }
 
-    fun getLocationLive(context: Context) = object: LiveData<LocationStatus>() {
+    private fun getLocationLive(context: Context) = object: LiveData<LocationStatus>() {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val locationListener = object: LocationListener {
             override fun onLocationChanged(location: Location) {
@@ -105,6 +106,8 @@ object LocationUtil {
             locationManager.removeUpdates(locationListener)
         }
     }
+
+    fun getLocationFlow(context: Context) = getLocationLive(context).asFlow()
 }
 
 sealed class LocationStatus

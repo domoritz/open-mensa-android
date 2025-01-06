@@ -1,58 +1,32 @@
 <resources>
 
     <string name="app_name">OpenMensa</string>
-    <string name="section_canteen">Canteen</string>
-    <string name="hello_world">Hello world!</string>
     <string name="menu_preferences">Preferences</string>
     <string name="menu_favorite_add">Mark as favorite</string>
     <string name="menu_favorite_rm">Remove from favorites</string>
     <string name="title_activity_main">OpenMensa</string>
-    
-    <string name="spinner_favourites">Choose Favourites</string>
-    <string name="empty"></string>
-    
-    <string name="today">today</string>
-    <string name="yesterday">yesterday</string>
-    <string name="tomorrow">tomorrow</string>
-    
+
     <string name="students">Students:</string>
     <string name="employees">Employees:</string>
     <string name="pupils">Pupils:</string>
     <string name="other">Other:</string>
     <string name="no_known_price">No price available</string>
     
-    <string name="address">Address:</string>
-    
-    <string name="noconnection">No internet connection.</string>
-    <string name="pleaseconnect">No internet connection available. Please connect.</string>
     <string name="canteenclosed">This canteen is closed on this date</string>
     <string name="noinfo">No information available</string>
-    <string name="noprice">Not available</string>
     <string name="nomapapp">Could not find a map application</string>
-    <string name="noactivecanteens">No favourite canteens.</string>
-    <string name="chooseone">You have not yet set any active canteens. Please select at least one.</string>
 
     <string name="sync_snackbar_running">Syncing</string>
     <string name="sync_snackbar_done">Data synced</string>
     <string name="sync_snackbar_failed">Could not download current data</string>
     <string name="sync_snackbar_retry">Retry</string>
 
-    <string name="reload">Refresh canteens</string>
+    <string name="reload">Refresh canteen</string>
     <string name="canteen_info">Canteen information</string>
-    
-    <string name="title_activity_preferences">Preferences</string>
-    
+
     <string name="source_title">Source</string>
     <string name="source_url_title">OpenMensa Server</string>
     <string name="source_url_desc">URL to the API endpoint of an OpenMensa server.</string>
-    <string name="canteen_title">Favourite Canteens</string>
-    <string name="canteen_desc_empty">No favourite canteens</string>
-    <string name="canteen_desc">%s favourite canteens</string>
-    <string name="canteen_choose_title">Favourite Canteens</string>
-    <string name="canteen_choose_desc">Choose your preferred canteens from the list that is sorted by the distance to your current location.</string>
-    <string name="canteen_choose_sort_by_loc">Sort by distance</string>
-    <string name="canteen_choose_sort_by_loc_no_location">No known location</string>
-    <string name="canteen_choose_sort_by_loc_rejected_toast">For sorting by distance, you have to enable location access</string>
 
     <string name="pref_theme">Theme</string>
     <string name="pref_theme_dialog_title">Choose your preferred theme</string>
@@ -64,41 +38,44 @@
     <string name="about_title">About</string>
     <string name="version_title">Version</string>
     <string name="license_title">License</string>
-    <string name="license">GNU General Public License, Version 3</string>
+    <string name="license" translatable="false">GNU General Public License, Version 3</string>
     <string name="powered_by_title">Powered by</string>
-    <string name="powered_by_desc">OpenMensa</string>
+    <string name="powered_by_desc" translatable="false">OpenMensa</string>
     <string name="author_title">Author</string>
     <string name="author_desc" translatable="false">Dominik Moritz, Christian Nicolai, Jan Graichen, Jan Renz, Matthias Jacob, Jonas Lochmann</string>
     <string name="feedback_title">Feedback</string>
     <string name="feedback_desc">Write me a short email and ask a question, thank me, or complain.</string>
-    <string name="settings_design_title">Design</string>
+    <string name="settings_design_title" translatable="false">Design</string>
+    <string name="settings_toast_no_app_found">no suitable App found</string>
+    <string name="settings_icon_open_in_browser">open website</string>
+    <string name="settings_icon_edit">Edit</string>
+    <string name="settings_back">Back</string>
+    <string name="settings_authors_and_license">License and Authors</string>
+    <string name="settings_version" translatable="false">Version %s</string>
+    <string name="settings_save_btn">Save</string>
+    <string name="settings_cancel_btn">Cancel</string>
+    <string name="settings_server_updated_toast">URL updated and canteen list cleaned</string>
 
     <string name="select_canteen_dialog_search_hint">Search</string>
     <string name="select_canteen_dialog_empty">Nothing found</string>
 
     <string name="privacy_dialog_title">Privacy</string>
     <string name="privacy_dialog_text">This App uses data from %s. The provider of this server could create logfiles. You can chose an other server in the settings.</string>
-    <string name="privacy_dialog_warning_plaintext">Due to your old Android version, HTTP (an unencrypted connection) will be used.</string>
     <string name="privacy_dialog_accept">Accept</string>
-    <string name="privacy_dialog_settings">Open settings</string>
 
     <string name="setup_no_selection_text">Please select a canteen to show some content.</string>
     <string name="setup_no_selection_action">Select canteen</string>
     <string name="setup_no_data_text">It was not possible to load a list of canteens</string>
     <string name="setup_no_data_action">Retry</string>
 
-    <string name="map_btn_enable">Enable map</string>
-    <string name="map_privacy_title">Privacy</string>
-    <string name="map_privacy_text">To provide the map feature, tiles from *.tile.openstreetmap.org will be requested. The requested location and the used App will be transmitted.</string>
-    <string name="map_privacy_accept">Accept</string>
-    <string name="map_privacy_reject">Reject</string>
-    <string name="pref_map_category">Map</string>
-    <string name="pref_map">@string/map_btn_enable</string>
-    <string name="pref_map_text">@string/map_privacy_text</string>
-    
+    <string name="external_map_btn">Open map</string>
+
+    <string name="canteen_list_open">Show canteen list</string>
     <string name="canteen_list_show_more">Show all</string>
     <string name="canteen_list_select_city">Select city</string>
     <string name="canteen_list_enable_loc_access">Enable location access</string>
 
     <string name="widget_requires_app_setup_toast">you must setup the App before you can use the Widget</string>
+
+    <string name="menu_open">Open menu</string>
 </resources>

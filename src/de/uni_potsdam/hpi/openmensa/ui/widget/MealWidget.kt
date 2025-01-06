@@ -66,7 +66,7 @@ class MealWidget : AppWidgetProvider() {
                                 appWidgetManager.updateAppWidget(appWidgetId, view)
                             }
 
-                            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.list)
+                            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, android.R.id.background)
 
                             DayChangeReceiver.schedule(context)
                         } finally {

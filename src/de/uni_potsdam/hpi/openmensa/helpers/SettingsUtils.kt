@@ -2,14 +2,14 @@ package de.uni_potsdam.hpi.openmensa.helpers
 
 import android.app.Application
 import android.content.Context
-import android.content.res.Configuration
-import android.graphics.Color
 import android.preference.PreferenceManager
 import android.util.Log
 import de.uni_potsdam.hpi.openmensa.BuildConfig
 
-import de.uni_potsdam.hpi.openmensa.R
 import de.uni_potsdam.hpi.openmensa.api.DefaultApiUrl
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 
 /**
  * Provides simple methods to access shared settings.
@@ -24,13 +24,6 @@ class SettingsUtils(context: Application) {
 
         // Make sure to update xml/preferences.xml as well
         const val KEY_FAVOURITES = "pref_favourites"
-
-        const val KEY_STYLE = "pref_style"
-        private const val THEME_DARK = "dark"
-        private const val THEME_LIGHT = "light"
-        private const val THEME_AUTO = "auto"
-
-        const val KEY_ENABLE_MAP = "pref_map"
 
         const val KEY_LAST_SELECTED_CANTEEN_ID = "last_canteen_id"
         const val KEY_LAST_CANTEEN_LIST_UPDATE = "last_canteen_list_update"
@@ -58,62 +51,33 @@ class SettingsUtils(context: Application) {
 
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
+    data class Settings(
+        val sourceUrl: String?,
+        val lastSelectedCanteenId: Int?,
+        val favoriteCanteenIds: Set<Int>,
+        val cityHistory: List<String>
+    )
+
+    private val settingsFlowInternal = MutableStateFlow(Settings(
+        sourceUrl = sourceUrl.let { if (it.isBlank()) null else it },
+        lastSelectedCanteenId = lastSelectedCanteenId,
+        favoriteCanteenIds = favoriteCanteens,
+        cityHistory = selectedCities
+    ))
+
+    val settingsFlow: StateFlow<Settings> = settingsFlowInternal
+
     var sourceUrl: String
         get() = prefs.getString(KEY_SOURCE_URL, "")!!
         set(value) {
             prefs.edit()
                     .putString(KEY_SOURCE_URL, value)
                     .apply()
+
+            settingsFlowInternal.update {
+                it.copy(sourceUrl = value.let { if (it.isBlank()) null else it })
+            }
         }
-
-    private fun getThemeByString(theme: String): Int = when(theme) {
-        THEME_DARK -> R.style.DarkAppTheme
-        THEME_LIGHT -> R.style.LightAppTheme
-        THEME_AUTO -> R.style.DayNightAppTheme
-        else -> R.style.DayNightAppTheme
-    }
-
-    private fun getTranslucentTheme(theme: String): Int = when(theme) {
-        THEME_DARK -> R.style.DarkTranslucentAppTheme
-        THEME_LIGHT -> R.style.LightTranslucentAppTheme
-        THEME_AUTO -> R.style.DayNightTranslucentAppTheme
-        else -> R.style.DayNightTranslucentAppTheme
-    }
-
-    private fun getBottomSheetTheme(theme: String): Int = when(theme) {
-        THEME_DARK -> R.style.DarkBottomSheetTheme
-        THEME_LIGHT -> R.style.LightBottomSheetTheme
-        THEME_AUTO -> R.style.DayNightBottomSheetTheme
-        else -> R.style.DayNightBottomSheetTheme
-    }
-
-    private fun getIconColorByThemeByString(configuration: Configuration, theme: String): Int = when(theme) {
-        THEME_DARK -> Color.WHITE
-        THEME_LIGHT -> Color.BLACK
-        THEME_AUTO -> if (isUsingOsNightMode(configuration)) Color.WHITE else Color.BLACK
-        else -> if (isUsingOsNightMode(configuration)) Color.WHITE else Color.BLACK
-    }
-
-    private fun isUsingOsNightMode(configuration: Configuration) =
-        configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-
-    private val selectedThemeName: String
-        get() = prefs.getString(KEY_STYLE, THEME_LIGHT)!!
-
-    val selectedTheme: Int
-        get() = getThemeByString(selectedThemeName)
-
-    val selectedTranslucentTheme: Int
-        get() = getTranslucentTheme(selectedThemeName)
-
-    val selectedBottomSheetThemeTheme: Int
-        get() = getBottomSheetTheme(selectedThemeName)
-
-    fun selectedThemeIconColor(configuration: Configuration): Int =
-        getIconColorByThemeByString(configuration, selectedThemeName)
-
-    val selectedThemeLive = LiveSettings.createObservablePreference(prefs, KEY_STYLE) { selectedTheme }
-    val selectedTranslucentThemeLive = LiveSettings.createObservablePreference(prefs, KEY_STYLE) { selectedTranslucentTheme }
 
     var favoriteCanteens: Set<Int>
         get() = prefs.getStringSet(KEY_FAVOURITES, emptySet())!!.map { it.toInt() }.toSet()
@@ -121,9 +85,11 @@ class SettingsUtils(context: Application) {
             prefs.edit()
                     .putStringSet(KEY_FAVOURITES, value.map { it.toString() }.toSet())
                     .apply()
-        }
 
-    val favoriteCanteensLive = LiveSettings.createObservablePreference(prefs, KEY_FAVOURITES) { favoriteCanteens }
+            settingsFlowInternal.update {
+                it.copy(favoriteCanteenIds = value)
+            }
+        }
 
     var lastCanteenListUpdate: Long
         get() = prefs.getLong(KEY_LAST_CANTEEN_LIST_UPDATE, 0)
@@ -132,16 +98,6 @@ class SettingsUtils(context: Application) {
                     .putLong(KEY_LAST_CANTEEN_LIST_UPDATE, value)
                     .apply()
         }
-
-    var enableMap: Boolean
-        get() = prefs.getBoolean(KEY_ENABLE_MAP, false)
-        set(value) {
-            prefs.edit()
-                    .putBoolean(KEY_ENABLE_MAP, value)
-                    .apply()
-        }
-
-    val enableMapLive = LiveSettings.createObservablePreference(prefs, KEY_ENABLE_MAP) { enableMap }
 
     var lastSelectedCanteenId: Int?
         get() = if (prefs.contains(KEY_LAST_SELECTED_CANTEEN_ID))
@@ -159,23 +115,25 @@ class SettingsUtils(context: Application) {
 
                         editor.apply()
                     }
+
+            settingsFlowInternal.update {
+                it.copy(lastSelectedCanteenId = value)
+            }
         }
 
-    var selectedCities: List<String>
+    private var selectedCities: List<String>
         get() = ArrayStringUtil.parse(prefs.getString(SELECTED_CITIES, null))
         set(value) {
             prefs.edit()
                     .putString(SELECTED_CITIES, ArrayStringUtil.serialize(value))
                     .apply()
+
+            settingsFlowInternal.update {
+                it.copy(cityHistory = value)
+            }
         }
 
-    val selectedCity: String?
-        get() = selectedCities.firstOrNull()
-
-    val selectedCityLive = LiveSettings.createObservablePreference(prefs, SELECTED_CITIES) { selectedCity }
-    val selectedCitiesLive = LiveSettings.createObservablePreference(prefs, SELECTED_CITIES) { selectedCities }
-
-    fun selectCity(name: String) {
+    fun saveSelectedCity(name: String) {
         selectedCities = selectedCities.toMutableList().apply {
             remove(name)
             add(0, name)

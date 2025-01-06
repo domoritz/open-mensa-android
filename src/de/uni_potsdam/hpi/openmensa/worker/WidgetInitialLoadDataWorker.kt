@@ -1,15 +1,16 @@
 package de.uni_potsdam.hpi.openmensa.worker
 
 import android.content.Context
+import android.util.Log
 import androidx.work.*
+import de.uni_potsdam.hpi.openmensa.BuildConfig
 import de.uni_potsdam.hpi.openmensa.sync.MealSyncing
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.atomic.AtomicBoolean
 
-class WidgetInitialLoadDataWorker(context: Context, private val workerParameters: WorkerParameters): Worker(context, workerParameters) {
+class WidgetInitialLoadDataWorker(context: Context, private val workerParameters: WorkerParameters): CoroutineWorker(context, workerParameters) {
     companion object {
         private const val EXTRA_CANTEEN_ID = "canteenId"
         const val TAG = "WidgetInitialLoadDataWorker"
+        private const val LOG_TAG = "WidgetInitialWorker"
 
         private fun workId(canteenId: Int) = "$TAG:$canteenId"
 
@@ -34,26 +35,23 @@ class WidgetInitialLoadDataWorker(context: Context, private val workerParameters
         }
     }
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         val canteenId = workerParameters.inputData.getInt(EXTRA_CANTEEN_ID, -1)
 
-        val latch = CountDownLatch(1)
-        val hadError = AtomicBoolean(false)
+        try {
+            MealSyncing.syncCanteenSynchronousThrowEventually(
+                canteenId = canteenId,
+                force = false,
+                context = applicationContext
+            )
 
-        MealSyncing.syncInBackground(
-            canteenId = canteenId,
-            force = false,
-            context = applicationContext,
-            onCompletion = {
-                if (it.isFailure) hadError.set(true)
-
-                latch.countDown()
+            return Result.success()
+        } catch (ex: Exception) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "task failed for $canteenId")
             }
-        )
 
-        latch.await()
-
-        return if (hadError.get()) Result.retry()
-        else Result.success()
+            return Result.retry()
+        }
     }
 }
