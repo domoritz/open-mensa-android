@@ -52,7 +52,7 @@ android {
         versionCode 31
         versionName "1.1.1"
         minSdkVersion 21
-        targetSdkVersion 34
+        targetSdkVersion 35
     }
 
     compileSdk 35
