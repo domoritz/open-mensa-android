@@ -49,8 +49,8 @@ android {
 
     defaultConfig {
         applicationId 'de.uni_potsdam.hpi.openmensa'
-        versionCode 31
-        versionName "1.1.1"
+        versionCode 32
+        versionName "2.0.0"
         minSdkVersion 21
         targetSdkVersion 35
     }
