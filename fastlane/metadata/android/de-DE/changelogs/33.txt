@@ -1,0 +1,2 @@
+- Anzeige von Studentenpreisen als Mitarbeiterpreise behoben
+- Abhängigkeiten aktualisiert
