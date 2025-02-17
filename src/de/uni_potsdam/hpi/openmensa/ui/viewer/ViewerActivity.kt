@@ -483,7 +483,7 @@ class ViewerActivity : FragmentActivity() {
                                                                             val items = remember(item.meal) {
                                                                                 listOf(
                                                                                     Pair(R.string.students, item.meal.prices?.students),
-                                                                                    Pair(R.string.employees, item.meal.prices?.students),
+                                                                                    Pair(R.string.employees, item.meal.prices?.employees),
                                                                                     Pair(R.string.pupils, item.meal.prices?.pupils),
                                                                                     Pair(R.string.other, item.meal.prices?.others)
                                                                                 ).filter { (it.second ?: 0.0) > 0.0 }
