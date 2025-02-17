@@ -7,7 +7,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.8.0'
+        classpath 'com.android.tools.build:gradle:8.8.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:1.9.21-1.0.16"
     }
@@ -24,14 +24,13 @@ repositories {
 
 dependencies {
     def room_version = "2.6.1"
-    def lifecycle_version = "2.2.0"
 
-    implementation platform('androidx.compose:compose-bom:2024.12.01')
-    implementation 'androidx.activity:activity-compose:1.9.3'
+    implementation platform('androidx.compose:compose-bom:2025.02.00')
+    implementation 'androidx.activity:activity-compose:1.10.0'
     implementation 'androidx.compose.material3:material3'
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.runtime:runtime-livedata'
-    implementation('androidx.compose.material:material-icons-extended:1.7.6')
+    implementation('androidx.compose.material:material-icons-extended:1.7.8')
 
     // compile fileTree(dir: 'libs', include: '*.jar')
     implementation "com.google.android.material:material:1.12.0"
