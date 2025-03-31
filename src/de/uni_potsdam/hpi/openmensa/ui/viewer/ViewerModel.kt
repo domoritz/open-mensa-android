@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transformLatest
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import kotlin.math.roundToLong
@@ -168,12 +169,45 @@ class ViewerModel(application: Application): AndroidViewModel(application), View
                 launch {
                     currentCanteenId.transformLatest<_, Unit> { canteenId ->
                         coroutineScope {
-                            val localRefreshChannel = Channel<Unit>(Channel.RENDEZVOUS)
+                            val localRefreshChannel = Channel<Boolean>(Channel.RENDEZVOUS)
 
                             var failedSyncCounter = 0
                             var lastMessageJob: Job? = null
 
-                            if (canteenId != null) while (true) {
+                            if (canteenId != null) while (isActive) {
+                                val outdatedDataJob = launch {
+                                    if (failedSyncCounter > 0) {
+                                        val backoff =
+                                            1000 * 60 * Math.pow(
+                                                2.0,
+                                                failedSyncCounter.toDouble() - 1
+                                            ) * (1 + Math.random())
+
+                                        if (BuildConfig.DEBUG) {
+                                            Log.d(
+                                                LOG_TAG,
+                                                "wait $backoff before next auto sync attempt"
+                                            )
+                                        }
+
+                                        delay(backoff.roundToLong())
+                                    }
+
+                                    while (!MealSyncing.shouldSync(
+                                            canteenId,
+                                            getApplication()
+                                        )
+                                    ) {
+                                        delay(1000 * 60)
+                                    }
+
+                                    if (BuildConfig.DEBUG) {
+                                        Log.d(LOG_TAG, "refresh due to outdated data")
+                                    }
+
+                                    localRefreshChannel.send(false)
+                                }
+
                                 val force = select {
                                     refreshChannel.onReceive {
                                         if (BuildConfig.DEBUG) {
@@ -187,42 +221,11 @@ class ViewerModel(application: Application): AndroidViewModel(application), View
                                             Log.d(LOG_TAG, "refresh due to internal user request")
                                         }
 
-                                        true
-                                    }
-                                    launch {
-                                        if (failedSyncCounter > 0) {
-                                            val backoff =
-                                                1000 * 60 * Math.pow(
-                                                    2.0,
-                                                    failedSyncCounter.toDouble() - 1
-                                                ) * (1 + Math.random())
-
-                                            if (BuildConfig.DEBUG) {
-                                                Log.d(
-                                                    LOG_TAG,
-                                                    "wait $backoff before next auto sync attempt"
-                                                )
-                                            }
-
-                                            delay(backoff.roundToLong())
-                                        }
-
-                                        while (!MealSyncing.shouldSync(
-                                                canteenId,
-                                                getApplication()
-                                            )
-                                        ) {
-                                            delay(1000 * 60)
-                                        }
-                                    }.onJoin {
-                                        if (BuildConfig.DEBUG) {
-                                            Log.d(LOG_TAG, "refresh due to outdated data")
-                                        }
-
-                                        false
+                                        it
                                     }
                                 }
 
+                                outdatedDataJob.cancel()
                                 lastMessageJob?.cancel()
 
                                 val startSnackbar = launch {
@@ -255,7 +258,7 @@ class ViewerModel(application: Application): AndroidViewModel(application), View
                                         )
 
                                         if (result == SnackbarResult.ActionPerformed) {
-                                            localRefreshChannel.trySend(Unit)
+                                            localRefreshChannel.trySend(true)
                                         }
                                     }
                                 } finally {
