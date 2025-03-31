@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '2.1.0'
+    ext.kotlin_version = '2.1.10'
 
     repositories {
         google()
@@ -9,7 +9,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:8.9.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.1.0-1.0.29"
+        classpath "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.1.10-1.0.30"
     }
 }
 
@@ -29,8 +29,8 @@ repositories {
 dependencies {
     def room_version = "2.6.1"
 
-    implementation platform('androidx.compose:compose-bom:2025.02.00')
-    implementation 'androidx.activity:activity-compose:1.10.0'
+    implementation platform('androidx.compose:compose-bom:2025.03.01')
+    implementation 'androidx.activity:activity-compose:1.10.1'
     implementation 'androidx.compose.material3:material3'
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.runtime:runtime-livedata'
