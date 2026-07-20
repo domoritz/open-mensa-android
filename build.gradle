@@ -55,7 +55,7 @@ android {
         versionCode 34
         versionName "2.1.0"
         minSdkVersion 23
-        targetSdkVersion 35
+        targetSdkVersion 36
     }
 
     compileSdk 36
