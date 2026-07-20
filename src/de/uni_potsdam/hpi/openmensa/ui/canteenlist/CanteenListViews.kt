@@ -79,7 +79,7 @@ object CanteenListViews {
                             },
                             item.canteen.name,
                             { content.actions.pickCanteen(item) },
-                            Modifier.animateItemPlacement()
+                            Modifier.animateItem()
                         )
                     }
 
@@ -153,7 +153,7 @@ object CanteenListViews {
                             },
                             item.city,
                             { content.actions.pickCity(item) },
-                            Modifier.animateItemPlacement()
+                            Modifier.animateItem()
                         )
                     }
 

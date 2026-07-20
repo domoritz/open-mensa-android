@@ -170,7 +170,7 @@ class ViewerActivity : FragmentActivity() {
                                 else {
                                     Row(
                                         Modifier
-                                            .fillMaxSize()
+                                            .fillMaxWidth()
                                             .clickable {
                                                 canteenListModel.startSelectionIfIdle()
                                             },
