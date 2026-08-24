@@ -7,9 +7,9 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:9.3.0'
+        classpath 'com.android.tools.build:gradle:9.3.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.3.2'
+        classpath 'com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.3.6'
     }
 }
 
@@ -110,8 +110,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_21
-        targetCompatibility JavaVersion.VERSION_21
+        sourceCompatibility JavaVersion.VERSION_25
+        targetCompatibility JavaVersion.VERSION_25
     }
 
     composeOptions {
